@@ -1,15 +1,47 @@
-/** Copyright(C) LibDriver 2015-2021
-  * Author: LiShifeng
-  * Version: 2.0.0
-  */
+/**
+ * Copyright (C) LibDriver 2015-2021 All rights reserved
+ * 
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. 
+ *
+ * @file      driver_bmp388_fifo_test.c
+ * @brief     driver bmp388 fifo test source file
+ * @version   2.0.0
+ * @author    Shifeng Li
+ * @date      2021-04-12
+ *
+ * <h3>history</h3>
+ * <table>
+ * <tr><th>Date        <th>Version  <th>Author      <th>Description
+ * <tr><td>2021/04/12  <td>2.0      <td>Shifeng Li  <td>format the code
+ * <tr><td>2020/12/20  <td>1.0      <td>Shifeng Li  <td>first upload
+ * </table>
+ */
 
-#include <driver_bmp388_fifo_test.h>
+#include "driver_bmp388_fifo_test.h"
 
-static bmp388_handle_t gs_handle;
-static uint8_t gs_fifo_full_flag;
-static uint8_t gs_fifo_watermark_flag;
-static uint8_t gs_buf[512];
-static bmp388_frame_t gs_frame[256];
+static bmp388_handle_t gs_handle;             /**< bmp388 handle */
+static uint8_t gs_fifo_full_flag;             /**< fifo full flag */
+static uint8_t gs_fifo_watermark_flag;        /**< fifo watermark flag */
+static uint8_t gs_buf[512];                   /**< local buffer */
+static bmp388_frame_t gs_frame[256];          /**< local frame */
 
 /**
  * @brief  fifo test irq handler
