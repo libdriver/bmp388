@@ -6,47 +6,47 @@
 
 [English](/README.md) | [ 简体中文](/README_zh-Hans.md) | [繁體中文](/README_zh-Hant.md)
 
-The BMP388 is a digital sensor with pressure and temperature measurement based on proven sensing principles.The sensor module is housed in an extremely compact 10-pin metal-lid LGA package with a footprint only 2.0 x 2.0 mm2 and max 0.8 mm package height. Its small dimensions and its low power consumption of 3.4 uA@1Hz allow the implementation in battery driven devices such as mobile phones ,GPS modules or watches.
+BMP388是一款成熟的帶有壓力和溫度測量的數字傳感器。傳感器1Hz、3.4uA的測量模式可以使其工作在諸多電池驅動的設備，例如手機、GPS或者手錶。 BMP388可被用在飛行玩具、無人機、手機平板GPS、導航系統、便攜式健康設備、室內監測和手錶等。
 
-LibDriver BMP388 is a full function driver of BMP388 launched by LibDriver.It provides continuous reading of pressure and temperature, single reading of pressure and temperature, interrupt reading, FIFO acquisition and other functions.
+LibDriver BMP388是LibDriver推出的BMP388全功能驅動，該驅動提供壓強溫度連續讀取、壓強溫度單次讀取、中斷讀取和FIFO採集等功能。
 
-### Table of Contents
+### 目錄
 
-  - [Instruction](#Instruction)
-  - [Install](#Install)
-  - [Usage](#Usage)
+  - [說明](#說明)
+  - [安裝](#安裝)
+  - [使用](#使用)
     - [example basic](#example-basic)
-    - [example match](#example-match)
-    - [example alarm](#example-alarm)
-    - [example search](#example-search)
-  - [Document](#Document)
-  - [Contributing](#Contributing)
-  - [License](#License)
-  - [Contact Us](#Contact-Us)
+    - [example shot](#example-shot)
+    - [example interrupt](#example-interrupt)
+    - [example fifo](#example-fifo)
+  - [文檔](#文檔)
+  - [貢獻](#貢獻)
+  - [版權](#版權)
+  - [聯繫我們](#聯繫我們)
 
-### Instruction
+### 說明
 
-/src includes LibDriver BMP388 source files.
+/src目錄包含了LibDriver BMP388的源文件。
 
-/interface includes LibDriver BMP388 IIC, SPI platform independent template。
+/interface目錄包含了LibDriver BMP388與平台無關的IIC、SPI總線模板。
 
-/test includes LibDriver BMP388 driver test code and this code can test the chip necessary function simply。
+/test目錄包含了LibDriver BMP388驅動測試程序，該程序可以簡單的測試芯片必要功能。
 
-/example includes LibDriver BMP388 sample code.
+/example目錄包含了LibDriver BMP388編程範例。
 
-/doc includes LibDriver BMP388 offline document.
+/doc目錄包含了LibDriver BMP388離線文檔。
 
-/datasheet includes BMP388 datasheet。
+/datasheet目錄包含了BMP388數據手冊。
 
-/project includes the common Linux and MCU development board sample code. All projects use the shell script to debug the driver and the detail instruction can be found in each project's README.md.
+/project目錄包含了常用Linux與單片機開發板的工程樣例。所有工程均採用shell腳本作為調試方法，詳細內容可參考每個工程裡面的README.md。
 
-### Install
+### 安裝
 
-Reference /interface IIC, SPI platform independent template and finish your platform IIC, SPI driver.
+參考/interface目錄下與平台無關的IIC、SPI總線模板，完成指定平台的IIC、SPI總線驅動。
 
-Add /src, /interface and /example to your project.
+將/src目錄，/interface目錄和/example目錄加入工程。
 
-### Usage
+### 使用
 
 #### example basic
 
@@ -384,60 +384,28 @@ bmp388_fifo_deinit();
 return 0;
 ```
 
-### Document
+### 文檔
 
-Online documents: https://www.libdriver.com/docs/bmp388/index.html
+在線文檔: https://www.libdriver.com/docs/bmp388/index.html
 
-Offline documents: /doc/html/index.html
+離線文檔: /doc/html/index.html
 
-### Contributing
+### 貢獻
 
-Please sent an e-mail to lishifenging@outlook.com
+請聯繫lishifenging@outlook.com
 
-### License
+### 版權
 
-Copyright (c) 2015 - present LibDriver All rights reserved
+版權(C) LibDriver 2015-2021 版權所有
 
+MIT 許可證（MIT）
 
+特此免費授予任何獲得本軟件副本和相關文檔文件（下稱“軟件”）的人不受限制地處置該軟件的權利，包括不受限制地使用、複製、修改、合併、發布、分發、轉授許可和/或出售該軟件副本，以及再授權被配發了本軟件的人如上的權利，須在下列條件下：
 
-The MIT License (MIT) 
+上述版權聲明和本許可聲明應包含在該軟件的所有副本或實質成分中。
 
+本軟件是“如此”提供的，沒有任何形式的明示或暗示的保證，包括但不限於對適銷性、特定用途的適用性和不侵權的保證。在任何情況下，作者或版權持有人都不對任何索賠、損害或其他責任負責，無論這些追責來自合同、侵權或其它行為中，還是產生於、源於或有關於本軟件以及本軟件的使用或其它處置。
 
+### 聯繫我們
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-
-of this software and associated documentation files (the "Software"), to deal
-
-in the Software without restriction, including without limitation the rights
-
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-
-copies of the Software, and to permit persons to whom the Software is
-
-furnished to do so, subject to the following conditions: 
-
-
-
-The above copyright notice and this permission notice shall be included in all
-
-copies or substantial portions of the Software. 
-
-
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-
-SOFTWARE. 
-
-### Contact Us
-
-Please sent an e-mail to lishifenging@outlook.com
+請聯繫lishifenging@outlook.com
