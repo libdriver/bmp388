@@ -1,10 +1,12 @@
+[English](/README.md) | [ 简体中文](/README_zh-Hans.md) | [繁體中文](/README_zh-Hant.md)
+
 <div align=center>
 <img src="/doc/image/logo.png"/>
 </div>
 
 ## LibDriver BMP388
 
-[English](/README.md) | [ 简体中文](/README_zh-Hans.md) | [繁體中文](/README_zh-Hant.md)
+[![API](https://img.shields.io/badge/api-reference-blue)](https://www.libdriver.com/docs/bmp388/index.html) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](/LICENSE)
 
 BMP388是一款成熟的带有压力和温度测量的数字传感器。传感器1Hz、3.4uA的测量模式可以使其工作在诸多电池驱动的设备，例如手机、GPS或者手表。BMP388可被用在飞行玩具、无人机、手机平板GPS、导航系统、便携式健康设备、室内监测和手表等。
 
