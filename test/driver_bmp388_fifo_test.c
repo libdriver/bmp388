@@ -50,7 +50,7 @@ static bmp388_frame_t gs_frame[256];          /**< local frame */
  *         - 1 run failed
  * @note   none
  */
-uint8_t bmp388_interface_fifo_test_irq_handler(void)
+uint8_t bmp388_fifo_test_irq_handler(void)
 {
     /* run irq handler */
     if (bmp388_irq_handler(&gs_handle))

@@ -56,7 +56,7 @@ extern "C"{
  *         - 1 run failed
  * @note   none
  */
-uint8_t bmp388_interface_interrupt_test_irq_handler(void);
+uint8_t bmp388_interrupt_test_irq_handler(void);
 
 /**
  * @brief     interrupt test

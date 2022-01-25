@@ -115,6 +115,10 @@ $(document).ready(function(){initNavTree('globals_func.html',''); initResizable(
 : <a class="el" href="group__bmp388__example__driver.html#ga6aa656de828a88aca09cd17db4beeeb4">driver_bmp388_fifo.c</a>
 , <a class="el" href="group__bmp388__example__driver.html#ga6aa656de828a88aca09cd17db4beeeb4">driver_bmp388_fifo.h</a>
 </li>
+<li>bmp388_fifo_irq_handler()
+: <a class="el" href="group__bmp388__example__driver.html#gae7e2a59944134e658ea72d3366b22cfc">driver_bmp388_fifo.c</a>
+, <a class="el" href="group__bmp388__example__driver.html#gae7e2a59944134e658ea72d3366b22cfc">driver_bmp388_fifo.h</a>
+</li>
 <li>bmp388_fifo_parse()
 : <a class="el" href="group__bmp388__fifo__driver.html#ga540257fe85daa0dbf6114ef1374327f3">driver_bmp388.c</a>
 , <a class="el" href="group__bmp388__fifo__driver.html#ga540257fe85daa0dbf6114ef1374327f3">driver_bmp388.h</a>
@@ -126,6 +130,10 @@ $(document).ready(function(){initNavTree('globals_func.html',''); initResizable(
 <li>bmp388_fifo_test()
 : <a class="el" href="group__bmp388__test__driver.html#ga4cf502dd7acc61a3b6d061c71f7bad8e">driver_bmp388_fifo_test.c</a>
 , <a class="el" href="group__bmp388__test__driver.html#ga4cf502dd7acc61a3b6d061c71f7bad8e">driver_bmp388_fifo_test.h</a>
+</li>
+<li>bmp388_fifo_test_irq_handler()
+: <a class="el" href="group__bmp388__test__driver.html#gaea410471a0f8745cb5581576e5d07853">driver_bmp388_fifo_test.c</a>
+, <a class="el" href="group__bmp388__test__driver.html#gaea410471a0f8745cb5581576e5d07853">driver_bmp388_fifo_test.h</a>
 </li>
 <li>bmp388_flush_fifo()
 : <a class="el" href="group__bmp388__fifo__driver.html#gafc2b4867a9704039761f55a5b6eff03c">driver_bmp388.c</a>
@@ -283,14 +291,6 @@ $(document).ready(function(){initNavTree('globals_func.html',''); initResizable(
 : <a class="el" href="group__bmp388__interface__driver.html#ga9748474f03a367a1ac3f2fb8f6ed9388">driver_bmp388_interface.h</a>
 , <a class="el" href="group__bmp388__interface__driver.html#ga9748474f03a367a1ac3f2fb8f6ed9388">driver_bmp388_interface_template.c</a>
 </li>
-<li>bmp388_interface_fifo_irq_handler()
-: <a class="el" href="group__bmp388__example__driver.html#ga66d09a4c6778800f5249e1f2e97f5531">driver_bmp388_fifo.c</a>
-, <a class="el" href="group__bmp388__example__driver.html#ga66d09a4c6778800f5249e1f2e97f5531">driver_bmp388_fifo.h</a>
-</li>
-<li>bmp388_interface_fifo_test_irq_handler()
-: <a class="el" href="group__bmp388__test__driver.html#ga84271100c689a3d37dce538e868d53ab">driver_bmp388_fifo_test.c</a>
-, <a class="el" href="group__bmp388__test__driver.html#ga84271100c689a3d37dce538e868d53ab">driver_bmp388_fifo_test.h</a>
-</li>
 <li>bmp388_interface_iic_deinit()
 : <a class="el" href="group__bmp388__interface__driver.html#ga5ca1bd82480b97044f01aab4a98abf30">driver_bmp388_interface.h</a>
 , <a class="el" href="group__bmp388__interface__driver.html#ga5ca1bd82480b97044f01aab4a98abf30">driver_bmp388_interface_template.c</a>
@@ -306,14 +306,6 @@ $(document).ready(function(){initNavTree('globals_func.html',''); initResizable(
 <li>bmp388_interface_iic_write()
 : <a class="el" href="group__bmp388__interface__driver.html#ga8cd7529e0aa299c9fbad2b0493e2f5f2">driver_bmp388_interface.h</a>
 , <a class="el" href="group__bmp388__interface__driver.html#ga8cd7529e0aa299c9fbad2b0493e2f5f2">driver_bmp388_interface_template.c</a>
-</li>
-<li>bmp388_interface_interrupt_irq_handler()
-: <a class="el" href="group__bmp388__example__driver.html#ga41216caf614cdc99523da199fde6772c">driver_bmp388_interrupt.c</a>
-, <a class="el" href="group__bmp388__example__driver.html#ga41216caf614cdc99523da199fde6772c">driver_bmp388_interrupt.h</a>
-</li>
-<li>bmp388_interface_interrupt_test_irq_handler()
-: <a class="el" href="group__bmp388__test__driver.html#ga5a7623f5725b23a48ec6ef5d6eb3a627">driver_bmp388_interrupt_test.c</a>
-, <a class="el" href="group__bmp388__test__driver.html#ga5a7623f5725b23a48ec6ef5d6eb3a627">driver_bmp388_interrupt_test.h</a>
 </li>
 <li>bmp388_interface_receive_callback()
 : <a class="el" href="group__bmp388__interface__driver.html#gadb492fa38d0210e1d4ffc15d82811d66">driver_bmp388_interface.h</a>
@@ -343,6 +335,10 @@ $(document).ready(function(){initNavTree('globals_func.html',''); initResizable(
 : <a class="el" href="group__bmp388__example__driver.html#ga136fb221c63daee497af3d967c90aa0c">driver_bmp388_interrupt.c</a>
 , <a class="el" href="group__bmp388__example__driver.html#ga136fb221c63daee497af3d967c90aa0c">driver_bmp388_interrupt.h</a>
 </li>
+<li>bmp388_interrupt_irq_handler()
+: <a class="el" href="group__bmp388__example__driver.html#ga471f65c5e594b3bca756f1a4b8fc7226">driver_bmp388_interrupt.c</a>
+, <a class="el" href="group__bmp388__example__driver.html#ga471f65c5e594b3bca756f1a4b8fc7226">driver_bmp388_interrupt.h</a>
+</li>
 <li>bmp388_interrupt_read()
 : <a class="el" href="group__bmp388__example__driver.html#gab7cc141a924c193a9a6becf4cbf7af49">driver_bmp388_interrupt.c</a>
 , <a class="el" href="group__bmp388__example__driver.html#gab7cc141a924c193a9a6becf4cbf7af49">driver_bmp388_interrupt.h</a>
@@ -350,6 +346,10 @@ $(document).ready(function(){initNavTree('globals_func.html',''); initResizable(
 <li>bmp388_interrupt_test()
 : <a class="el" href="group__bmp388__test__driver.html#ga012e1f90ff48a214d35b7fa38542a003">driver_bmp388_interrupt_test.c</a>
 , <a class="el" href="group__bmp388__test__driver.html#ga012e1f90ff48a214d35b7fa38542a003">driver_bmp388_interrupt_test.h</a>
+</li>
+<li>bmp388_interrupt_test_irq_handler()
+: <a class="el" href="group__bmp388__test__driver.html#gaa6040c4f8c8b0affcc5639dc8374a63a">driver_bmp388_interrupt_test.c</a>
+, <a class="el" href="group__bmp388__test__driver.html#gaa6040c4f8c8b0affcc5639dc8374a63a">driver_bmp388_interrupt_test.h</a>
 </li>
 <li>bmp388_irq_handler()
 : <a class="el" href="group__bmp388__base__driver.html#ga8ddcf60f139fe30316ee7e5ad58a219a">driver_bmp388.c</a>

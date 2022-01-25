@@ -11,8 +11,8 @@ var driver__bmp388__interrupt_8h =
     [ "BMP388_INTERRUPT_DEFAULT_SPI_WIRE", "group__bmp388__example__driver.html#gaaa46bf7aaf773ec644baf2979ef15479", null ],
     [ "BMP388_INTERRUPT_DEFAULT_TEMPERATURE", "group__bmp388__example__driver.html#ga0d3136a7aa11ab0ba1d6e675985be9c3", null ],
     [ "BMP388_INTERRUPT_DEFAULT_TEMPERATURE_OVERSAMPLING", "group__bmp388__example__driver.html#gafe2f3fccb8c0f3d348b063654b117515", null ],
-    [ "bmp388_interface_interrupt_irq_handler", "group__bmp388__example__driver.html#ga41216caf614cdc99523da199fde6772c", null ],
     [ "bmp388_interrupt_deinit", "group__bmp388__example__driver.html#gad3aa576f6d9f3eace607eeeb5f58160c", null ],
     [ "bmp388_interrupt_init", "group__bmp388__example__driver.html#ga136fb221c63daee497af3d967c90aa0c", null ],
+    [ "bmp388_interrupt_irq_handler", "group__bmp388__example__driver.html#ga471f65c5e594b3bca756f1a4b8fc7226", null ],
     [ "bmp388_interrupt_read", "group__bmp388__example__driver.html#gab7cc141a924c193a9a6becf4cbf7af49", null ]
 ];

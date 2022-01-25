@@ -440,7 +440,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
                 {
                     return 1;
                 }
-                g_gpio_irq = bmp388_interface_interrupt_test_irq_handler;
+                g_gpio_irq = bmp388_interrupt_test_irq_handler;
                 res = bmp388_interrupt_test(interface, addr_pin, atoi(argv[3]));
                 if (res)
                 {
@@ -501,7 +501,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
                 {
                     return 1;
                 }
-                g_gpio_irq = bmp388_interface_fifo_test_irq_handler;
+                g_gpio_irq = bmp388_fifo_test_irq_handler;
                 res = bmp388_fifo_test(interface, addr_pin, atoi(argv[3]));
                 if (res)
                 {
@@ -696,7 +696,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     
                     return 5;
                 }
-                g_gpio_irq = bmp388_interface_interrupt_irq_handler;
+                g_gpio_irq = bmp388_interrupt_irq_handler;
                 res = gpio_interrupt_init();
                 if (res)
                 {
@@ -787,7 +787,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     
                     return 5;
                 }
-                g_gpio_irq = bmp388_interface_fifo_irq_handler;
+                g_gpio_irq = bmp388_fifo_irq_handler;
                 res = gpio_interrupt_init();
                 if (res)
                 {

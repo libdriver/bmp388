@@ -82,7 +82,7 @@ extern "C"{
  *         - 1 run failed
  * @note   none
  */
-uint8_t bmp388_interface_fifo_irq_handler(void);
+uint8_t bmp388_fifo_irq_handler(void);
 
 /**
  * @brief     fifo example init

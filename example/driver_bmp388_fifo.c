@@ -46,7 +46,7 @@ static bmp388_handle_t gs_handle;        /**< bmp388 handle */
  *         - 1 run failed
  * @note   none
  */
-uint8_t bmp388_interface_fifo_irq_handler(void)
+uint8_t bmp388_fifo_irq_handler(void)
 {
     /* run irq handler */
     if (bmp388_irq_handler(&gs_handle))

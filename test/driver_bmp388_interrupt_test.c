@@ -49,7 +49,7 @@ static float gs_pressure_pa;             /**< pressure */
  *         - 1 run failed
  * @note   none
  */
-uint8_t bmp388_interface_interrupt_test_irq_handler(void)
+uint8_t bmp388_interrupt_test_irq_handler(void)
 {
     /* run irq handler */
     if (bmp388_irq_handler(&gs_handle))

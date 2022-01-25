@@ -139,7 +139,7 @@ uint8_t gs_data_ready_flag;
 float gs_temperature_c;
 float gs_pressure_pa;
 
-uint8_t bmp388_interface_interrupt_receive_callback(uint8_t type)
+uint8_t bmp388_interrupt_receive_callback(uint8_t type)
 {
     switch (type)
     {
@@ -178,7 +178,7 @@ if (res)
 {
     return 1;
 }
-res = bmp388_interrupt_init(BMP388_INTERFACE_IIC, BMP388_ADDRESS_ADO_LOW, bmp388_interface_interrupt_receive_callback);
+res = bmp388_interrupt_init(BMP388_INTERFACE_IIC, BMP388_ADDRESS_ADO_LOW, bmp388_interrupt_receive_callback);
 if (res)
 {
     gpio_interrupt_deinit();
@@ -234,7 +234,7 @@ uint16_t i, timeout;
 uint8_t gs_buf[512];
 bmp388_frame_t gs_frame[256];
 
-uint8_t bmp388_interface_fifo_receive_callback(uint8_t type)
+uint8_t bmp388_fifo_receive_callback(uint8_t type)
 {
     switch (type)
     {
@@ -340,7 +340,7 @@ if (res)
 {
     return 1;
 }
-res = bmp388_fifo_init(BMP388_INTERFACE_IIC, BMP388_ADDRESS_ADO_LOW, bmp388_interface_fifo_receive_callback);
+res = bmp388_fifo_init(BMP388_INTERFACE_IIC, BMP388_ADDRESS_ADO_LOW, bmp388_fifo_receive_callback);
 if (res)
 {
     gpio_interrupt_deinit();
