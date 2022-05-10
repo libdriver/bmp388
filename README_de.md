@@ -6,49 +6,49 @@
 
 ## LibDriver BMP388
 
-[![MISRA](https://img.shields.io/badge/misra-compliant-brightgreen.svg)](/misra/README.md) [![API](https://img.shields.io/badge/api-reference-blue.svg)](https://www.libdriver.com/docs/bmp388/index.html) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](/LICENSE)
+[![MISRA](https://img.shields.io/badge/misra-compliant-brightgreen.svg)](/misra/README.md) [![API](https://img.shields.io/badge/api-reference-blue.svg)](https://www.libdriver.com/docs/bmp388/index.html) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](/LICENSE) 
 
-The BMP388 is a digital sensor with pressure and temperature measurement based on proven sensing principles.The sensor module is housed in an extremely compact 10-pin metal-lid LGA package with a footprint only 2.0 x 2.0 mm2 and max 0.8 mm package height. Its small dimensions and its low power consumption of 3.4 uA@1Hz allow the implementation in battery driven devices such as mobile phones ,GPS modules or watches.
+Der BMP388 ist ein digitaler Sensor mit Druck- und Temperaturmessung basierend auf bewährten Sensorprinzipien. Das Sensormodul ist in einem extrem kompakten 10-Pin-Metalldeckel-LGA-Gehäuse mit einer Grundfläche von nur 2,0 x 2,0 mm2 und einer maximalen Gehäusehöhe von 0,8 mm untergebracht. Seine geringen Abmessungen und sein geringer Stromverbrauch von 3,4 uA@1Hz ermöglichen den Einsatz in batteriebetriebenen Geräten wie Mobiltelefonen, GPS-Modulen oder Uhren.
 
-LibDriver BMP388 is a full function driver of BMP388 launched by LibDriver.It provides continuous reading of pressure and temperature, single reading of pressure and temperature, interrupt reading, FIFO acquisition and other functions. LibDriver is MISRA compliant.
+LibDriver BMP388 ist ein voll funktionsfähiger Treiber von BMP388, der von LibDriver gestartet wurde. Er bietet kontinuierliches Lesen von Druck und Temperatur, einzelnes Lesen von Druck und Temperatur, Interrupt-Lesen, FIFO-Erfassung und andere Funktionen. LibDriver ist MISRA-konform.
 
-### Table of Contents
+### Inhaltsverzeichnis
 
-  - [Instruction](#Instruction)
-  - [Install](#Install)
-  - [Usage](#Usage)
+  - [Anweisung](#Anweisung)
+  - [Installieren](#Installieren)
+  - [Nutzung](#Nutzung)
     - [example basic](#example-basic)
     - [example shot](#example-shot)
     - [example interrupt](#example-interrupt)
     - [example fifo](#example-fifo)
-  - [Document](#Document)
-  - [Contributing](#Contributing)
-  - [License](#License)
-  - [Contact Us](#Contact-Us)
+  - [Dokument](#Dokument)
+  - [Beitrag](#Beitrag)
+  - [Lizenz](#Lizenz)
+  - [Kontaktieren Sie uns](#Kontaktieren-Sie-uns)
 
-### Instruction
+### Anweisung
 
-/src includes LibDriver BMP388 source files.
+/src enthält LibDriver BMP388-Quelldateien.
 
-/interface includes LibDriver BMP388 IIC, SPI platform independent template。
+/interface enthält die plattformunabhängige Vorlage LibDriver BMP388 IIC, SPI.
 
-/test includes LibDriver BMP388 driver test code and this code can test the chip necessary function simply。
+/test enthält den Testcode des LibDriver BMP388-Treibers und dieser Code kann die erforderliche Funktion des Chips einfach testen.
 
-/example includes LibDriver BMP388 sample code.
+/example enthält LibDriver BMP388-Beispielcode.
 
-/doc includes LibDriver BMP388 offline document.
+/doc enthält das LibDriver BMP388-Offlinedokument.
 
-/datasheet includes BMP388 datasheet。
+/Datenblatt enthält BMP388-Datenblatt.
 
-/project includes the common Linux and MCU development board sample code. All projects use the shell script to debug the driver and the detail instruction can be found in each project's README.md.
+/project enthält den allgemeinen Beispielcode für Linux- und MCU-Entwicklungsboards. Alle Projekte verwenden das Shell-Skript, um den Treiber zu debuggen, und die detaillierten Anweisungen finden Sie in der README.md jedes Projekts.
 
-### Install
+### Installieren
 
-Reference /interface IIC, SPI platform independent template and finish your platform IIC, SPI driver.
+Verweisen Sie auf eine plattformunabhängige IIC, SPI-Schnittstellenvorlage und stellen Sie Ihren Plattform-IIC, SPI-Treiber fertig.
 
-Add /src, /interface and /example to your project.
+Fügen Sie /src, /interface und /example zu Ihrem Projekt hinzu.
 
-### Usage
+### Nutzung
 
 #### example basic
 
@@ -89,7 +89,6 @@ for (i = 0; i < 3; i++)
 
 return 0;
 ```
-
 #### example shot
 
 ```C
@@ -382,60 +381,60 @@ for (i = 0; i < 3; i++)
 return 0;
 ```
 
-### Document
+### Dokument
 
-Online documents: https://www.libdriver.com/docs/bmp388/index.html
+Online-Dokumente: https://www.libdriver.com/docs/bmp388/index.html
 
-Offline documents: /doc/html/index.html
+Offline-Dokumente: /doc/html/index.html
 
-### Contributing
+### Beitrag
 
-Please sent an e-mail to lishifenging@outlook.com
+Bitte senden Sie eine E-Mail an lishifenging@outlook.com
 
-### License
+### Lizenz
 
-Copyright (c) 2015 - present LibDriver All rights reserved
-
-
-
-The MIT License (MIT) 
+Urheberrechte © (c) 2015 - Gegenwart LibDriver Alle Rechte vorbehalten
 
 
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-
-of this software and associated documentation files (the "Software"), to deal
-
-in the Software without restriction, including without limitation the rights
-
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-
-copies of the Software, and to permit persons to whom the Software is
-
-furnished to do so, subject to the following conditions: 
+Die MIT-Lizenz (MIT)
 
 
 
-The above copyright notice and this permission notice shall be included in all
+Hiermit wird jeder Person kostenlos die Erlaubnis erteilt, eine Kopie zu erhalten
 
-copies or substantial portions of the Software. 
+dieser Software und zugehörigen Dokumentationsdateien (die „Software“) zu behandeln
+
+in der Software ohne Einschränkung, einschließlich, aber nicht beschränkt auf die Rechte
+
+zu verwenden, zu kopieren, zu modifizieren, zusammenzuführen, zu veröffentlichen, zu verteilen, unterzulizenzieren und/oder zu verkaufen
+
+Kopien der Software und Personen, denen die Software gehört, zu gestatten
+
+dazu eingerichtet werden, unter folgenden Bedingungen:
 
 
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+Der obige Urheberrechtshinweis und dieser Genehmigungshinweis müssen in allen enthalten sein
 
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+Kopien oder wesentliche Teile der Software.
 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+DIE SOFTWARE WIRD "WIE BESEHEN" BEREITGESTELLT, OHNE JEGLICHE GEWÄHRLEISTUNG, AUSDRÜCKLICH ODER
 
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+STILLSCHWEIGEND, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE GEWÄHRLEISTUNG DER MARKTGÄNGIGKEIT,
 
-SOFTWARE. 
+EIGNUNG FÜR EINEN BESTIMMTEN ZWECK UND NICHTVERLETZUNG VON RECHTEN DRITTER. IN KEINEM FALL DARF DAS
 
-### Contact Us
+AUTOREN ODER URHEBERRECHTSINHABER HAFTEN FÜR JEGLICHE ANSPRÜCHE, SCHÄDEN ODER ANDERE
 
-Please sent an e-mail to lishifenging@outlook.com
+HAFTUNG, OB AUS VERTRAG, DELIKT ODER ANDERWEITIG, ENTSTEHEND AUS,
+
+AUS ODER IM ZUSAMMENHANG MIT DER SOFTWARE ODER DER VERWENDUNG ODER ANDEREN HANDLUNGEN MIT DER
+
+SOFTWARE.
+
+### Kontaktieren Sie uns
+
+Bitte senden Sie eine E-Mail an lishifenging@outlook.com

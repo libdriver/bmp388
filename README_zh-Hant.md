@@ -1,4 +1,4 @@
-[English](/README.md) | [ 简体中文](/README_zh-Hans.md) | [繁體中文](/README_zh-Hant.md)
+[English](/README.md) | [ 简体中文](/README_zh-Hans.md) | [繁體中文](/README_zh-Hant.md) | [日本語](/README_ja.md) | [Deutsch](/README_de.md) | [한국어](/README_ko.md)
 
 <div align=center>
 <img src="/doc/image/logo.png"/>
@@ -6,11 +6,11 @@
 
 ## LibDriver BMP388
 
-[![API](https://img.shields.io/badge/api-reference-blue)](https://www.libdriver.com/docs/bmp388/index.html) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](/LICENSE)
+[![MISRA](https://img.shields.io/badge/misra-compliant-brightgreen.svg)](/misra/README.md) [![API](https://img.shields.io/badge/api-reference-blue.svg)](https://www.libdriver.com/docs/bmp388/index.html) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](/LICENSE)
 
 BMP388是一款成熟的帶有壓力和溫度測量的數字傳感器。傳感器1Hz、3.4uA的測量模式可以使其工作在諸多電池驅動的設備，例如手機、GPS或者手錶。 BMP388可被用在飛行玩具、無人機、手機平板GPS、導航系統、便攜式健康設備、室內監測和手錶等。
 
-LibDriver BMP388是LibDriver推出的BMP388全功能驅動，該驅動提供壓強溫度連續讀取、壓強溫度單次讀取、中斷讀取和FIFO採集等功能。
+LibDriver BMP388是LibDriver推出的BMP388全功能驅動，該驅動提供壓強溫度連續讀取、壓強溫度單次讀取、中斷讀取和FIFO採集等功能並且它符合MISRA標準。
 
 ### 目錄
 
@@ -59,7 +59,7 @@ float temperature_c;
 float pressure_pa;
 
 res = bmp388_basic_init(BMP388_INTERFACE_IIC, BMP388_ADDRESS_ADO_LOW);
-if (res)
+if (res != 0)
 {
     return 1;
 }
@@ -70,9 +70,9 @@ for (i = 0; i < 3; i++)
 {
     bmp388_interface_delay_ms(1000);
     res = bmp388_basic_read((float *)&temperature_c, (float *)&pressure_pa);
-    if (res)
+    if (res != 0)
     {
-        bmp388_basic_deinit();
+        (void)bmp388_basic_deinit();
 
         return 1;
     }
@@ -85,7 +85,7 @@ for (i = 0; i < 3; i++)
 
 ...
 
-bmp388_basic_deinit();
+(void)bmp388_basic_deinit();
 
 return 0;
 ```
@@ -99,7 +99,7 @@ float temperature_c;
 float pressure_pa;
 
 res = bmp388_shot_init(BMP388_INTERFACE_IIC, BMP388_ADDRESS_ADO_LOW);
-if (res)
+if (res != 0)
 {
     return 1;
 }
@@ -110,9 +110,9 @@ for (i = 0; i < 3; i++)
 {
     bmp388_interface_delay_ms(1000);
     res = bmp388_shot_read((float *)&temperature_c, (float *)&pressure_pa);
-    if (res)
+    if (res != 0)
     {
-        bmp388_shot_deinit();
+        (void)bmp388_shot_deinit();
 
         return 1;
     }
@@ -125,7 +125,7 @@ for (i = 0; i < 3; i++)
 
 ...
 
-bmp388_shot_deinit();
+(void)bmp388_shot_deinit();
 
 return 0;
 ```
@@ -139,7 +139,7 @@ uint8_t gs_data_ready_flag;
 float gs_temperature_c;
 float gs_pressure_pa;
 
-uint8_t bmp388_interrupt_receive_callback(uint8_t type)
+void bmp388_interrupt_receive_callback(uint8_t type)
 {
     switch (type)
     {
@@ -154,11 +154,11 @@ uint8_t bmp388_interrupt_receive_callback(uint8_t type)
         case BMP388_INTERRUPT_STATUS_DATA_READY :
         {
             /* read temperature pressure */
-            if (bmp388_interrupt_read((float *)&gs_temperature_c, (float *)&gs_pressure_pa))
+            if (bmp388_interrupt_read((float *)&gs_temperature_c, (float *)&gs_pressure_pa) != 0)
             {
                 bmp388_interface_debug_print("bmp388: read temperature and pressure failed.\n");
            
-                return 1;
+                return;
             }
             gs_data_ready_flag  = 1;
             
@@ -169,19 +169,17 @@ uint8_t bmp388_interrupt_receive_callback(uint8_t type)
             break;
         }
     }
-    
-    return 0;
 }
 
 res = gpio_interrupt_init();
-if (res)
+if (res != 0)
 {
     return 1;
 }
 res = bmp388_interrupt_init(BMP388_INTERFACE_IIC, BMP388_ADDRESS_ADO_LOW, bmp388_interrupt_receive_callback);
-if (res)
+if (res != 0)
 {
-    gpio_interrupt_deinit();
+    (void)gpio_interrupt_deinit();
 
     return 1;
 }
@@ -192,18 +190,18 @@ gs_data_ready_flag = 0;
 timeout = 5000;
 for (i = 0; i < 3; i++)
 {
-    while (timeout)
+    while (timeout != 0)
     {
         bmp388_interface_delay_ms(100);
         timeout--;
-        if (gs_data_ready_flag)
+        if (gs_data_ready_flag != 0)
         {
             break;
         }
         if (timeout == 0)
         {
-            gpio_interrupt_deinit();
-            bmp388_interrupt_deinit();
+            (void)gpio_interrupt_deinit();
+            (void)bmp388_interrupt_deinit();
 
             return 1;
         }
@@ -219,8 +217,8 @@ for (i = 0; i < 3; i++)
 
 ...
 
-gpio_interrupt_deinit();
-bmp388_interrupt_deinit();
+(void)gpio_interrupt_deinit();
+(void)bmp388_interrupt_deinit();
 
 return 0;
 ```
@@ -234,7 +232,7 @@ uint16_t i, timeout;
 uint8_t gs_buf[512];
 bmp388_frame_t gs_frame[256];
 
-uint8_t bmp388_fifo_receive_callback(uint8_t type)
+void bmp388_fifo_receive_callback(uint8_t type)
 {
     switch (type)
     {
@@ -247,13 +245,13 @@ uint8_t bmp388_fifo_receive_callback(uint8_t type)
             len = 512;
             frame_len = 256;
             res = bmp388_fifo_read(gs_buf, len, (bmp388_frame_t *)gs_frame, (uint16_t *)&frame_len);
-            if (res)
+            if (res != 0)
             {
                 bmp388_interface_debug_print("bmp388: fifo read failed.\n");
                 
-                return 1;
+                return;
             }
-            for (i=0; i<frame_len; i++)
+            for (i = 0; i < frame_len; i++)
             {
                 if (gs_frame[i].type == BMP388_FRAME_TYPE_TEMPERATURE)
                 {
@@ -282,20 +280,20 @@ uint8_t bmp388_fifo_receive_callback(uint8_t type)
         }
         case BMP388_INTERRUPT_STATUS_FIFO_FULL :
         {
-            volatile uint8_t res;
-            volatile uint16_t len;
-            volatile uint16_t i, frame_len;
+            uint8_t res;
+            uint16_t len;
+            uint16_t i, frame_len;
             
             len = 512;
             frame_len = 256;
             res = bmp388_fifo_read(gs_buf, len, (bmp388_frame_t *)gs_frame, (uint16_t *)&frame_len);
-            if (res)
+            if (res != 0)
             {
                 bmp388_interface_debug_print("bmp388: fifo read failed.\n");
                 
-                return 1;
+                return;
             }
-            for (i=0; i<frame_len; i++)
+            for (i = 0; i < frame_len; i++)
             {
                 if (gs_frame[i].type == BMP388_FRAME_TYPE_TEMPERATURE)
                 {
@@ -331,19 +329,17 @@ uint8_t bmp388_fifo_receive_callback(uint8_t type)
             break;
         }
     }
-    
-    return 0;
 }
 
 res = gpio_interrupt_init();
-if (res)
+if (res != 0)
 {
     return 1;
 }
 res = bmp388_fifo_init(BMP388_INTERFACE_IIC, BMP388_ADDRESS_ADO_LOW, bmp388_fifo_receive_callback);
-if (res)
+if (res != 0)
 {
-    gpio_interrupt_deinit();
+    (void)gpio_interrupt_deinit();
 
     return 1;
 }
@@ -355,18 +351,18 @@ gs_fifo_full_flag = 0;
 timeout = 5000;
 for (i = 0; i < 3; i++)
 {
-    while (timeout)
+    while (timeout != 0)
     {
         bmp388_interface_delay_ms(100);
         timeout--;
-        if (gs_fifo_watermark_flag || gs_fifo_full_flag)
+        if ((gs_fifo_watermark_flag != 0) || (gs_fifo_full_flag != 0))
         {
             break;
         }
         if (timeout == 0)
         {
-            gpio_interrupt_deinit();
-            bmp388_fifo_deinit();
+            (void)gpio_interrupt_deinit();
+            (void)bmp388_fifo_deinit();
 
             return 1;
         }
@@ -378,8 +374,8 @@ for (i = 0; i < 3; i++)
     ...
     
 }
-gpio_interrupt_deinit();
-bmp388_fifo_deinit();
+(void)gpio_interrupt_deinit();
+(void)bmp388_fifo_deinit();
 
 ...
 

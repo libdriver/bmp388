@@ -91,11 +91,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 /**
  * @brief     interface interrupt receive callback
  * @param[in] type is the interrupt type
- * @return    status code
- *            - 0 success
  * @note      none
  */
-uint8_t bmp388_interface_interrupt_receive_callback(uint8_t type)
+void bmp388_interface_interrupt_receive_callback(uint8_t type)
 {
     switch (type)
     {
@@ -110,11 +108,11 @@ uint8_t bmp388_interface_interrupt_receive_callback(uint8_t type)
         case BMP388_INTERRUPT_STATUS_DATA_READY :
         {
             /* read temperature pressure */
-            if (bmp388_interrupt_read((float *)&gs_temperature_c, (float *)&gs_pressure_pa))
+            if (bmp388_interrupt_read((float *)&gs_temperature_c, (float *)&gs_pressure_pa) != 0)
             {
                 bmp388_interface_debug_print("bmp388: read temperature and pressure failed.\n");
            
-                return 1;
+                return;
             }
             gs_data_ready_flag  = 1;
             
@@ -125,37 +123,33 @@ uint8_t bmp388_interface_interrupt_receive_callback(uint8_t type)
             break;
         }
     }
-    
-    return 0;
 }
 
 /**
  * @brief     interface fifo receive callback
  * @param[in] type is the interrupt type
- * @return    status code
- *            - 0 success
  * @note      none
  */
-uint8_t bmp388_interface_fifo_receive_callback(uint8_t type)
+void bmp388_interface_fifo_receive_callback(uint8_t type)
 {
     switch (type)
     {
         case BMP388_INTERRUPT_STATUS_FIFO_WATERMARK :
         {
-            volatile uint8_t res;
-            volatile uint16_t len;
-            volatile uint16_t i, frame_len;
+            uint8_t res;
+            uint16_t len;
+            uint16_t i, frame_len;
             
             len = 512;
             frame_len = 256;
             res = bmp388_fifo_read(gs_buf, len, (bmp388_frame_t *)gs_frame, (uint16_t *)&frame_len);
-            if (res)
+            if (res != 0)
             {
                 bmp388_interface_debug_print("bmp388: fifo read failed.\n");
                 
-                return 1;
+                return;
             }
-            for (i=0; i<frame_len; i++)
+            for (i = 0; i < frame_len; i++)
             {
                 if (gs_frame[i].type == BMP388_FRAME_TYPE_TEMPERATURE)
                 {
@@ -184,20 +178,20 @@ uint8_t bmp388_interface_fifo_receive_callback(uint8_t type)
         }
         case BMP388_INTERRUPT_STATUS_FIFO_FULL :
         {
-            volatile uint8_t res;
-            volatile uint16_t len;
-            volatile uint16_t i, frame_len;
+            uint8_t res;
+            uint16_t len;
+            uint16_t i, frame_len;
             
             len = 512;
             frame_len = 256;
             res = bmp388_fifo_read(gs_buf, len, (bmp388_frame_t *)gs_frame, (uint16_t *)&frame_len);
-            if (res)
+            if (res != 0)
             {
                 bmp388_interface_debug_print("bmp388: fifo read failed.\n");
                 
-                return 1;
+                return;
             }
-            for (i=0; i<frame_len; i++)
+            for (i = 0; i < frame_len; i++)
             {
                 if (gs_frame[i].type == BMP388_FRAME_TYPE_TEMPERATURE)
                 {
@@ -233,8 +227,6 @@ uint8_t bmp388_interface_fifo_receive_callback(uint8_t type)
             break;
         }
     }
-    
-    return 0;
 }
 
 /**
@@ -319,7 +311,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
             /* reg test */
             if (strcmp("reg", argv[2]) == 0)
             {
-                volatile uint8_t res;
+                uint8_t res;
                 bmp388_address_t addr_pin;
                 bmp388_interface_t interface;
                 
@@ -356,7 +348,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     return 5;
                 }
                 res = bmp388_register_test(interface, addr_pin);
-                if (res)
+                if (res != 0)
                 {
                     return 1;
                 }
@@ -383,7 +375,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
             /* read test */
             if (strcmp("read", argv[2]) == 0)
             {
-                volatile uint8_t res;
+                uint8_t res;
                 bmp388_address_t addr_pin;
                 bmp388_interface_t interface;
                 
@@ -420,7 +412,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     return 5;
                 }
                 res = bmp388_read_test(interface, addr_pin, atoi(argv[3]));
-                if (res)
+                if (res != 0)
                 {
                     return 1;
                 }
@@ -430,7 +422,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
             /* interrupt test */
             else if (strcmp("int", argv[2]) == 0)
             {
-                volatile uint8_t res;
+                uint8_t res;
                 bmp388_address_t addr_pin;
                 bmp388_interface_t interface;
                 
@@ -467,28 +459,28 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     return 5;
                 }
                 res = gpio_interrupt_init();
-                if (res)
+                if (res != 0)
                 {
                     return 1;
                 }
                 g_gpio_irq = bmp388_interrupt_test_irq_handler;
                 res = bmp388_interrupt_test(interface, addr_pin, atoi(argv[3]));
-                if (res)
+                if (res != 0)
                 {
                     g_gpio_irq = NULL;
-                    gpio_interrupt_deinit();
+                    (void)gpio_interrupt_deinit();
                     
                     return 1;
                 }
                 g_gpio_irq = NULL;
-                gpio_interrupt_deinit();
+                (void)gpio_interrupt_deinit();
                 
                 return 0;
             }
             /* fifo test */
             else if (strcmp("fifo", argv[2]) == 0)
             {
-                volatile uint8_t res;
+                uint8_t res;
                 bmp388_address_t addr_pin;
                 bmp388_interface_t interface;
                 
@@ -528,21 +520,21 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     return 5;
                 }
                 res = gpio_interrupt_init();
-                if (res)
+                if (res != 0)
                 {
                     return 1;
                 }
                 g_gpio_irq = bmp388_fifo_test_irq_handler;
                 res = bmp388_fifo_test(interface, addr_pin, atoi(argv[3]));
-                if (res)
+                if (res != 0)
                 {
                     g_gpio_irq = NULL;
-                    gpio_interrupt_deinit();
+                    (void)gpio_interrupt_deinit();
                     
                     return 1;
                 }
                 g_gpio_irq = NULL;
-                gpio_interrupt_deinit();
+                (void)gpio_interrupt_deinit();
                 
                 return 0;
             }
@@ -558,10 +550,10 @@ uint8_t bmp388(uint8_t argc, char **argv)
             /* read function */
             if (strcmp("read", argv[2]) == 0)
             {
-                volatile uint8_t res;
-                volatile uint32_t times, i;
-                volatile float temperature_c;
-                volatile float pressure_pa;
+                uint8_t res;
+                uint32_t times, i;
+                float temperature_c;
+                float pressure_pa;
                 bmp388_address_t addr_pin;
                 bmp388_interface_t interface;
                 
@@ -598,18 +590,18 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     return 5;
                 }
                 res = bmp388_basic_init(interface, addr_pin);
-                if (res)
+                if (res != 0)
                 {
                     return 1;
                 }
                 times = atoi(argv[3]);
-                for (i=0; i<times; i++)
+                for (i = 0; i < times; i++)
                 {
                     bmp388_interface_delay_ms(1000);
                     res = bmp388_basic_read((float *)&temperature_c, (float *)&pressure_pa);
-                    if (res)
+                    if (res != 0)
                     {
-                        bmp388_basic_deinit();
+                        (void)bmp388_basic_deinit();
                         
                         return 1;
                     }
@@ -617,17 +609,17 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     bmp388_interface_debug_print("bmp388: temperature is %0.2fC.\n", temperature_c);
                     bmp388_interface_debug_print("bmp388: pressure is %0.2fPa.\n", pressure_pa);
                 }
-                bmp388_basic_deinit();
+                (void)bmp388_basic_deinit();
                 
                 return 0;
             }
             /* shot function */
             else if (strcmp("shot", argv[2]) == 0)
             {
-                volatile uint8_t res;
-                volatile uint32_t times, i;
-                volatile float temperature_c;
-                volatile float pressure_pa;
+                uint8_t res;
+                uint32_t times, i;
+                float temperature_c;
+                float pressure_pa;
                 bmp388_address_t addr_pin;
                 bmp388_interface_t interface;
                 
@@ -664,18 +656,18 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     return 5;
                 }
                 res = bmp388_shot_init(interface, addr_pin);
-                if (res)
+                if (res != 0)
                 {
                     return 1;
                 }
                 times = atoi(argv[3]);
-                for (i=0; i<times; i++)
+                for (i = 0; i < times; i++)
                 {
                     bmp388_interface_delay_ms(1000);
                     res = bmp388_shot_read((float *)&temperature_c, (float *)&pressure_pa);
-                    if (res)
+                    if (res != 0)
                     {
-                        bmp388_shot_deinit();
+                        (void)bmp388_shot_deinit();
                         
                         return 1;
                     }
@@ -683,15 +675,15 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     bmp388_interface_debug_print("bmp388: temperature is %0.2fC.\n", temperature_c);
                     bmp388_interface_debug_print("bmp388: pressure is %0.2fPa.\n", pressure_pa);
                 }
-                bmp388_shot_deinit();
+                (void)bmp388_shot_deinit();
                
                 return 0;
             }
             /* interrupt function */
             else if (strcmp("int", argv[2]) == 0)
             {
-                volatile uint8_t res;
-                volatile uint32_t times, i, timeout;;
+                uint8_t res;
+                uint32_t times, i, timeout;;
                 bmp388_address_t addr_pin;
                 bmp388_interface_t interface;
                 
@@ -729,36 +721,36 @@ uint8_t bmp388(uint8_t argc, char **argv)
                 }
                 g_gpio_irq = bmp388_interrupt_irq_handler;
                 res = gpio_interrupt_init();
-                if (res)
+                if (res != 0)
                 {
                     return 1;
                 }
                 res = bmp388_interrupt_init(interface, addr_pin, bmp388_interface_interrupt_receive_callback);
-                if (res)
+                if (res != 0)
                 {
                     g_gpio_irq = NULL;
-                    gpio_interrupt_deinit();
+                    (void)gpio_interrupt_deinit();
                     
                     return 1;
                 }
                 times = atoi(argv[3]);
                 gs_data_ready_flag = 0;
                 timeout = 5000;
-                for (i=0; i<times; i++)
+                for (i = 0; i < times; i++)
                 {
-                    while (timeout)
+                    while (timeout != 0)
                     {
                         bmp388_interface_delay_ms(100);
                         timeout--;
-                        if (gs_data_ready_flag)
+                        if (gs_data_ready_flag != 0)
                         {
                             break;
                         }
                         if (timeout == 0)
                         {
                             g_gpio_irq = NULL;
-                            gpio_interrupt_deinit();
-                            bmp388_interrupt_deinit();
+                            (void)gpio_interrupt_deinit();
+                            (void)bmp388_interrupt_deinit();
                             
                             return 1;
                         }
@@ -770,16 +762,16 @@ uint8_t bmp388(uint8_t argc, char **argv)
                     bmp388_interface_debug_print("bmp388: pressure is %0.2fPa.\n", gs_pressure_pa);
                 }
                 g_gpio_irq = NULL;
-                gpio_interrupt_deinit();
-                bmp388_interrupt_deinit();
+                (void)gpio_interrupt_deinit();
+                (void)bmp388_interrupt_deinit();
                
                 return 0;
             }
             /* fifo function */
             else if (strcmp("fifo", argv[2]) == 0)
             {
-                volatile uint8_t res;
-                volatile uint32_t times, i, timeout;;
+                uint8_t res;
+                uint32_t times, i, timeout;;
                 bmp388_address_t addr_pin;
                 bmp388_interface_t interface;
                 
@@ -820,15 +812,15 @@ uint8_t bmp388(uint8_t argc, char **argv)
                 }
                 g_gpio_irq = bmp388_fifo_irq_handler;
                 res = gpio_interrupt_init();
-                if (res)
+                if (res != 0)
                 {
                     return 1;
                 }
                 res = bmp388_fifo_init(interface, addr_pin, bmp388_interface_fifo_receive_callback);
-                if (res)
+                if (res != 0)
                 {
                     g_gpio_irq = NULL;
-                    gpio_interrupt_deinit();
+                    (void)gpio_interrupt_deinit();
                     
                     return 1;
                 }
@@ -836,21 +828,21 @@ uint8_t bmp388(uint8_t argc, char **argv)
                 gs_fifo_watermark_flag = 0;
                 gs_fifo_full_flag = 0;
                 timeout = 5000;
-                for (i=0; i<times; i++)
+                for (i = 0; i < times; i++)
                 {
-                    while (timeout)
+                    while (timeout != 0)
                     {
                         bmp388_interface_delay_ms(100);
                         timeout--;
-                        if (gs_fifo_watermark_flag || gs_fifo_full_flag)
+                        if (gs_fifo_watermark_flag != 0 || gs_fifo_full_flag != 0)
                         {
                             break;
                         }
                         if (timeout == 0)
                         {
                             g_gpio_irq = NULL;
-                            gpio_interrupt_deinit();
-                            bmp388_fifo_deinit();
+                            (void)gpio_interrupt_deinit();
+                            (void)bmp388_fifo_deinit();
                             
                             return 1;
                         }
@@ -861,8 +853,8 @@ uint8_t bmp388(uint8_t argc, char **argv)
                 }
                 bmp388_interface_debug_print("bmp388: finish fifo read.\n");
                 g_gpio_irq = NULL;
-                gpio_interrupt_deinit();
-                bmp388_fifo_deinit();
+                (void)gpio_interrupt_deinit();
+                (void)bmp388_fifo_deinit();
                
                 return 0;
             }
@@ -891,7 +883,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
  */
 int main(void)
 {
-    volatile uint8_t res;
+    uint8_t res;
     
     /* stm32f407 clock init and hal init */
     clock_init();

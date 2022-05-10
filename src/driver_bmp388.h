@@ -35,8 +35,8 @@
  * </table>
  */
 
-#ifndef _DRIVER_BMP388_H_
-#define _DRIVER_BMP388_H_
+#ifndef DRIVER_BMP388_H
+#define DRIVER_BMP388_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -261,9 +261,9 @@ typedef struct bmp388_handle_s
     uint8_t (*spi_deinit)(void);                                                        /**< point to a spi_deinit function address */
     uint8_t (*spi_read)(uint8_t reg, uint8_t *buf, uint16_t len);                       /**< point to a spi_read function address */
     uint8_t (*spi_write)(uint8_t reg, uint8_t *buf, uint16_t len);                      /**< point to a spi_write function address */
-    uint8_t (*receive_callback)(uint8_t type);                                          /**< point to a receive_callback function address */
+    void (*receive_callback)(uint8_t type);                                             /**< point to a receive_callback function address */
     void (*delay_ms)(uint32_t ms);                                                      /**< point to a delay_ms function address */
-    uint16_t (*debug_print)(char *fmt, ...);                                            /**< point to a debug_print function address */
+    void (*debug_print)(const char *const fmt, ...);                                    /**< point to a debug_print function address */
     uint8_t inited;                                                                     /**< inited flag */
     uint8_t iic_spi;                                                                    /**< iic spi interface */
     uint16_t t1;                                                                        /**< t1 register */
@@ -581,7 +581,7 @@ uint8_t bmp388_get_status(bmp388_handle_t *handle, uint8_t *status);
 /**
  * @brief      get the sensortime
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *time points to a timerstamp buffer
+ * @param[out] *t points to a timerstamp buffer
  * @return     status code
  *             - 0 success
  *             - 1 get sensortime failed
@@ -589,7 +589,7 @@ uint8_t bmp388_get_status(bmp388_handle_t *handle, uint8_t *status);
  *             - 3 handle is not initialized
  * @note       none
  */
-uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *time);
+uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *t);
 
 /**
  * @brief      get the event

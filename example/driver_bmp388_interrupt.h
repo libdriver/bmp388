@@ -35,8 +35,8 @@
  * </table>
  */
 
-#ifndef _DRIVER_BMP388_INTERRUPT_H_
-#define _DRIVER_BMP388_INTERRUPT_H_
+#ifndef DRIVER_BMP388_INTERRUPT_H
+#define DRIVER_BMP388_INTERRUPT_H
 
 #include "driver_bmp388_interface.h"
 
@@ -84,7 +84,7 @@ uint8_t bmp388_interrupt_irq_handler(void);
  * @note      none
  */
 uint8_t bmp388_interrupt_init(bmp388_interface_t interface, bmp388_address_t addr_pin, 
-                              uint8_t (*interrupt_receive_callback)(uint8_t type));
+                              void (*interrupt_receive_callback)(uint8_t type));
 
 /**
  * @brief  interrupt example deinit

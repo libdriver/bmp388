@@ -35,8 +35,8 @@
  * </table>
  */
 
-#ifndef _DRIVER_BMP388_INTERFACE_H_
-#define _DRIVER_BMP388_INTERFACE_H_
+#ifndef DRIVER_BMP388_INTERFACE_H
+#define DRIVER_BMP388_INTERFACE_H
 
 #include "driver_bmp388.h"
 
@@ -147,19 +147,16 @@ void bmp388_interface_delay_ms(uint32_t ms);
 /**
  * @brief     interface print format data
  * @param[in] fmt is the format data
- * @return    length of the send data
  * @note      none
  */
-uint16_t bmp388_interface_debug_print(char *fmt, ...);
+void bmp388_interface_debug_print(const char *const fmt, ...);
 
 /**
  * @brief     interface receive callback
  * @param[in] type is the interrupt type
- * @return    status code
- *            - 0 success
  * @note      none
  */
-uint8_t bmp388_interface_receive_callback(uint8_t type);
+void bmp388_interface_receive_callback(uint8_t type);
 
 /**
  * @}
