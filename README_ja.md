@@ -8,47 +8,47 @@
 
 [![MISRA](https://img.shields.io/badge/misra-compliant-brightgreen.svg)](/misra/README.md) [![API](https://img.shields.io/badge/api-reference-blue.svg)](https://www.libdriver.com/docs/bmp388/index.html) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](/LICENSE)
 
-The BMP388 is a digital sensor with pressure and temperature measurement based on proven sensing principles.The sensor module is housed in an extremely compact 10-pin metal-lid LGA package with a footprint only 2.0 x 2.0 mm2 and max 0.8 mm package height. Its small dimensions and its low power consumption of 3.4 uA@1Hz allow the implementation in battery driven devices such as mobile phones ,GPS modules or watches.
+BMP388は、実績のあるセンシング原理に基づいた圧力と温度の測定を備えたデジタルセンサーです。センサーモジュールは、フットプリントがわずか2.0 x 2.0 mm2、パッケージの高さが最大0.8mmの非常にコンパクトな10ピン金属蓋LGAパッケージに収容されています。 寸法が小さく、消費電力が3.4 uA @ 1Hzと小さいため、携帯電話、GPSモジュール、時計などのバッテリー駆動デバイスに実装できます。
 
-LibDriver BMP388 is a full function driver of BMP388 launched by LibDriver.It provides continuous reading of pressure and temperature, single reading of pressure and temperature, interrupt reading, FIFO acquisition and other functions. LibDriver is MISRA compliant.
+LibDriver BMP388は、LibDriverによって起動されたBMP388の全機能ドライバーであり、圧力と温度の連続読み取り、圧力と温度の単一読み取り、割り込み読み取り、FIFO取得およびその他の機能を提供します。 LibDriverはMISRAに準拠しています。
 
-### Table of Contents
+### 目次
 
-  - [Instruction](#Instruction)
-  - [Install](#Install)
-  - [Usage](#Usage)
+  - [説明](#説明)
+  - [インストール](#インストール)
+  - [使用](#使用)
     - [example basic](#example-basic)
     - [example shot](#example-shot)
     - [example interrupt](#example-interrupt)
     - [example fifo](#example-fifo)
-  - [Document](#Document)
-  - [Contributing](#Contributing)
-  - [License](#License)
-  - [Contact Us](#Contact-Us)
+  - [ドキュメント](#ドキュメント)
+  - [貢献](#貢献)
+  - [著作権](#著作権)
+  - [連絡して](#連絡して)
 
-### Instruction
+### 説明
 
-/src includes LibDriver BMP388 source files.
+/ srcディレクトリには、LibDriver BMP388のソースファイルが含まれています。
 
-/interface includes LibDriver BMP388 IIC, SPI platform independent template。
+/ interfaceディレクトリには、LibDriver BMP388用のプラットフォームに依存しないIIC, SPIバステンプレートが含まれています。
 
-/test includes LibDriver BMP388 driver test code and this code can test the chip necessary function simply。
+/ testディレクトリには、チップの必要な機能を簡単にテストできるLibDriver BMP388ドライバーテストプログラムが含まれています。
 
-/example includes LibDriver BMP388 sample code.
+/ exampleディレクトリには、LibDriver BMP388プログラミング例が含まれています。
 
-/doc includes LibDriver BMP388 offline document.
+/ docディレクトリには、LibDriver BMP388オフラインドキュメントが含まれています。
 
-/datasheet includes BMP388 datasheet。
+/ datasheetディレクトリには、BMP388データシートが含まれています。
 
-/project includes the common Linux and MCU development board sample code. All projects use the shell script to debug the driver and the detail instruction can be found in each project's README.md.
+/ projectディレクトリには、一般的に使用されるLinuxおよびマイクロコントローラー開発ボードのプロジェクトサンプルが含まれています。 すべてのプロジェクトは、デバッグ方法としてシェルスクリプトを使用しています。詳細については、各プロジェクトのREADME.mdを参照してください。
 
-### Install
+### インストール
 
-Reference /interface IIC, SPI platform independent template and finish your platform IIC, SPI driver.
+/ interfaceディレクトリにあるプラットフォームに依存しないIIC, SPIバステンプレートを参照して、指定したプラットフォームのIIC, SPIバスドライバを完成させます。
 
-Add /src, /interface and /example to your project.
+/ srcディレクトリ、/ interfaceディレクトリ、および/exampleディレクトリをプロジェクトに追加します。
 
-### Usage
+### 使用
 
 #### example basic
 
@@ -92,7 +92,7 @@ return 0;
 
 #### example shot
 
-```C
+```c
 uint8_t res;
 uint8_t i;
 float temperature_c;
@@ -132,7 +132,7 @@ return 0;
 
 #### example interrupt
 
-```C
+```c
 uint8_t res;
 uint16_t i, timeout;
 uint8_t gs_data_ready_flag;
@@ -225,7 +225,7 @@ return 0;
 
 #### example fifo
 
-```C
+```c
 uint8_t gs_fifo_full_flag;
 uint8_t gs_fifo_watermark_flag;
 uint16_t i, timeout;
@@ -382,60 +382,28 @@ for (i = 0; i < 3; i++)
 return 0;
 ```
 
-### Document
+### ドキュメント
 
-Online documents: https://www.libdriver.com/docs/bmp388/index.html
+オンラインドキュメント: https://www.libdriver.com/docs/bmp388/index.html
 
-Offline documents: /doc/html/index.html
+オフラインドキュメント: /doc/html/index.html
 
-### Contributing
+### 貢献
 
-Please sent an e-mail to lishifenging@outlook.com
+お問い合わせくださいlishifenging@outlook.com
 
-### License
+### 著作権
 
-Copyright (c) 2015 - present LibDriver All rights reserved
+著作権（c）2015-今 LibDriver 全著作権所有
 
+MITライセンス（MIT）
 
+このソフトウェアおよび関連するドキュメントファイル（「ソフトウェア」）のコピーを取得した人は、無制限の使用、複製、変更、組み込み、公開、配布、サブライセンスを含む、ソフトウェアを処分する権利を制限なく付与されます。ソフトウェアのライセンスおよび/またはコピーの販売、および上記のようにソフトウェアが配布された人の権利のサブライセンスは、次の条件に従うものとします。
 
-The MIT License (MIT) 
+上記の著作権表示およびこの許可通知は、このソフトウェアのすべてのコピーまたは実体に含まれるものとします。
 
+このソフトウェアは「現状有姿」で提供され、商品性、特定目的への適合性、および非侵害の保証を含むがこれらに限定されない、明示または黙示を問わず、いかなる種類の保証もありません。 いかなる場合も、作者または著作権所有者は、契約、不法行為、またはその他の方法で、本ソフトウェアおよび本ソフトウェアの使用またはその他の廃棄に起因または関連して、請求、損害、またはその他の責任を負わないものとします。
 
+### 連絡して
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-
-of this software and associated documentation files (the "Software"), to deal
-
-in the Software without restriction, including without limitation the rights
-
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-
-copies of the Software, and to permit persons to whom the Software is
-
-furnished to do so, subject to the following conditions: 
-
-
-
-The above copyright notice and this permission notice shall be included in all
-
-copies or substantial portions of the Software. 
-
-
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-
-SOFTWARE. 
-
-### Contact Us
-
-Please sent an e-mail to lishifenging@outlook.com
+お問い合わせくださいlishifenging@outlook.com

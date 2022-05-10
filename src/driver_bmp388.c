@@ -113,20 +113,28 @@
  *             - 1 iic spi read failed
  * @note       none
  */
-static uint8_t _bmp388_iic_spi_read(bmp388_handle_t *handle, uint8_t reg, uint8_t *buf, uint16_t len)
+static uint8_t a_bmp388_iic_spi_read(bmp388_handle_t *handle, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     if (handle->iic_spi == BMP388_INTERFACE_IIC)                                      /* iic interface */
     {
-        return handle->iic_read(handle->iic_addr, reg, buf, len);                     /* iic read */
+        if (handle->iic_read(handle->iic_addr, reg, buf, len) != 0)                   /* iic read */
+        {
+            return 1;                                                                 /* return error */
+        }
+        else
+        {
+            return 0;                                                                 /* success return 0 */
+        }
     }
     else                                                                              /* spi interface */
     {
         reg |= 1 << 7;                                                                /* set read mode */
-        if (handle->spi_read(reg, handle->buf, (len>512) ? (512+1) : (len+1)))        /* spi read */
+        if (handle->spi_read(reg, handle->buf, 
+                             len > 512 ? (512 + 1) : (len + 1)) != 0)                 /* spi read */
         {
             return 1;                                                                 /* return error */
         }
-        memcpy(buf, handle->buf+1, (len>512) ? 512 : len);                            /* copy data */
+        memcpy(buf, handle->buf+1, (len > 512) ? 512 : len);                          /* copy data */
         
         return 0;                                                                     /* success return 0 */
     }
@@ -143,30 +151,31 @@ static uint8_t _bmp388_iic_spi_read(bmp388_handle_t *handle, uint8_t reg, uint8_
  *            - 1 iic spi write failed
  * @note      none
  */
-static uint8_t _bmp388_iic_spi_write(bmp388_handle_t *handle, uint8_t reg, uint8_t *buf, uint16_t len)
+static uint8_t a_bmp388_iic_spi_write(bmp388_handle_t *handle, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     if (handle->iic_spi == BMP388_INTERFACE_IIC)                             /* iic interface */
     {
-        volatile uint16_t i;
+        uint16_t i;
         
         for (i = 0; i < len; i++)                                            /* write data one byte by one byte */
         {
-            if (handle->iic_write(handle->iic_addr, reg+i, buf+i, 1))        /* iic write */
+            if (handle->iic_write(handle->iic_addr, 
+                                  (uint8_t)(reg + i), buf + i, 1) != 0)      /* iic write */
             {
                 return 1;                                                    /* return error */
             }
         }
         
-        return 0;                                                            /* return error */
+        return 0;                                                            /* success return 0 */
     }
     else
     {
-        volatile uint16_t i;
+        uint16_t i;
         
         reg &= ~(1 << 7);                                                    /* write mode */
         for (i = 0; i < len; i++)                                            /* write data one byte by one byte */
         {
-            if (handle->spi_write(reg + i, buf + i, 1))                      /* spi write */
+            if (handle->spi_write((uint8_t)(reg + i), buf + i, 1) != 0)      /* spi write */
             {
                 return 1;                                                    /* return error */
             }
@@ -183,102 +192,102 @@ static uint8_t _bmp388_iic_spi_write(bmp388_handle_t *handle, uint8_t reg, uint8
  *         - 1 get calibration data failed
  * @note   none
  */
-static uint8_t _bmp388_get_calibration_data(bmp388_handle_t *handle)
+static uint8_t a_bmp388_get_calibration_data(bmp388_handle_t *handle)
 {
-    volatile uint8_t buf[2];
+    uint8_t buf[2];
     
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_T1_L, (uint8_t *)buf, 2))        /* read t1 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_T1_L, (uint8_t *)buf, 2) != 0)  /* read t1 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
-    handle->t1 = (uint16_t)buf[1]<<8 | buf[0];                                           /* set t1 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_T2_L, (uint8_t *)buf, 2))        /* read t2 */
+    handle->t1 = (uint16_t)buf[1] <<8 | buf[0];                                          /* set t1 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_T2_L, (uint8_t *)buf, 2) != 0)  /* read t2 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
-    handle->t2 = (uint16_t)buf[1]<<8 | buf[0];                                           /* set t2 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_T3, (uint8_t *)buf, 1))          /* read t3 */
+    handle->t2 = (uint16_t)buf[1] << 8 | buf[0];                                         /* set t2 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_T3, (uint8_t *)buf, 1) != 0)    /* read t3 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
     handle->t3 = (int8_t)(buf[0]);                                                       /* set t3 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P1_L, (uint8_t *)buf, 2))        /* read p1 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P1_L, (uint8_t *)buf, 2) != 0)  /* read p1 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
-    handle->p1 = (int16_t)((uint16_t)buf[1]<<8 | buf[0]);                                /* set p1 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P2_L, (uint8_t *)buf, 2))        /* read p2 */
+    handle->p1 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                              /* set p1 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P2_L, (uint8_t *)buf, 2) != 0)  /* read p2 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
-    handle->p2 = (int16_t)((uint16_t)buf[1]<<8 | buf[0]);                                /* set p2 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P3, (uint8_t *)buf, 1))          /* read p3 */
+    handle->p2 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                              /* set p2 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P3, (uint8_t *)buf, 1) != 0)    /* read p3 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
     handle->p3 = (int8_t)(buf[0]);                                                       /* set p3 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P4, (uint8_t *)buf, 1))          /* read p4 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P4, (uint8_t *)buf, 1) != 0)    /* read p4 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
     handle->p4 = (int8_t)(buf[0]);                                                       /* set p4 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P5_L, (uint8_t *)buf, 2))        /* read p5 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P5_L, (uint8_t *)buf, 2) != 0)  /* read p5 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
-    handle->p5 = (uint16_t)buf[1]<<8 | buf[0];                                           /* set p5 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P6_L, (uint8_t *)buf, 2))        /* read p6l */
+    handle->p5 = (uint16_t)buf[1] << 8 | buf[0];                                         /* set p5 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P6_L, (uint8_t *)buf, 2) != 0)  /* read p6l */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
-    handle->p6 = (uint16_t)buf[1]<<8 | buf[0];                                           /* set p6 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P7, (uint8_t *)buf, 1))          /* read p7 */
+    handle->p6 = (uint16_t)buf[1] << 8 | buf[0];                                         /* set p6 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P7, (uint8_t *)buf, 1) != 0)    /* read p7 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
     handle->p7 = (int8_t)(buf[0]);                                                       /* set p7 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P8, (uint8_t *)buf, 1))          /* read p8 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P8, (uint8_t *)buf, 1) != 0)    /* read p8 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
     handle->p8 = (int8_t)(buf[0]);                                                       /* set p8 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P9_L, (uint8_t *)buf, 2))        /* read p9l */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P9_L, (uint8_t *)buf, 2) != 0)  /* read p9l */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
-    handle->p9 = (int16_t)((uint16_t)buf[1]<<8 | buf[0]);                                /* set p9 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P10, (uint8_t *)buf, 1))         /* read p10 */
+    handle->p9 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                              /* set p9 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P10, (uint8_t *)buf, 1) != 0)   /* read p10 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
         return 1;                                                                        /* return error */
     }
     handle->p10 = (int8_t)(buf[0]);                                                      /* set p10 */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P11, (uint8_t *)buf, 1))         /* read p11 */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_NVM_PAR_P11, (uint8_t *)buf, 1) != 0)   /* read p11 */
     {
         handle->debug_print("bmp388: get calibration data failed.\n");                   /* get calibration data failed */
        
@@ -296,15 +305,15 @@ static uint8_t _bmp388_get_calibration_data(bmp388_handle_t *handle)
  * @return    compensated temperature
  * @note      none
  */
-static int64_t _bmp388_compensate_temperature(bmp388_handle_t *handle, uint32_t data)
+static int64_t a_bmp388_compensate_temperature(bmp388_handle_t *handle, uint32_t data)
 { 
-    volatile uint64_t partial_data1;
-    volatile uint64_t partial_data2;
-    volatile uint64_t partial_data3;
-    volatile int64_t partial_data4;
-    volatile int64_t partial_data5;
-    volatile int64_t partial_data6;
-    volatile int64_t comp_temp;
+    uint64_t partial_data1;
+    uint64_t partial_data2;
+    uint64_t partial_data3;
+    int64_t partial_data4;
+    int64_t partial_data5;
+    int64_t partial_data6;
+    int64_t comp_temp;
 
     /* calculate compensate temperature */
     partial_data1 = (uint64_t)(data - (256 * (uint64_t)(handle->t1)));
@@ -312,7 +321,7 @@ static int64_t _bmp388_compensate_temperature(bmp388_handle_t *handle, uint32_t 
     partial_data3 = (uint64_t)(partial_data1 * partial_data1);
     partial_data4 = (int64_t)(((int64_t)partial_data3) * ((int64_t)handle->t3));
     partial_data5 = ((int64_t)(((int64_t)partial_data2) * 262144) + (int64_t)partial_data4);
-    partial_data6 = (int64_t)(((int64_t)partial_data5) / 4294967296);
+    partial_data6 = (int64_t)(((int64_t)partial_data5) / 4294967296U);
     handle->t_fine = partial_data6;
     comp_temp = (int64_t)((partial_data6 * 25)  / 16384);
     
@@ -326,17 +335,17 @@ static int64_t _bmp388_compensate_temperature(bmp388_handle_t *handle, uint32_t 
  * @return    compensated pressure
  * @note      none
  */
-static int64_t _bmp388_compensate_pressure(bmp388_handle_t *handle, uint32_t data)
+static int64_t a_bmp388_compensate_pressure(bmp388_handle_t *handle, uint32_t data)
 {
-    volatile int64_t partial_data1;
-    volatile int64_t partial_data2;
-    volatile int64_t partial_data3;
-    volatile int64_t partial_data4;
-    volatile int64_t partial_data5;
-    volatile int64_t partial_data6;
-    volatile int64_t offset;
-    volatile int64_t sensitivity;
-    volatile uint64_t comp_press;
+    int64_t partial_data1;
+    int64_t partial_data2;
+    int64_t partial_data3;
+    int64_t partial_data4;
+    int64_t partial_data5;
+    int64_t partial_data6;
+    int64_t offset;
+    int64_t sensitivity;
+    uint64_t comp_press;
 
     /* calculate compensate pressure */
     partial_data1 = handle->t_fine * handle->t_fine;
@@ -345,11 +354,11 @@ static int64_t _bmp388_compensate_pressure(bmp388_handle_t *handle, uint32_t dat
     partial_data4 = (handle->p8 * partial_data3) / 32;
     partial_data5 = (handle->p7 * partial_data1) * 16;
     partial_data6 = (handle->p6 * handle->t_fine) * 4194304;
-    offset = (int64_t)((int64_t)(handle->p5) * (int64_t)140737488355328) + partial_data4 + partial_data5 + partial_data6;
+    offset = (int64_t)((int64_t)(handle->p5) * (int64_t)140737488355328U) + partial_data4 + partial_data5 + partial_data6;
     partial_data2 = (((int64_t)handle->p4) * partial_data3) / 32;
     partial_data4 = (handle->p3 * partial_data1) * 4;
     partial_data5 = ((int64_t)(handle->p2) - 16384) * ((int64_t)handle->t_fine) * 2097152;
-    sensitivity = (((int64_t)(handle->p1) - 16384) * (int64_t)70368744177664) + partial_data2 + partial_data4 + partial_data5;
+    sensitivity = (((int64_t)(handle->p1) - 16384) * (int64_t)70368744177664U) + partial_data2 + partial_data4 + partial_data5;
     partial_data1 = (sensitivity / 16777216) * data;
     partial_data2 = (int64_t)(handle->p10) * (int64_t)(handle->t_fine);
     partial_data3 = partial_data2 + (65536 * (int64_t)(handle->p9));
@@ -359,7 +368,7 @@ static int64_t _bmp388_compensate_pressure(bmp388_handle_t *handle, uint32_t dat
     partial_data2 = ((int64_t)(handle->p11) * (int64_t)(partial_data6)) / 65536;
     partial_data3 = (partial_data2 * data) / 128;
     partial_data4 = (offset / 4) + partial_data1 + partial_data5 + partial_data3;
-    comp_press = (((uint64_t)partial_data4 * 25) / (uint64_t)1099511627776);
+    comp_press = (((uint64_t)partial_data4 * 25) / (uint64_t)1099511627776U);
     
     return comp_press;
 }
@@ -377,7 +386,7 @@ static int64_t _bmp388_compensate_pressure(bmp388_handle_t *handle, uint32_t dat
  */
 uint8_t bmp388_get_error(bmp388_handle_t *handle, uint8_t *err)
 {
-    volatile uint8_t res;
+    uint8_t res;
     
     if (handle == NULL)                                                               /* check handle */
     {
@@ -388,8 +397,8 @@ uint8_t bmp388_get_error(bmp388_handle_t *handle, uint8_t *err)
         return 3;                                                                     /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_ERR_REG, (uint8_t *)err, 1);        /* read config */
-    if (res)                                                                          /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_ERR_REG, (uint8_t *)err, 1);       /* read config */
+    if (res != 0)                                                                     /* check result */
     {
         handle->debug_print("bmp388: get error register failed.\n");                  /* get error register failed */
        
@@ -412,7 +421,7 @@ uint8_t bmp388_get_error(bmp388_handle_t *handle, uint8_t *err)
  */
 uint8_t bmp388_get_status(bmp388_handle_t *handle, uint8_t *status)
 {
-    volatile uint8_t res;
+    uint8_t res;
     
     if (handle == NULL)                                                                 /* check handle */
     {
@@ -423,8 +432,8 @@ uint8_t bmp388_get_status(bmp388_handle_t *handle, uint8_t *status)
         return 3;                                                                       /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)status, 1);        /* read status */
-    if (res)                                                                            /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)status, 1);       /* read status */
+    if (res != 0)                                                                       /* check result */
     {
         handle->debug_print("bmp388: get status register failed.\n");                   /* get status register failed */
        
@@ -437,7 +446,7 @@ uint8_t bmp388_get_status(bmp388_handle_t *handle, uint8_t *status)
 /**
  * @brief      get the sensortime
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *time points to a timerstamp buffer
+ * @param[out] *t points to a timerstamp buffer
  * @return     status code
  *             - 0 success
  *             - 1 get sensortime failed
@@ -445,10 +454,10 @@ uint8_t bmp388_get_status(bmp388_handle_t *handle, uint8_t *status)
  *             - 3 handle is not initialized
  * @note       none
  */
-uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *time)
+uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *t)
 {
-    volatile uint8_t res;
-    volatile uint8_t buf[3];
+    uint8_t res;
+    uint8_t buf[3];
     
     if (handle == NULL)                                                                    /* check handle */
     {
@@ -459,14 +468,14 @@ uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *time)
         return 3;                                                                          /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_SENSORTIME_0, (uint8_t *)buf, 3);        /* read config */
-    if (res)                                                                               /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_SENSORTIME_0, (uint8_t *)buf, 3);       /* read config */
+    if (res != 0)                                                                          /* check result */
     {
         handle->debug_print("bmp388: get sensortime register failed.\n");                  /* get sensortime register failed */
        
         return 1;                                                                          /* return error */
     }
-    *time = (uint32_t)buf[2] << 16 | (uint32_t)buf[1] << 8 | buf[0];                       /* get time */
+    *t = (uint32_t)buf[2] << 16 | (uint32_t)buf[1] << 8 | buf[0];                          /* get time */
     
     return 0;                                                                              /* success return 0 */
 }
@@ -484,8 +493,8 @@ uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *time)
  */
 uint8_t bmp388_get_event(bmp388_handle_t *handle, bmp388_event_t *event)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                               /* check handle */
     {
@@ -496,8 +505,8 @@ uint8_t bmp388_get_event(bmp388_handle_t *handle, bmp388_event_t *event)
         return 3;                                                                     /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_EVENT, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                          /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_EVENT, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                     /* check result */
     {
         handle->debug_print("bmp388: get event register failed.\n");                  /* get event register failed */
        
@@ -521,7 +530,7 @@ uint8_t bmp388_get_event(bmp388_handle_t *handle, bmp388_event_t *event)
  */
 uint8_t bmp388_get_interrupt_status(bmp388_handle_t *handle, uint8_t *status)
 {
-    volatile uint8_t res;
+    uint8_t res;
     
     if (handle == NULL)                                                                     /* check handle */
     {
@@ -532,8 +541,8 @@ uint8_t bmp388_get_interrupt_status(bmp388_handle_t *handle, uint8_t *status)
         return 3;                                                                           /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_STATUS, (uint8_t *)status, 1);        /* read status */
-    if (res)                                                                                /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_STATUS, (uint8_t *)status, 1);       /* read status */
+    if (res != 0)                                                                           /* check result */
     {
         handle->debug_print("bmp388: get interrupt status register failed.\n");             /* get interrupt status register failed */
        
@@ -556,8 +565,8 @@ uint8_t bmp388_get_interrupt_status(bmp388_handle_t *handle, uint8_t *status)
  */
 uint8_t bmp388_get_fifo_length(bmp388_handle_t *handle, uint16_t *length)
 {
-    volatile uint8_t res;
-    volatile uint8_t buf[2];
+    uint8_t res;
+    uint8_t buf[2];
     
     if (handle == NULL)                                                                     /* check handle */
     {
@@ -568,8 +577,8 @@ uint8_t bmp388_get_fifo_length(bmp388_handle_t *handle, uint16_t *length)
         return 3;                                                                           /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_LENGTH_0, (uint8_t *)buf, 2);        /* read config */
-    if (res)                                                                                /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_LENGTH_0, (uint8_t *)buf, 2);       /* read config */
+    if (res != 0)                                                                           /* check result */
     {
         handle->debug_print("bmp388: get fifo length register failed.\n");                  /* get fifo length register failed */
        
@@ -594,7 +603,7 @@ uint8_t bmp388_get_fifo_length(bmp388_handle_t *handle, uint16_t *length)
  */
 uint8_t bmp388_get_fifo_data(bmp388_handle_t *handle, uint8_t *data, uint16_t length)
 {
-    volatile uint8_t res;
+    uint8_t res;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -605,8 +614,8 @@ uint8_t bmp388_get_fifo_data(bmp388_handle_t *handle, uint8_t *data, uint16_t le
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_DATA, (uint8_t *)data, length);        /* read data */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_DATA, (uint8_t *)data, length);       /* read data */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo data register failed.\n");                      /* get fifo data register failed */
        
@@ -629,8 +638,8 @@ uint8_t bmp388_get_fifo_data(bmp388_handle_t *handle, uint8_t *data, uint16_t le
  */
 uint8_t bmp388_set_fifo_watermark(bmp388_handle_t *handle, uint16_t watermark)
 {
-    volatile uint8_t res;
-    volatile uint8_t buf[2];
+    uint8_t res;
+    uint8_t buf[2];
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -643,8 +652,8 @@ uint8_t bmp388_set_fifo_watermark(bmp388_handle_t *handle, uint16_t watermark)
     
     buf[0] = watermark & 0xFF;                                                            /* set low part */
     buf[1] = (watermark >> 8) & 0x01;                                                     /* set high part */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_FIFO_WTM_0, (uint8_t *)buf, 2);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_FIFO_WTM_0, (uint8_t *)buf, 2);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set fifo watermark register failed.\n");             /* set fifo watermark register failed */
        
@@ -667,8 +676,8 @@ uint8_t bmp388_set_fifo_watermark(bmp388_handle_t *handle, uint16_t watermark)
  */
 uint8_t bmp388_get_fifo_watermark(bmp388_handle_t *handle, uint16_t *watermark)
 {
-    volatile uint8_t res;
-    volatile uint8_t buf[2];
+    uint8_t res;
+    uint8_t buf[2];
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -679,8 +688,8 @@ uint8_t bmp388_get_fifo_watermark(bmp388_handle_t *handle, uint16_t *watermark)
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_WTM_0, (uint8_t *)buf, 2);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_WTM_0, (uint8_t *)buf, 2);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get fifo watermark register failed.\n");            /* get fifo watermark register failed */
        
@@ -704,8 +713,8 @@ uint8_t bmp388_get_fifo_watermark(bmp388_handle_t *handle, uint16_t *watermark)
  */
 uint8_t bmp388_set_fifo(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                        /* check handle */
     {
@@ -716,8 +725,8 @@ uint8_t bmp388_set_fifo(bmp388_handle_t *handle, bmp388_bool_t enable)
         return 3;                                                                              /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                   /* get fifo config 1 register failed */
        
@@ -725,8 +734,8 @@ uint8_t bmp388_set_fifo(bmp388_handle_t *handle, bmp388_bool_t enable)
     }
     prev &= ~(1 << 0);                                                                         /* clear config */
     prev |= enable << 0;                                                                       /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: set fifo config 1 register failed.\n");                   /* set fifo config 1 register failed */
        
@@ -749,8 +758,8 @@ uint8_t bmp388_set_fifo(bmp388_handle_t *handle, bmp388_bool_t enable)
  */
 uint8_t bmp388_get_fifo(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -761,8 +770,8 @@ uint8_t bmp388_get_fifo(bmp388_handle_t *handle, bmp388_bool_t *enable)
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                  /* get fifo config 1 register failed */
        
@@ -786,8 +795,8 @@ uint8_t bmp388_get_fifo(bmp388_handle_t *handle, bmp388_bool_t *enable)
  */
 uint8_t bmp388_set_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                        /* check handle */
     {
@@ -798,8 +807,8 @@ uint8_t bmp388_set_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t enab
         return 3;                                                                              /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                   /* get fifo config 1 register failed */
        
@@ -807,8 +816,8 @@ uint8_t bmp388_set_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t enab
     }
     prev &= ~(1 << 1);                                                                         /* clear config */
     prev |= enable << 1;                                                                       /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: set fifo config 1 register failed.\n");                   /* set fifo config 1 register failed */
        
@@ -831,8 +840,8 @@ uint8_t bmp388_set_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t enab
  */
 uint8_t bmp388_get_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -843,8 +852,8 @@ uint8_t bmp388_get_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t *ena
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                  /* get fifo config 1 register failed */
         
@@ -868,8 +877,8 @@ uint8_t bmp388_get_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t *ena
  */
 uint8_t bmp388_set_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                        /* check handle */
     {
@@ -880,8 +889,8 @@ uint8_t bmp388_set_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t ena
         return 3;                                                                              /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                   /* get fifo config 1 register failed */
        
@@ -889,8 +898,8 @@ uint8_t bmp388_set_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t ena
     }
     prev &= ~(1 << 2);                                                                         /* clear config */
     prev |= enable << 2;                                                                       /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: set fifo config 1 register failed.\n");                   /* set fifo config 1 register failed */
        
@@ -913,8 +922,8 @@ uint8_t bmp388_set_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t ena
  */
 uint8_t bmp388_get_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -925,8 +934,8 @@ uint8_t bmp388_get_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t *en
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                  /* get fifo config 1 register failed */
        
@@ -950,8 +959,8 @@ uint8_t bmp388_get_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t *en
  */
 uint8_t bmp388_set_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                        /* check handle */
     {
@@ -962,8 +971,8 @@ uint8_t bmp388_set_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t enabl
         return 3;                                                                              /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                   /* get fifo config 1 register failed */
        
@@ -971,8 +980,8 @@ uint8_t bmp388_set_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t enabl
     }
     prev &= ~(1 << 3);                                                                         /* clear config */
     prev |= enable << 3;                                                                       /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: set fifo config 1 register failed.\n");                   /* set fifo config 1 register failed */
        
@@ -995,8 +1004,8 @@ uint8_t bmp388_set_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t enabl
  */
 uint8_t bmp388_get_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -1007,8 +1016,8 @@ uint8_t bmp388_get_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t *enab
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                  /* get fifo config 1 register failed */
        
@@ -1032,8 +1041,8 @@ uint8_t bmp388_get_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t *enab
  */
 uint8_t bmp388_set_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                        /* check handle */
     {
@@ -1044,8 +1053,8 @@ uint8_t bmp388_set_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t en
         return 3;                                                                              /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                   /* get fifo config 1 register failed */
        
@@ -1053,8 +1062,8 @@ uint8_t bmp388_set_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t en
     }
     prev &= ~(1 << 4);                                                                         /* clear config */
     prev |= enable << 4;                                                                       /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: set fifo config 1 register failed.\n");                   /* set fifo config 1 register failed */
        
@@ -1077,8 +1086,8 @@ uint8_t bmp388_set_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t en
  */
 uint8_t bmp388_get_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -1089,8 +1098,8 @@ uint8_t bmp388_get_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t *e
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                  /* get fifo config 1 register failed */
        
@@ -1114,8 +1123,8 @@ uint8_t bmp388_get_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t *e
  */
 uint8_t bmp388_set_fifo_subsampling(bmp388_handle_t *handle, uint8_t subsample)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                        /* check handle */
     {
@@ -1132,8 +1141,8 @@ uint8_t bmp388_set_fifo_subsampling(bmp388_handle_t *handle, uint8_t subsample)
        
         return 4;                                                                              /* return error */
     }
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: get fifo config 2 register failed.\n");                   /* get fifo config 2 register failed */
        
@@ -1141,8 +1150,8 @@ uint8_t bmp388_set_fifo_subsampling(bmp388_handle_t *handle, uint8_t subsample)
     }
     prev &= ~(7 << 0);                                                                         /* clear config */
     prev |= subsample << 0;                                                                    /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: set fifo config 2 register failed.\n");                   /* set fifo config 2 register failed */
        
@@ -1165,8 +1174,8 @@ uint8_t bmp388_set_fifo_subsampling(bmp388_handle_t *handle, uint8_t subsample)
  */
 uint8_t bmp388_get_fifo_subsampling(bmp388_handle_t *handle, uint8_t *subsample)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -1177,8 +1186,8 @@ uint8_t bmp388_get_fifo_subsampling(bmp388_handle_t *handle, uint8_t *subsample)
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 2 register failed.\n");                  /* get fifo config 2 register failed */
        
@@ -1202,8 +1211,8 @@ uint8_t bmp388_get_fifo_subsampling(bmp388_handle_t *handle, uint8_t *subsample)
  */
 uint8_t bmp388_set_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_source_t source)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                        /* check handle */
     {
@@ -1214,8 +1223,8 @@ uint8_t bmp388_set_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_so
         return 3;                                                                              /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: get fifo config 2 register failed.\n");                   /* get fifo config 2 register failed */
        
@@ -1223,8 +1232,8 @@ uint8_t bmp388_set_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_so
     }   
     prev &= ~(3 << 3);                                                                         /* clear config */
     prev |= source << 3;                                                                       /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                                   /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                              /* check result */
     {
         handle->debug_print("bmp388: set fifo config 2 register failed.\n");                   /* set fifo config 2 register failed */
        
@@ -1247,8 +1256,8 @@ uint8_t bmp388_set_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_so
  */
 uint8_t bmp388_get_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_source_t *source)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -1259,8 +1268,8 @@ uint8_t bmp388_get_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_so
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_2, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 2 register failed.\n");                  /* get fifo config 2 register failed */
        
@@ -1284,8 +1293,8 @@ uint8_t bmp388_get_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_so
  */
 uint8_t bmp388_set_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_pin_type_t pin_type)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -1296,8 +1305,8 @@ uint8_t bmp388_set_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                   /* get int ctrl register failed */
        
@@ -1305,8 +1314,8 @@ uint8_t bmp388_set_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_
     }   
     prev &= ~(1 << 0);                                                                    /* clear config */
     prev |= pin_type << 0;                                                                /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set int ctrl register failed.\n");                   /* set int ctrl register failed */
        
@@ -1329,8 +1338,8 @@ uint8_t bmp388_set_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_
  */
 uint8_t bmp388_get_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_pin_type_t *pin_type)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1341,8 +1350,8 @@ uint8_t bmp388_get_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                  /* get int ctrl register failed */
        
@@ -1366,8 +1375,8 @@ uint8_t bmp388_get_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_
  */
 uint8_t bmp388_set_interrupt_active_level(bmp388_handle_t *handle, bmp388_interrupt_active_level_t level)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -1378,8 +1387,8 @@ uint8_t bmp388_set_interrupt_active_level(bmp388_handle_t *handle, bmp388_interr
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                   /* get int ctrl register failed */
        
@@ -1387,8 +1396,8 @@ uint8_t bmp388_set_interrupt_active_level(bmp388_handle_t *handle, bmp388_interr
     }   
     prev &= ~(1 << 1);                                                                    /* clear config */
     prev |= level << 1;                                                                   /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set int ctrl register failed.\n");                   /* set int ctrl register failed */
        
@@ -1411,8 +1420,8 @@ uint8_t bmp388_set_interrupt_active_level(bmp388_handle_t *handle, bmp388_interr
  */
 uint8_t bmp388_get_interrupt_active_level(bmp388_handle_t *handle, bmp388_interrupt_active_level_t *level)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1423,8 +1432,8 @@ uint8_t bmp388_get_interrupt_active_level(bmp388_handle_t *handle, bmp388_interr
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                  /* get int ctrl register failed */
        
@@ -1448,8 +1457,8 @@ uint8_t bmp388_get_interrupt_active_level(bmp388_handle_t *handle, bmp388_interr
  */
 uint8_t bmp388_set_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -1460,8 +1469,8 @@ uint8_t bmp388_set_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *han
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                   /* get int ctrl register failed */
        
@@ -1469,8 +1478,8 @@ uint8_t bmp388_set_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *han
     }   
     prev &= ~(1 << 2);                                                                    /* clear config */
     prev |= enable << 2;                                                                  /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set int ctrl register failed.\n");                   /* set int ctrl register failed */
        
@@ -1493,8 +1502,8 @@ uint8_t bmp388_set_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *han
  */
 uint8_t bmp388_get_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1505,8 +1514,8 @@ uint8_t bmp388_get_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *han
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                  /* get int ctrl register failed */
        
@@ -1530,8 +1539,8 @@ uint8_t bmp388_get_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *han
  */
 uint8_t bmp388_set_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -1542,8 +1551,8 @@ uint8_t bmp388_set_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                   /* get int ctrl register failed */
        
@@ -1551,8 +1560,8 @@ uint8_t bmp388_set_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool
     }   
     prev &= ~(1 << 3);                                                                    /* clear config */
     prev |= enable << 3;                                                                  /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set int ctrl register failed.\n");                   /* set int ctrl register failed */
        
@@ -1575,8 +1584,8 @@ uint8_t bmp388_set_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool
  */
 uint8_t bmp388_get_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1587,8 +1596,8 @@ uint8_t bmp388_get_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                  /* get int ctrl register failed */
        
@@ -1612,8 +1621,8 @@ uint8_t bmp388_get_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool
  */
 uint8_t bmp388_set_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -1624,8 +1633,8 @@ uint8_t bmp388_set_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t en
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                   /* get int ctrl register failed */
        
@@ -1633,8 +1642,8 @@ uint8_t bmp388_set_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t en
     }   
     prev &= ~(1 << 4);                                                                    /* clear config */
     prev |= enable << 4;                                                                  /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set int ctrl register failed.\n");                   /* set int ctrl register failed */
        
@@ -1657,8 +1666,8 @@ uint8_t bmp388_set_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t en
  */
 uint8_t bmp388_get_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1669,8 +1678,8 @@ uint8_t bmp388_get_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t *e
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                  /* get int ctrl register failed */
        
@@ -1694,8 +1703,8 @@ uint8_t bmp388_get_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t *e
  */
 uint8_t bmp388_set_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -1706,8 +1715,8 @@ uint8_t bmp388_set_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t e
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                   /* get int ctrl register failed */
        
@@ -1715,8 +1724,8 @@ uint8_t bmp388_set_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t e
     }   
     prev &= ~(1 << 6);                                                                    /* clear config */
     prev |= enable << 6;                                                                  /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set int ctrl register failed.\n");                   /* set int ctrl register failed */
        
@@ -1739,8 +1748,8 @@ uint8_t bmp388_set_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t e
  */
 uint8_t bmp388_get_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1751,8 +1760,8 @@ uint8_t bmp388_get_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t *
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get int ctrl register failed.\n");                  /* get int ctrl register failed */
        
@@ -1776,8 +1785,8 @@ uint8_t bmp388_get_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t *
  */
 uint8_t bmp388_set_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t wire)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1788,8 +1797,8 @@ uint8_t bmp388_set_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t wire)
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get if conf register failed.\n");                   /* get if conf register failed */
        
@@ -1797,8 +1806,8 @@ uint8_t bmp388_set_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t wire)
     }
     prev &= ~(1 << 0);                                                                   /* clear config */
     prev |= wire << 0;                                                                   /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: set if conf register failed.\n");                   /* set if conf register failed */
        
@@ -1821,8 +1830,8 @@ uint8_t bmp388_set_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t wire)
  */
 uint8_t bmp388_get_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t *wire)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                 /* check handle */
     {
@@ -1833,8 +1842,8 @@ uint8_t bmp388_get_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t *wire)
         return 3;                                                                       /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                            /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                       /* check result */
     {
         handle->debug_print("bmp388: get if conf register failed.\n");                  /* get if conf register failed */
        
@@ -1858,8 +1867,8 @@ uint8_t bmp388_get_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t *wire)
  */
 uint8_t bmp388_set_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1870,8 +1879,8 @@ uint8_t bmp388_set_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t ena
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get if conf register failed.\n");                   /* get if conf register failed */
        
@@ -1879,8 +1888,8 @@ uint8_t bmp388_set_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t ena
     }
     prev &= ~(1 << 1);                                                                   /* clear config */
     prev |= enable << 1;                                                                 /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: set if conf register failed.\n");                   /* set if conf register failed */
        
@@ -1903,8 +1912,8 @@ uint8_t bmp388_set_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t ena
  */
 uint8_t bmp388_get_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                 /* check handle */
     {
@@ -1915,8 +1924,8 @@ uint8_t bmp388_get_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t *en
         return 3;                                                                       /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                            /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                       /* check result */
     {
         handle->debug_print("bmp388: get if conf register failed.\n");                  /* get if conf register failed */
        
@@ -1940,8 +1949,8 @@ uint8_t bmp388_get_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t *en
  */
 uint8_t bmp388_set_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watchdog_period_t period)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -1952,8 +1961,8 @@ uint8_t bmp388_set_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get if conf register failed.\n");                   /* get if conf register failed */
        
@@ -1961,8 +1970,8 @@ uint8_t bmp388_set_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
     }
     prev &= ~(1 << 2);                                                                   /* clear config */
     prev |= period << 2;                                                                 /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: set if conf register failed.\n");                   /* set if conf register failed */
        
@@ -1985,8 +1994,8 @@ uint8_t bmp388_set_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
  */
 uint8_t bmp388_get_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watchdog_period_t *period)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                 /* check handle */
     {
@@ -1997,8 +2006,8 @@ uint8_t bmp388_get_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
         return 3;                                                                       /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                            /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_IF_CONF, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                       /* check result */
     {
         handle->debug_print("bmp388: get if conf register failed.\n");                  /* get if conf register failed */
        
@@ -2022,8 +2031,8 @@ uint8_t bmp388_get_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
  */
 uint8_t bmp388_set_pressure(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -2034,8 +2043,8 @@ uint8_t bmp388_set_pressure(bmp388_handle_t *handle, bmp388_bool_t enable)
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                   /* get pwr ctrl register failed */
        
@@ -2043,8 +2052,8 @@ uint8_t bmp388_set_pressure(bmp388_handle_t *handle, bmp388_bool_t enable)
     }
     prev &= ~(1 << 0);                                                                    /* clear config */
     prev |= enable << 0;                                                                  /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set pwr ctrl register failed.\n");                   /* set pwr ctrl register failed */
        
@@ -2067,8 +2076,8 @@ uint8_t bmp388_set_pressure(bmp388_handle_t *handle, bmp388_bool_t enable)
  */
 uint8_t bmp388_get_pressure(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -2079,8 +2088,8 @@ uint8_t bmp388_get_pressure(bmp388_handle_t *handle, bmp388_bool_t *enable)
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                  /* get pwr ctrl register failed */
        
@@ -2104,8 +2113,8 @@ uint8_t bmp388_get_pressure(bmp388_handle_t *handle, bmp388_bool_t *enable)
  */
 uint8_t bmp388_set_temperature(bmp388_handle_t *handle, bmp388_bool_t enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -2116,8 +2125,8 @@ uint8_t bmp388_set_temperature(bmp388_handle_t *handle, bmp388_bool_t enable)
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                   /* get pwr ctrl register failed */
        
@@ -2125,8 +2134,8 @@ uint8_t bmp388_set_temperature(bmp388_handle_t *handle, bmp388_bool_t enable)
     }
     prev &= ~(1 << 1);                                                                    /* clear config */
     prev |= enable << 1;                                                                  /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set pwr ctrl register failed.\n");                   /* set pwr ctrl register failed */
        
@@ -2149,8 +2158,8 @@ uint8_t bmp388_set_temperature(bmp388_handle_t *handle, bmp388_bool_t enable)
  */
 uint8_t bmp388_get_temperature(bmp388_handle_t *handle, bmp388_bool_t *enable)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -2161,8 +2170,8 @@ uint8_t bmp388_get_temperature(bmp388_handle_t *handle, bmp388_bool_t *enable)
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                  /* get pwr ctrl register failed */
        
@@ -2186,8 +2195,8 @@ uint8_t bmp388_get_temperature(bmp388_handle_t *handle, bmp388_bool_t *enable)
  */
 uint8_t bmp388_set_mode(bmp388_handle_t *handle, bmp388_mode_t mode)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -2198,8 +2207,8 @@ uint8_t bmp388_set_mode(bmp388_handle_t *handle, bmp388_mode_t mode)
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                   /* get pwr ctrl register failed */
        
@@ -2207,8 +2216,8 @@ uint8_t bmp388_set_mode(bmp388_handle_t *handle, bmp388_mode_t mode)
     }
     prev &= ~(3 << 4);                                                                    /* clear config */
     prev |= mode << 4;                                                                    /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set pwr ctrl register failed.\n");                   /* set pwr ctrl register failed */
        
@@ -2231,8 +2240,8 @@ uint8_t bmp388_set_mode(bmp388_handle_t *handle, bmp388_mode_t mode)
  */
 uint8_t bmp388_get_mode(bmp388_handle_t *handle, bmp388_mode_t *mode)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                  /* check handle */
     {
@@ -2243,8 +2252,8 @@ uint8_t bmp388_get_mode(bmp388_handle_t *handle, bmp388_mode_t *mode)
         return 3;                                                                        /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                             /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                        /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                  /* get pwr ctrl register failed */
        
@@ -2268,8 +2277,8 @@ uint8_t bmp388_get_mode(bmp388_handle_t *handle, bmp388_mode_t *mode)
  */
 uint8_t bmp388_set_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversampling_t oversampling)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                              /* check handle */
     {
@@ -2280,8 +2289,8 @@ uint8_t bmp388_set_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversam
         return 3;                                                                    /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: get osr register failed.\n");                   /* get osr register failed */
        
@@ -2289,8 +2298,8 @@ uint8_t bmp388_set_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversam
     }
     prev &= ~(7 << 0);                                                               /* clear config */
     prev |= oversampling << 0;                                                       /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: set osr register failed.\n");                   /* set osr register failed */
        
@@ -2313,8 +2322,8 @@ uint8_t bmp388_set_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversam
  */
 uint8_t bmp388_get_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversampling_t *oversampling)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                             /* check handle */
     {
@@ -2325,8 +2334,8 @@ uint8_t bmp388_get_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversam
         return 3;                                                                   /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                        /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                   /* check result */
     {
         handle->debug_print("bmp388: get osr register failed.\n");                  /* get osr register failed */
        
@@ -2350,8 +2359,8 @@ uint8_t bmp388_get_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversam
  */
 uint8_t bmp388_set_temperature_oversampling(bmp388_handle_t *handle, bmp388_oversampling_t oversampling)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                              /* check handle */
     {
@@ -2362,8 +2371,8 @@ uint8_t bmp388_set_temperature_oversampling(bmp388_handle_t *handle, bmp388_over
         return 3;                                                                    /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: get osr register failed.\n");                   /* get osr register failed */
        
@@ -2371,8 +2380,8 @@ uint8_t bmp388_set_temperature_oversampling(bmp388_handle_t *handle, bmp388_over
     }
     prev &= ~(7 << 3);                                                               /* clear config */
     prev |= oversampling << 3;                                                       /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: set osr register failed.\n");                   /* set osr register failed */
        
@@ -2395,8 +2404,8 @@ uint8_t bmp388_set_temperature_oversampling(bmp388_handle_t *handle, bmp388_over
  */
 uint8_t bmp388_get_temperature_oversampling(bmp388_handle_t *handle, bmp388_oversampling_t *oversampling)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                             /* check handle */
     {
@@ -2407,8 +2416,8 @@ uint8_t bmp388_get_temperature_oversampling(bmp388_handle_t *handle, bmp388_over
         return 3;                                                                   /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                        /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_OSR, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                   /* check result */
     {
         handle->debug_print("bmp388: get osr register failed.\n");                  /* get osr register failed */
        
@@ -2432,8 +2441,8 @@ uint8_t bmp388_get_temperature_oversampling(bmp388_handle_t *handle, bmp388_over
  */
 uint8_t bmp388_set_odr(bmp388_handle_t *handle, bmp388_odr_t odr)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                              /* check handle */
     {
@@ -2444,8 +2453,8 @@ uint8_t bmp388_set_odr(bmp388_handle_t *handle, bmp388_odr_t odr)
         return 3;                                                                    /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_ODR, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_ODR, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: get odr register failed.\n");                   /* get odr register failed */
        
@@ -2454,8 +2463,8 @@ uint8_t bmp388_set_odr(bmp388_handle_t *handle, bmp388_odr_t odr)
     
     prev &= ~(31 << 0);                                                              /* clear config */
     prev |= odr << 0;                                                                /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_ODR, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_ODR, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: set odr register failed.\n");                   /* set odr register failed */
        
@@ -2478,8 +2487,8 @@ uint8_t bmp388_set_odr(bmp388_handle_t *handle, bmp388_odr_t odr)
  */
 uint8_t bmp388_get_odr(bmp388_handle_t *handle, bmp388_odr_t *odr)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                             /* check handle */
     {
@@ -2490,8 +2499,8 @@ uint8_t bmp388_get_odr(bmp388_handle_t *handle, bmp388_odr_t *odr)
         return 3;                                                                   /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_ODR, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                        /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_ODR, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                   /* check result */
     {
         handle->debug_print("bmp388: get odr register failed.\n");                  /* get odr register failed */
        
@@ -2515,8 +2524,8 @@ uint8_t bmp388_get_odr(bmp388_handle_t *handle, bmp388_odr_t *odr)
  */
 uint8_t bmp388_set_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coefficient_t coefficient)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                 /* check handle */
     {
@@ -2527,8 +2536,8 @@ uint8_t bmp388_set_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
         return 3;                                                                       /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_CONFIG, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                            /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_CONFIG, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                       /* check result */
     {
         handle->debug_print("bmp388: get config register failed.\n");                   /* get config register failed */
        
@@ -2537,8 +2546,8 @@ uint8_t bmp388_set_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
     
     prev &= ~(0xF << 0);                                                                /* clear config */
     prev |= coefficient << 0;                                                           /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_CONFIG, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                            /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_CONFIG, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                       /* check result */
     {
         handle->debug_print("bmp388: set config register failed.\n");                   /* set config register failed */
        
@@ -2561,8 +2570,8 @@ uint8_t bmp388_set_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
  */
 uint8_t bmp388_get_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coefficient_t *coefficient)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                /* check handle */
     {
@@ -2573,8 +2582,8 @@ uint8_t bmp388_get_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
         return 3;                                                                      /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_CONFIG, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                           /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_CONFIG, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                      /* check result */
     {
         handle->debug_print("bmp388: get config register failed.\n");                  /* return error */
        
@@ -2597,8 +2606,8 @@ uint8_t bmp388_get_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
  */
 uint8_t bmp388_flush_fifo(bmp388_handle_t *handle)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                              /* check handle */
     {
@@ -2610,8 +2619,8 @@ uint8_t bmp388_flush_fifo(bmp388_handle_t *handle)
     }
     
     prev = 0xB0;                                                                     /* command */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_CMD, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_CMD, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: set cmd register failed.\n");                   /* set cmd register failed */
        
@@ -2633,8 +2642,8 @@ uint8_t bmp388_flush_fifo(bmp388_handle_t *handle)
  */
 uint8_t bmp388_softreset(bmp388_handle_t *handle)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                              /* check handle */
     {
@@ -2646,8 +2655,8 @@ uint8_t bmp388_softreset(bmp388_handle_t *handle)
     }
     
     prev = 0xB6;                                                                     /* command */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_CMD, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_CMD, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: set cmd register failed.\n");                   /* set cmd register failed */
        
@@ -2669,8 +2678,8 @@ uint8_t bmp388_softreset(bmp388_handle_t *handle)
  */
 uint8_t bmp388_extmode_en_middle(bmp388_handle_t *handle)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                              /* check handle */
     {
@@ -2682,8 +2691,8 @@ uint8_t bmp388_extmode_en_middle(bmp388_handle_t *handle)
     }
     
     prev = 0x34;                                                                     /* command */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_CMD, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                         /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_CMD, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                    /* check result */
     {
         handle->debug_print("bmp388: set cmd register failed.\n");                   /* set cmd register failed */
        
@@ -2703,11 +2712,11 @@ uint8_t bmp388_extmode_en_middle(bmp388_handle_t *handle)
  *            - 3 handle is not initialized
  * @note      none
  */
-static uint8_t _bmp388_close(bmp388_handle_t *handle)
+static uint8_t a_bmp388_close(bmp388_handle_t *handle)
 {
     if (handle->iic_spi == BMP388_INTERFACE_IIC)                        /* if iic interface */
     {
-        if (handle->iic_deinit())                                       /* close iic */
+        if (handle->iic_deinit() != 0)                                  /* close iic */
         {
             handle->debug_print("bmp388: iic deinit failed.\n");        /* iic deinit failed */
        
@@ -2720,7 +2729,7 @@ static uint8_t _bmp388_close(bmp388_handle_t *handle)
     }
     else
     {
-        if (handle->spi_deinit())                                       /* close spi */
+        if (handle->spi_deinit() != 0)                                  /* close spi */
         {
             handle->debug_print("bmp388: spi deinit failed.\n");        /* spi deinit failed */
        
@@ -2748,8 +2757,8 @@ static uint8_t _bmp388_close(bmp388_handle_t *handle)
  */
 uint8_t bmp388_init(bmp388_handle_t *handle)
 {
-    volatile uint8_t id;
-    volatile uint8_t reg;
+    uint8_t id;
+    uint8_t reg;
   
     if (handle == NULL)                                                              /* check handle */
     {
@@ -2816,7 +2825,7 @@ uint8_t bmp388_init(bmp388_handle_t *handle)
     
     if (handle->iic_spi == BMP388_INTERFACE_IIC)                                     /* if iic interface */
     {
-        if (handle->iic_init())                                                      /* initialize iic bus */
+        if (handle->iic_init() != 0)                                                 /* initialize iic bus */
         {
             handle->debug_print("bmp388: iic init failed.\n");                       /* iic init failed */
             
@@ -2825,54 +2834,54 @@ uint8_t bmp388_init(bmp388_handle_t *handle)
     }
     else
     {
-        if (handle->spi_init())                                                      /* initialize spi bus */
+        if (handle->spi_init() != 0)                                                 /* initialize spi bus */
         {
             handle->debug_print("bmp388: spi init failed.\n");                       /* spi init failed */
            
             return 1;                                                                /* return error */
         }
     }
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_CHIP_ID, (uint8_t *)&id, 1))         /* read chip id */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_CHIP_ID, (uint8_t *)&id, 1) != 0)   /* read chip id */
     {
         handle->debug_print("bmp388: read chip id failed.\n");                       /* read chip id failed */
-        _bmp388_close(handle);                                                       /* close bmp388 */
+        (void)a_bmp388_close(handle);                                                /* close bmp388 */
         
         return 4;                                                                    /* return error */
     }
     if (id != 0x50)                                                                  /* check chip id */
     {
         handle->debug_print("bmp388: id is invalid.\n");                             /* id is invalid */
-        _bmp388_close(handle);                                                       /* close bmp388 */
+        (void)a_bmp388_close(handle);                                                /* close bmp388 */
         
         return 4;         
     }                                                                                /* return error */
     reg = 0xB6;                                                                      /* set command */
-    if (_bmp388_iic_spi_write(handle, BMP388_REG_CMD, (uint8_t *)&reg, 1))           /* write command */
+    if (a_bmp388_iic_spi_write(handle, BMP388_REG_CMD, (uint8_t *)&reg, 1) != 0)     /* write command */
     {
         handle->debug_print("bmp388: soft rest failed.\n");                          /* soft rest failed */
-        _bmp388_close(handle);                                                       /* close bmp388 */
+        (void)a_bmp388_close(handle);                                                /* close bmp388 */
         
         return 5;                                                                    /* return error */
     }
     handle->delay_ms(10);                                                            /* delay 10 ms */
-    if (_bmp388_iic_spi_read(handle, BMP388_REG_ERR_REG, (uint8_t *)&reg, 1))        /* read reg */
+    if (a_bmp388_iic_spi_read(handle, BMP388_REG_ERR_REG, (uint8_t *)&reg, 1) != 0)  /* read reg */
     {
         handle->debug_print("bmp388: get err reg failed.\n");                        /* return error */
-        _bmp388_close(handle);                                                       /* close bmp388 */
+        (void)a_bmp388_close(handle);                                                /* close bmp388 */
         
         return 5;                                                                    /* return error */
     }
-    if (reg & 0x07)                                                                  /* check running status */
+    if ((reg & 0x07) != 0)                                                           /* check running status */
     {
         handle->debug_print("bmp388: find running error.\n");                        /* find running error */
-        _bmp388_close(handle);                                                       /* close bmp388 */
+        (void)a_bmp388_close(handle);                                                /* close bmp388 */
         
         return 5;                                                                    /* return error */
     }
-    if (_bmp388_get_calibration_data(handle))                                        /* get calibration data */
+    if (a_bmp388_get_calibration_data(handle) != 0)                                  /* get calibration data */
     {
         handle->debug_print("bmp388: get calibration data error.\n");                /* get calibration data error */
-        _bmp388_close(handle);                                                       /* close bmp388 */
+        (void)a_bmp388_close(handle);                                                /* close bmp388 */
         
         return 6;                                                                    /* return error */
     }
@@ -2894,8 +2903,8 @@ uint8_t bmp388_init(bmp388_handle_t *handle)
  */
 uint8_t bmp388_deinit(bmp388_handle_t *handle)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
+    uint8_t res;
+    uint8_t prev;
     
     if (handle == NULL)                                                                   /* check handle */
     {
@@ -2906,8 +2915,8 @@ uint8_t bmp388_deinit(bmp388_handle_t *handle)
         return 3;                                                                         /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);         /* read config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                   /* get pwr ctrl register failed */
        
@@ -2915,14 +2924,14 @@ uint8_t bmp388_deinit(bmp388_handle_t *handle)
     }
     prev &= ~(3 << 0);                                                                    /* clear config */
     prev &= ~(3 << 4);                                                                    /* set config */
-    res = _bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* write config */
-    if (res)                                                                              /* check result */
+    res = a_bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* write config */
+    if (res != 0)                                                                         /* check result */
     {
         handle->debug_print("bmp388: set pwr ctrl register failed.\n");                   /* set pwr ctrl register failed */
        
         return 4;                                                                         /* return error */
     }
-    if (_bmp388_close(handle))                                                            /* close bmp388 */
+    if (a_bmp388_close(handle) != 0)                                                      /* close bmp388 */
     {
         return 1;                                                                         /* return error */
     }
@@ -2948,9 +2957,9 @@ uint8_t bmp388_deinit(bmp388_handle_t *handle)
  */
 uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
-    volatile uint8_t buf[3];
+    uint8_t res;
+    uint8_t prev;
+    uint8_t buf[3];
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -2961,21 +2970,21 @@ uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                  /* get fifo config 1 register failed */
        
         return 1;                                                                             /* return error */
     }
-    if (prev & 0x01)                                                                          /* check mode */
+    if ((prev & 0x01) != 0)                                                                   /* check mode */
     {
         handle->debug_print("bmp388: fifo mode can't use this fuction.\n");                   /* fifo mode can't use this fuction */
        
         return 1;                                                                             /* return error */
     }
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);             /* read pwr ctrl */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);            /* read pwr ctrl */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                       /* get pwr ctrl register failed */
        
@@ -2983,27 +2992,27 @@ uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c
     } 
     if (((prev >> 4) & 0x03) == 0x03)                                                         /* normal mode */
     {
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);           /* read config */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);          /* read config */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: get status register failed.\n");                     /* get status register failed */
            
             return 1;                                                                         /* return error */
         }
-        if (prev & (1<<6))                                                                    /* data is ready */
+        if ((prev & (1 << 6)) != 0)                                                           /* data is ready */
         {
-            volatile int64_t output;
+            int64_t output;
             
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);         /* read raw data */
-            if (res)                                                                          /* check result */
+            res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);        /* read raw data */
+            if (res != 0)                                                                     /* check result */
             {
                 handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
                
                 return 1;                                                                     /* return error */
             }
             *raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];                    /* get data */
-            output = _bmp388_compensate_temperature(handle, *raw);                            /* compensate temperature */
-            *c = (float)((double)output / 100.0f);                                            /* get converted temperature */
+            output = a_bmp388_compensate_temperature(handle, *raw);                           /* compensate temperature */
+            *c = (float)((double)output / 100.0);                                             /* get converted temperature */
             
             return 0;                                                                         /* success return 0 */
             
@@ -3017,10 +3026,10 @@ uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c
     }
     else if (((prev >> 4) & 0x03) == 0x00)                                                    /* force mode */
     {
-        volatile uint16_t cnt = 5000;
+        uint16_t cnt = 5000;
         
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);         /* read config */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: get pwr ctrl register failed.\n");                   /* get pwr ctrl register failed */
            
@@ -3028,53 +3037,54 @@ uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c
         }
         prev &= ~(0x03 << 4);                                                                 /* clear 4-5 bits */
         prev |= 0x01 << 4;                                                                    /* set bit 4 */
-        res = _bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* read config */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: set pwr ctrl register failed.\n");                   /* set pwr ctrl register failed */
            
             return 1;                                                                         /* return error */
         }
         
-        start:
-        
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);           /* read status */
-        if (res)                                                                              /* check result */
+        while (1)                                                                             /* loop */
         {
-            handle->debug_print("bmp388: get status register failed.\n");                     /* get status register failed */
-           
-            return 1;                                                                         /* return error */
-        }
-        if (prev & (1 << 6))                                                                  /* data is ready */
-        {
-            volatile int64_t output;
-            
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);         /* read raw data */
-            if (res)                                                                          /* check result */
+            res = a_bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);      /* read status */
+            if (res != 0)                                                                     /* check result */
             {
-                handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
+                handle->debug_print("bmp388: get status register failed.\n");                 /* get status register failed */
                
                 return 1;                                                                     /* return error */
             }
-            *raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];                    /* get data */
-            output = _bmp388_compensate_temperature(handle, *raw);                            /* compensate temperature */
-            *c = (float)((double)output / 100.0f);                                            /* get converted temperature */
-            
-            return 0;                                                                         /* success return 0 */
-            
-        }
-        else
-        {
-            if (cnt)                                                                          /* check cnt */
+            if ((prev & (1 << 6)) != 0)                                                       /* data is ready */
             {
-                cnt--;                                                                        /* cnt-- */
-                handle->delay_ms(1);                                                          /* delay 1 ms */
+                int64_t output;
                 
-                goto start;                                                                   /* goto start */
+                res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);    /* read raw data */
+                if (res != 0)                                                                 /* check result */
+                {
+                    handle->debug_print("bmp388: get data register failed.\n");               /* get data register failed */
+                   
+                    return 1;                                                                 /* return error */
+                }
+                *raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];                /* get data */
+                output = a_bmp388_compensate_temperature(handle, *raw);                       /* compensate temperature */
+                *c = (float)((double)output / 100.0);                                         /* get converted temperature */
+                
+                return 0;                                                                     /* success return 0 */
+                
             }
-            handle->debug_print("bmp388: temperature data is not ready.\n");                  /* temperature data is not ready */
-           
-            return 1;                                                                         /* return error */
+            else
+            {
+                if (cnt != 0)                                                                 /* check cnt */
+                {
+                    cnt--;                                                                    /* cnt-- */
+                    handle->delay_ms(1);                                                      /* delay 1 ms */
+                    
+                    continue;                                                                 /* continue */
+                }
+                handle->debug_print("bmp388: temperature data is not ready.\n");              /* temperature data is not ready */
+               
+                return 1;                                                                     /* return error */
+            }
         }
     }
     else
@@ -3099,10 +3109,10 @@ uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c
  */
 uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
-    volatile uint8_t buf[3];
-    volatile uint32_t temperature_yaw;
+    uint8_t res;
+    uint8_t prev;
+    uint8_t buf[3];
+    uint32_t temperature_yaw;
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -3113,21 +3123,21 @@ uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                  /* get fifo config 1 register failed */
        
         return 1;                                                                             /* return error */
     }
-    if (prev & 0x01)                                                                          /* check mode */
+    if ((prev & 0x01) != 0)                                                                   /* check mode */
     {
         handle->debug_print("bmp388: fifo mode can't use this fuction.\n");                   /* fifo mode can't use this fuction */
        
         return 1;                                                                             /* return error */
     }
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);             /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);            /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                       /* get pwr ctrl register failed */
        
@@ -3135,26 +3145,24 @@ uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
     }
     if (((prev >> 4) & 0x03) == 0x03)                                                         /* normal mode */
     {
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);           /* read status */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);          /* read status */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: get status register failed.\n");                     /* get status register failed */
            
             return 1;                                                                         /* return error */
         }
-        if (prev & (1 << 6))                                                                  /* data is ready */
+        if ((prev & (1 << 6)) != 0)                                                           /* data is ready */
         {
-            volatile int64_t output;
-            
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);         /* read config */
-            if (res)                                                                          /* check result */
+            res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);        /* read config */
+            if (res != 0)                                                                     /* check result */
             {
                 handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
                
                 return 1;                                                                     /* return error */
             }
             temperature_yaw= (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];          /* get data */
-            output = _bmp388_compensate_temperature(handle, temperature_yaw);                 /* compensate temperature */
+            (void)a_bmp388_compensate_temperature(handle, temperature_yaw);                   /* compensate temperature */
         }
         else
         {
@@ -3162,20 +3170,20 @@ uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
            
             return 1;                                                                         /* return error */
         }
-        if (prev & (1 << 5))                                                                  /* data is ready */
+        if ((prev & (1 << 5)) != 0)                                                           /* data is ready */
         {
-            volatile int64_t output;
+            int64_t output;
             
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_0, (uint8_t *)buf, 3);         /* read config */
-            if (res)                                                                          /* check result */
+            res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_0, (uint8_t *)buf, 3);        /* read config */
+            if (res != 0)                                                                     /* check result */
             {
                 handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
                
                 return 1;                                                                     /* return error */
             }
             *raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];                    /* get data */
-            output = _bmp388_compensate_pressure(handle, *raw);                               /* compensate pressure */
-            *pa = (float)((double)output / 100.0f);                                           /* get converted pressure */
+            output = a_bmp388_compensate_pressure(handle, *raw);                              /* compensate pressure */
+            *pa = (float)((double)output / 100.0);                                            /* get converted pressure */
             
             return 0;                                                                         /* success return 0 */
         }
@@ -3188,10 +3196,10 @@ uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
     }
     else if (((prev >> 4) & 0x03) == 0x00)                                                    /* force mode */
     {
-        volatile uint16_t cnt = 5000;
+        uint16_t cnt = 5000;
         
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);         /* read config */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: get pwr ctrl register failed.\n");                   /* get pwr ctrl register failed */
            
@@ -3199,80 +3207,84 @@ uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
         }
         prev &= ~(0x03 << 4);                                                                 /* clear 4-5 bits */
         prev |= 0x01 << 4;                                                                    /* set 4 bit */
-        res = _bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* read config */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: set pwr ctrl register failed.\n");                   /* set pwr ctrl register failed */
            
             return 1;                                                                         /* return error */
         }
         
-        start:
+        while (1)                                                                             /* loop */
+        {
+            res = a_bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);      /* read config */
+            if (res != 0)                                                                     /* check result */
+            {
+                handle->debug_print("bmp388: get status register failed.\n");                 /* get status register failed */
+               
+                return 1;                                                                     /* return error */
+            }
+            if ((prev & (1 << 6)) != 0)                                                       /* data is ready */
+            {
+                res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);    /* read raw data */
+                if (res != 0)                                                                 /* check result */
+                {
+                    handle->debug_print("bmp388: get data register failed.\n");               /* get data register failed */
+                   
+                    return 1;                                                                 /* return error */
+                }
+                temperature_yaw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];     /* get data */
+                (void)a_bmp388_compensate_temperature(handle, temperature_yaw);               /* compensate temperature */
+                
+                goto press;                                                                   /* goto press */
+            }
+            else
+            {
+                if (cnt != 0)                                                                 /* check cnt */
+                {
+                    cnt--;                                                                    /* cnt-- */
+                    handle->delay_ms(1);                                                      /* delay 1 ms */
+                    
+                    continue;                                                                 /* continue */
+                }
+                handle->debug_print("bmp388: temperature data is not ready.\n");              /* temperature data is not ready */
+               
+                return 1;                                                                     /* return error */
+            }
         
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);           /* read config */
-        if (res)                                                                              /* check result */
-        {
-            handle->debug_print("bmp388: get status register failed.\n");                     /* get status register failed */
-           
-            return 1;                                                                         /* return error */
-        }
-        if (prev & (1 << 6))                                                                  /* data is ready */
-        {
-            volatile int64_t output;
+            press:
             
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);         /* read raw data */
-            if (res)                                                                          /* check result */
+            cnt = 5000;                                                                       /* set cnt 5000 */
+            if ((prev & (1 << 5)) != 0)                                                       /* data is ready */
             {
-                handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
+                int64_t output;
+                
+                res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_0, (uint8_t *)buf, 3);    /* read config */
+                if (res != 0)                                                                 /* check result */
+                {
+                    handle->debug_print("bmp388: get data register failed.\n");               /* get data register failed */
+                   
+                    return 1;                                                                 /* return error */
+                }
+                *raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];                /* get data */
+                output = a_bmp388_compensate_pressure(handle, *raw);                          /* compensate pressure */
+                *pa = (float)((double)output / 100.0);                                        /* get converted pressure */
+                
+                return 0;                                                                     /* success return 0 */
+            }
+            else
+            {
+                if (cnt != 0)                                                                 /* check cnt */
+                {
+                    cnt--;                                                                    /* cnt-- */
+                    handle->delay_ms(1);                                                      /* delay 1 ms */
+                    
+                    continue;                                                                 /* continue */
+                }
+                handle->debug_print("bmp388: temperature data is not ready.\n");              /* temperature data is not ready */
                
                 return 1;                                                                     /* return error */
             }
-            temperature_yaw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];         /* get data */
-            output = _bmp388_compensate_temperature(handle, temperature_yaw);                 /* compensate temperature */
-        }
-        else
-        {
-            if (cnt)                                                                          /* check cnt */
-            {
-                cnt--;                                                                        /* cnt-- */
-                handle->delay_ms(1);                                                          /* delay 1 ms */
-                
-                goto start;                                                                   /* goto start */
-            }
-            handle->debug_print("bmp388: temperature data is not ready.\n");                  /* temperature data is not ready */
-           
-            return 1;                                                                         /* return error */
-        }
-        cnt = 5000;                                                                           /* set cnt 5000 */
-        if (prev & (1 << 5))                                                                  /* data is ready */
-        {
-            volatile int64_t output;
-            
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_0, (uint8_t *)buf, 3);         /* read config */
-            if (res)                                                                          /* check result */
-            {
-                handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
-               
-                return 1;                                                                     /* return error */
-            }
-            *raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];                    /* get data */
-            output = _bmp388_compensate_pressure(handle, *raw);                               /* compensate pressure */
-            *pa = (float)((double)output / 100.0f);                                           /* get converted pressure */
-            
-            return 0;                                                                         /* success return 0 */
-        }
-        else
-        {
-            if (cnt)                                                                          /* check cnt */
-            {
-                cnt--;                                                                        /* cnt-- */
-                handle->delay_ms(1);                                                          /* delay 1 ms */
-                
-                goto start;                                                                   /* goto start */
-            }
-            handle->debug_print("bmp388: temperature data is not ready.\n");                  /* temperature data is not ready */
-           
-            return 1;                                                                         /* return error */
         }
     }
     else
@@ -3300,9 +3312,9 @@ uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
 uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temperature_raw, float *temperature_c, 
                                          uint32_t *pressure_raw, float *pressure_pa)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
-    volatile uint8_t buf[3];
+    uint8_t res;
+    uint8_t prev;
+    uint8_t buf[3];
     
     if (handle == NULL)                                                                       /* check handle */
     {
@@ -3313,21 +3325,21 @@ uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temp
         return 3;                                                                             /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);        /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);       /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                  /* get fifo config 1 register failed */
        
         return 1;                                                                             /* return error */
     }
-    if (prev & 0x01)                                                                          /* check fifo mode */
+    if ((prev & 0x01) != 0)                                                                   /* check fifo mode */
     {
         handle->debug_print("bmp388: fifo mode can't use this fuction.\n");                   /* fifo mode can't use this fuction */
        
         return 1;                                                                             /* return error */
     }
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);             /* read config */
-    if (res)                                                                                  /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);            /* read config */
+    if (res != 0)                                                                             /* check result */
     {
         handle->debug_print("bmp388: get pwr ctrl register failed.\n");                       /* get pwr ctrl register failed */
        
@@ -3335,27 +3347,27 @@ uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temp
     }
     if (((prev >> 4) & 0x03) == 0x03)                                                         /* normal mode */
     {
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);           /* read config */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);          /* read config */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: get status register failed.\n");                     /* get status register failed */
            
             return 1;                                                                         /* return error */
         }
-        if (prev & (1<<6))                                                                    /* data is ready */
+        if ((prev & (1 << 6)) != 0)                                                           /* data is ready */
         {
-            volatile int64_t output;
+            int64_t output;
             
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);         /* read raw data */
-            if (res)                                                                          /* check result */
+            res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);        /* read raw data */
+            if (res != 0)                                                                     /* check result */
             {
                 handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
                
                 return 1;                                                                     /* return error */
             }
             *temperature_raw= (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];         /* get data */
-            output = _bmp388_compensate_temperature(handle, *temperature_raw);                /* compensate temperature */
-            *temperature_c = (float)((double)output / 100.0f);                                /* get converted temperature */
+            output = a_bmp388_compensate_temperature(handle, *temperature_raw);               /* compensate temperature */
+            *temperature_c = (float)((double)output / 100.0);                                 /* get converted temperature */
         }
         else
         {
@@ -3363,20 +3375,20 @@ uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temp
            
             return 1;                                                                         /* return error */
         }
-        if (prev & (1 << 5))                                                                  /* data is ready */
+        if ((prev & (1 << 5)) != 0)                                                           /* data is ready */
         {
-            volatile int64_t output;
+            int64_t output;
             
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_0, (uint8_t *)buf, 3);         /* read data */
-            if (res)                                                                          /* check result */
+            res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_0, (uint8_t *)buf, 3);        /* read data */
+            if (res != 0)                                                                     /* check result */
             {
                 handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
                
                 return 1;                                                                     /* return error */
             }
             *pressure_raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];           /* get data */
-            output = _bmp388_compensate_pressure(handle, *pressure_raw);                      /* compensate pressure */
-            *pressure_pa = (float)((double)output / 100.0f);                                  /* get converted pressure */
+            output = a_bmp388_compensate_pressure(handle, *pressure_raw);                     /* compensate pressure */
+            *pressure_pa = (float)((double)output / 100.0);                                   /* get converted pressure */
             
             return 0;                                                                         /* success return 0 */
         }
@@ -3389,10 +3401,10 @@ uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temp
     }
     else if (((prev >> 4) & 0x03) == 0x00)                                                    /* force mode */
     {
-        volatile uint16_t cnt = 5000;
+        uint16_t cnt = 5000;
         
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);         /* read config */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_read(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* read config */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: get pwr ctrl register failed.\n");                   /* get pwr ctrl register failed */
            
@@ -3400,84 +3412,88 @@ uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temp
         }
         prev &= ~(0x03 << 4);                                                                 /* clear 4-5 bits */
         prev |= 0x01 << 4;                                                                    /* set bit 4 */
-        res = _bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);        /* write config */
-        if (res)                                                                              /* check result */
+        res = a_bmp388_iic_spi_write(handle, BMP388_REG_PWR_CTRL, (uint8_t *)&prev, 1);       /* write config */
+        if (res != 0)                                                                         /* check result */
         {
             handle->debug_print("bmp388: set pwr ctrl register failed.\n");                   /* set pwr ctrl register failed */
            
             return 1;                                                                         /* return error */
         }
         
-        start1:
-        
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);           /* read config */
-        if (res)                                                                              /* check result */
+        while (1)                                                                             /* loop */
         {
-            handle->debug_print("bmp388: get status register failed.\n");                     /* get status register failed */
-           
-            return 1;                                                                         /* return error */
-        }
-        if (prev & (1 << 6))                                                                  /* data is ready */
-        {
-            volatile int64_t output;
-            
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);         /* read raw data */
-            if (res)                                                                          /* check result */
+            res = a_bmp388_iic_spi_read(handle, BMP388_REG_STATUS, (uint8_t *)&prev, 1);      /* read config */
+            if (res != 0)                                                                     /* check result */
             {
-                handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
+                handle->debug_print("bmp388: get status register failed.\n");                 /* get status register failed */
                
                 return 1;                                                                     /* return error */
             }
-            *temperature_raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];        /* get data */
-            output = _bmp388_compensate_temperature(handle, *temperature_raw);                /* compensate temperature */
-            *temperature_c = (float)((double)output / 100.0f);                                /* get converted temperature */
-        }
-        else
-        {
-            if (cnt)                                                                          /* check cnt */
+            if ((prev & (1 << 6)) != 0)                                                       /* data is ready */
             {
-                cnt--;                                                                        /* cnt-- */
-                handle->delay_ms(1);                                                          /* delay 1 ms */
+                int64_t output;
                 
-                goto start1;                                                                  /* goto start1 */
+                res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_3, (uint8_t *)buf, 3);    /* read raw data */
+                if (res != 0)                                                                 /* check result */
+                {
+                    handle->debug_print("bmp388: get data register failed.\n");               /* get data register failed */
+                   
+                    return 1;                                                                 /* return error */
+                }
+                *temperature_raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];    /* get data */
+                output = a_bmp388_compensate_temperature(handle, *temperature_raw);           /* compensate temperature */
+                *temperature_c = (float)((double)output / 100.0);                             /* get converted temperature */
+                
+                break;                                                                        /* break */
             }
-            handle->debug_print("bmp388: temperature data is not ready.\n");                  /* temperature data is not ready */
-           
-            return 1;                                                                         /* return error */
+            else
+            {
+                if (cnt != 0)                                                                 /* check cnt */
+                {
+                    cnt--;                                                                    /* cnt-- */
+                    handle->delay_ms(1);                                                      /* delay 1 ms */
+                    
+                    continue;                                                                 /* continue */
+                }
+                handle->debug_print("bmp388: temperature data is not ready.\n");              /* temperature data is not ready */
+               
+                return 1;                                                                     /* return error */
+            }
         }
         cnt = 5000;                                                                           /* set cnt */
         
-        start2:
-        
-        if (prev & (1 << 5))                                                                  /* data is ready */
+        while (1)                                                                             /* loop */
         {
-            volatile int64_t output;
-            
-            res = _bmp388_iic_spi_read(handle, BMP388_REG_DATA_0, (uint8_t *)buf, 3);         /* read raw data */
-            if (res)                                                                          /* check result */
+            if ((prev & (1 << 5)) != 0)                                                       /* data is ready */
             {
-                handle->debug_print("bmp388: get data register failed.\n");                   /* get data register failed */
+                int64_t output;
+                
+                res = a_bmp388_iic_spi_read(handle, BMP388_REG_DATA_0, (uint8_t *)buf, 3);    /* read raw data */
+                if (res != 0)                                                                 /* check result */
+                {
+                    handle->debug_print("bmp388: get data register failed.\n");               /* get data register failed */
+                   
+                    return 1;                                                                 /* return error */
+                }
+                *pressure_raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];       /* get data */
+                output = a_bmp388_compensate_pressure(handle, *pressure_raw);                 /* compensate pressure */
+                *pressure_pa = (float)((double)output / 100.0);                               /* get converted pressure */
+                
+                return 0;                                                                     /* success return 0 */
+            }
+            else
+            {
+                if (cnt != 0)                                                                 /* check cnt */
+                {
+                    cnt--;                                                                    /* cnt-- */
+                    handle->delay_ms(1);                                                      /* delay 1 ms */
+                    
+                    continue;                                                                 /* continue */
+                }
+                handle->debug_print("bmp388: temperature data is not ready.\n");              /* temperature data is not ready */
                
                 return 1;                                                                     /* return error */
             }
-            *pressure_raw = (uint32_t)buf[2] << 16| (uint32_t)buf[1] << 8 | buf[0];           /* get data */
-            output = _bmp388_compensate_pressure(handle, *pressure_raw);                      /* compensate pressure */
-            *pressure_pa = (float)((double)output / 100.0f);                                  /* get converted pressure */
-            
-            return 0;                                                                         /* success return 0 */
-        }
-        else
-        {
-            if (cnt)                                                                          /* check cnt */
-            {
-                cnt--;                                                                        /* cnt-- */
-                handle->delay_ms(1);                                                          /* delay 1 ms */
-                
-                goto start2;                                                                  /* goto start2 */
-            }
-            handle->debug_print("bmp388: temperature data is not ready.\n");                  /* temperature data is not ready */
-           
-            return 1;                                                                         /* return error */
         }
     }
     else
@@ -3500,8 +3516,8 @@ uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temp
  */
 uint8_t bmp388_irq_handler(bmp388_handle_t *handle)
 {
-    volatile uint8_t res;
-    volatile uint8_t status;
+    uint8_t res;
+    uint8_t status;
     
     if (handle == NULL)                                                                      /* check handle */
     {
@@ -3512,34 +3528,34 @@ uint8_t bmp388_irq_handler(bmp388_handle_t *handle)
         return 3;                                                                            /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_INT_STATUS, (uint8_t *)&status, 1);        /* read config */
-    if (res)                                                                                 /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_INT_STATUS, (uint8_t *)&status, 1);       /* read config */
+    if (res != 0)                                                                            /* check result */
     {
         handle->debug_print("bmp388: get interrupt status register failed.\n");              /* get interrupt status register failed */
        
         return 1;                                                                            /* return error */
     }
-    if (status & (1 << 0))                                                                   /* if fifo watermark */
+    if ((status & (1 << 0)) != 0)                                                            /* if fifo watermark */
     {
-        if(handle->receive_callback)                                                         /* if receive callback is valid */
+        if(handle->receive_callback != NULL)                                                 /* if receive callback is valid */
         {
             handle->receive_callback(BMP388_INTERRUPT_STATUS_FIFO_WATERMARK);                /* run receive callback */
         }
         
         return 0;                                                                            /* success return 0 */
     }
-    if (status & (1 << 1))                                                                   /* if fifo full */
+    if ((status & (1 << 1)) != 0)                                                            /* if fifo full */
     {
-        if(handle->receive_callback)                                                         /* if receive callback is valid */
+        if(handle->receive_callback != NULL)                                                 /* if receive callback is valid */
         {
             handle->receive_callback(BMP388_INTERRUPT_STATUS_FIFO_FULL);                     /* run receive callback */
         }
         
         return 0;                                                                            /* success return 0 */
     }
-    if (status & (1 << 3))                                                                   /* if data ready */
+    if ((status & (1 << 3)) != 0)                                                            /* if data ready */
     {
-        if (handle->receive_callback)                                                        /* if receive callback is valid */
+        if (handle->receive_callback != NULL)                                                /* if receive callback is valid */
         {
             handle->receive_callback(BMP388_INTERRUPT_STATUS_DATA_READY);                    /* run receive callback */
         }
@@ -3547,7 +3563,7 @@ uint8_t bmp388_irq_handler(bmp388_handle_t *handle)
         return 0;                                                                            /* success return 0 */
     }
     
-    return 9;                                                                                /* success return 0 */
+    return 0;                                                                                /* success return 0 */
 }
 
 /**
@@ -3561,14 +3577,14 @@ uint8_t bmp388_irq_handler(bmp388_handle_t *handle)
  */
 uint8_t bmp388_set_addr_pin(bmp388_handle_t *handle, bmp388_address_t addr_pin)
 {
-    if (handle == NULL)                 /* check handle */
+    if (handle == NULL)                          /* check handle */
     {
-        return 2;                       /* return error */
+        return 2;                                /* return error */
     }
     
-    handle->iic_addr = addr_pin;        /* set iic address */
+    handle->iic_addr = (uint8_t)addr_pin;        /* set iic address */
     
-    return 0;                           /* success return 0 */
+    return 0;                                    /* success return 0 */
 }
 
 /**
@@ -3603,14 +3619,14 @@ uint8_t bmp388_get_addr_pin(bmp388_handle_t *handle, bmp388_address_t *addr_pin)
  */
 uint8_t bmp388_set_interface(bmp388_handle_t *handle, bmp388_interface_t interface) 
 {
-    if (handle == NULL)                 /* check handle */
+    if (handle == NULL)                        /* check handle */
     {
-        return 2;                       /* return error */
+        return 2;                              /* return error */
     }
     
-    handle->iic_spi = interface;        /* set interface */
+    handle->iic_spi = (uint8_t)interface;      /* set interface */
     
-    return 0;                           /* success return 0 */
+    return 0;                                  /* success return 0 */
 }
 
 /**
@@ -3648,10 +3664,10 @@ uint8_t bmp388_get_interface(bmp388_handle_t *handle, bmp388_interface_t *interf
  */
 uint8_t bmp388_read_fifo(bmp388_handle_t *handle, uint8_t *buf, uint16_t *len)
 {
-    volatile uint8_t res;
-    volatile uint8_t prev;
-    volatile uint8_t tmp_buf[2];
-    volatile uint16_t length;
+    uint8_t res;
+    uint8_t prev;
+    uint8_t tmp_buf[2];
+    uint16_t length;
     
     if (handle == NULL)                                                                             /* check handle */
     {
@@ -3662,30 +3678,30 @@ uint8_t bmp388_read_fifo(bmp388_handle_t *handle, uint8_t *buf, uint16_t *len)
         return 3;                                                                                   /* return error */
     }
     
-    res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);              /* read config */
-    if (res)                                                                                        /* check result */
+    res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_CONFIG_1, (uint8_t *)&prev, 1);             /* read config */
+    if (res != 0)                                                                                   /* check result */
     {
         handle->debug_print("bmp388: get fifo config 1 register failed.\n");                        /* get fifo config 1 register failed */
        
         return 1;                                                                                   /* return error */
     }
-    if (prev & 0x01)                                                                                /* check mode */
+    if ((prev & 0x01) != 0)                                                                         /* check mode */
     {
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_LENGTH_0, (uint8_t *)tmp_buf, 2);        /* read config */
-        if (res)                                                                                    /* check result */
+        res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_LENGTH_0, (uint8_t *)tmp_buf, 2);       /* read config */
+        if (res != 0)                                                                               /* check result */
         {
             handle->debug_print("bmp388: get fifo length register failed.\n");                      /* get fifo length register failed */
            
             return 1;                                                                               /* return error */
         }
         length = ((uint16_t)(tmp_buf[1] & 0x01) << 8) | tmp_buf[0];                                 /* get data */
-        if (prev & (1 << 2))                                                                        /* if include sensorttime */
+        if ((prev & (1 << 2)) != 0)                                                                 /* if include sensorttime */
         {
             length += 4;                                                                            /* add sensortime length */
         }            
-        *len = *len<length ? *len :length;                                                          /* get real length */
-        res = _bmp388_iic_spi_read(handle, BMP388_REG_FIFO_DATA, (uint8_t *)buf, *len);             /* read config */
-        if (res)                                                                                    /* check result */
+        *len = (*len) < length ? (*len) :length;                                                    /* get real length */
+        res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_DATA, (uint8_t *)buf, *len);            /* read config */
+        if (res != 0)                                                                               /* check result */
         {
             handle->debug_print("bmp388: get fifo data failed.\n");                                 /* get fifo data failed */
            
@@ -3718,8 +3734,9 @@ uint8_t bmp388_read_fifo(bmp388_handle_t *handle, uint8_t *buf, uint16_t *len)
  */
 uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_len, bmp388_frame_t *frame, uint16_t *frame_len)
 {
-    volatile uint16_t i;
-    volatile uint16_t frame_total;
+    uint8_t res;
+    uint16_t i;
+    uint16_t frame_total;
     
     if (handle == NULL)                                                                                                                   /* check handle */
     {
@@ -3737,9 +3754,11 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
         return 1;                                                                                                                         /* return error */
     } 
     frame_total = 0;                                                                                                                      /* clear total frame */
-    for (i = 0; i < buf_len; )
+    res = 0;                                                                                                                              /* set 0 */
+    i = 0;                                                                                                                                /* set 0 */
+    while (i < buf_len)                                                                                                                   /* loop */
     {
-        switch (buf[i])
+        switch ((uint8_t)buf[i])
         {
             case 0x90 :
             {
@@ -3748,8 +3767,8 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
                     return 0;                                                                                                             /* return success */
                 }
                 frame[frame_total].type =  BMP388_FRAME_TYPE_TEMPERATURE;                                                                 /* set temperature type */
-                frame[frame_total].raw = (uint32_t)buf[i+2+1]<<16| (uint32_t)buf[i+1+1]<<8 | buf[i+0+1];                                  /* set raw */
-                frame[frame_total].data = (float)((double)_bmp388_compensate_temperature(handle, frame[frame_total].raw) / 100.0);        /* set compensate temerature */
+                frame[frame_total].raw = (uint32_t)buf[i + 2 + 1] << 16 | (uint32_t)buf[i + 1 + 1] << 8 | buf[i + 0 + 1];                 /* set raw */
+                frame[frame_total].data = (float)((double)a_bmp388_compensate_temperature(handle, frame[frame_total].raw) / 100.0);       /* set compensate temerature */
                 frame_total++;                                                                                                            /* frame++ */
                 i += 4;                                                                                                                   /* index + 4 */
                 
@@ -3762,16 +3781,16 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
                     return 0;                                                                                                             /* return success */
                 }
                 frame[frame_total].type =  BMP388_FRAME_TYPE_TEMPERATURE;                                                                 /* set temperature type */
-                frame[frame_total].raw = (uint32_t)buf[i+2+1]<<16| (uint32_t)buf[i+1+1]<<8 | buf[i+0+1];                                  /* set raw */
-                frame[frame_total].data = (float)((double)_bmp388_compensate_temperature(handle, frame[frame_total].raw) / 100.0);        /* set compensate temerature */
+                frame[frame_total].raw = (uint32_t)buf[i + 2 + 1] << 16| (uint32_t)buf[i + 1 + 1] << 8 | buf[i + 0 + 1];                  /* set raw */
+                frame[frame_total].data = (float)((double)a_bmp388_compensate_temperature(handle, frame[frame_total].raw) / 100.0);       /* set compensate temerature */
                 frame_total++;                                                                                                            /* frame++ */
                 if (frame_total > ((*frame_len)-1))                                                                                       /* check length */
                 {
                     return 0;                                                                                                             /* return success */
                 }
                 frame[frame_total].type =  BMP388_FRAME_TYPE_PRESSURE;                                                                    /* set pressure type */
-                frame[frame_total].raw = (uint32_t)buf[i+5+1]<<16| (uint32_t)buf[i+4+1]<<8 | buf[i+3+1];                                  /* set raw */
-                frame[frame_total].data = (float)((double)_bmp388_compensate_pressure(handle, frame[frame_total].raw) / 100.0);           /* set compensate pressure */
+                frame[frame_total].raw = (uint32_t)buf[i + 5 + 1] << 16| (uint32_t)buf[i + 4 + 1] << 8 | buf[i + 3 + 1];                  /* set raw */
+                frame[frame_total].data = (float)((double)a_bmp388_compensate_pressure(handle, frame[frame_total].raw) / 100.0);          /* set compensate pressure */
                 frame_total++;                                                                                                            /* frame++ */
                 i += 7;                                                                                                                   /* index + 7 */
                 
@@ -3784,7 +3803,7 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
                     return 0;                                                                                                             /* return success */
                 }
                 frame[frame_total].type =  BMP388_FRAME_TYPE_SENSORTIME;                                                                  /* set sensortime type */
-                frame[frame_total].raw = (uint32_t)buf[i+2+1]<<16| (uint32_t)buf[i+1+1]<<8 | buf[i+0+1];                                  /* set raw */
+                frame[frame_total].raw = (uint32_t)buf[i + 2 + 1] << 16 | (uint32_t)buf[i + 1 + 1] << 8 | buf[i + 0 + 1];                 /* set raw */
                 frame[frame_total].data = 0;                                                                                              /* set data */
                 frame_total++;                                                                                                            /* frame++ */
                 i += 4;                                                                                                                   /* index+4 */
@@ -3794,10 +3813,15 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
             default :
             {
                 handle->debug_print("bmp388: header is invalid.\n");                                                                      /* header is invalid */
-   
-                return 1;                                                                                                                 /* return error */
+                res = 1;                                                                                                                  /* set 1 */
+                
+                break;                                                                                                                    /* break */
             }
-        }       
+        }
+        if (res == 1)                                                                                                                     /* check the result */
+        {
+            return 1;                                                                                                                     /* return error */
+        }
     }
     *frame_len = frame_total;                                                                                                             /* set frame length */
     
@@ -3827,7 +3851,7 @@ uint8_t bmp388_set_reg(bmp388_handle_t *handle, uint8_t reg, uint8_t value)
         return 3;                                                /* return error */
     } 
     
-    return _bmp388_iic_spi_write(handle, reg, &value, 1);        /* write register */
+    return a_bmp388_iic_spi_write(handle, reg, &value, 1);       /* write register */
 }
 
 /**
@@ -3853,7 +3877,7 @@ uint8_t bmp388_get_reg(bmp388_handle_t *handle, uint8_t reg, uint8_t *value)
         return 3;                                              /* return error */
     } 
     
-    return _bmp388_iic_spi_read(handle, reg, value, 1);        /* read register */
+    return a_bmp388_iic_spi_read(handle, reg, value, 1);       /* read register */
 }
 
 /**

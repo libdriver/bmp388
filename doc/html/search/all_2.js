@@ -1,7 +1,7 @@
 var searchData=
 [
   ['data_304',['data',['../structbmp388__frame__s.html#a173b91873a3fc4f50a95416a6204d963',1,'bmp388_frame_s']]],
-  ['debug_5fprint_305',['debug_print',['../structbmp388__handle__s.html#a75f9f50c23e87e9407f9ec4e34bb42f2',1,'bmp388_handle_s']]],
+  ['debug_5fprint_305',['debug_print',['../structbmp388__handle__s.html#a769d5b3a6c14790a0e126e8fe70b384b',1,'bmp388_handle_s']]],
   ['delay_5fms_306',['delay_ms',['../structbmp388__handle__s.html#a406c9433252b7366de417b7a60915c81',1,'bmp388_handle_s']]],
   ['driver_5fbmp388_2ec_307',['driver_bmp388.c',['../driver__bmp388_8c.html',1,'']]],
   ['driver_5fbmp388_2eh_308',['driver_bmp388.h',['../driver__bmp388_8h.html',1,'']]],

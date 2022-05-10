@@ -51,16 +51,16 @@ static bmp388_handle_t gs_handle;        /**< bmp388 handle */
  */
 uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr_pin)
 {
-    volatile uint8_t res;
-    volatile uint16_t fifo_watermark_in;
-    volatile uint16_t fifo_watermark_out;
-    volatile uint8_t subsampling_in;
-    volatile uint8_t subsampling_out;
-    volatile uint8_t err;
-    volatile uint8_t status;
-    volatile uint8_t data;
-    volatile uint16_t length;
-    volatile uint32_t sensortime;
+    uint8_t res;
+    uint16_t fifo_watermark_in;
+    uint16_t fifo_watermark_out;
+    uint8_t subsampling_in;
+    uint8_t subsampling_out;
+    uint8_t err;
+    uint8_t status;
+    uint8_t data;
+    uint16_t length;
+    uint32_t sensortime;
     bmp388_event_t event;
     bmp388_info_t info;
     bmp388_interface_t interface_test;
@@ -92,7 +92,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* bmp388 info */
     res = bmp388_info(&info);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get info failed.\n");
        
@@ -120,7 +120,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set iic */
     res = bmp388_set_interface(&gs_handle, BMP388_INTERFACE_IIC);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interface failed.\n");
        
@@ -128,7 +128,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     }
     bmp388_interface_debug_print("bmp388: set interface iic.\n");
     res = bmp388_get_interface(&gs_handle, &interface_test);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interface failed.\n");
        
@@ -138,7 +138,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set spi */
     res = bmp388_set_interface(&gs_handle, BMP388_INTERFACE_SPI);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interface failed.\n");
        
@@ -146,7 +146,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     }
     bmp388_interface_debug_print("bmp388: set interface spi.\n");
     res = bmp388_get_interface(&gs_handle, &interface_test);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interface failed.\n");
        
@@ -159,7 +159,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set low */
     res = bmp388_set_addr_pin(&gs_handle, BMP388_ADDRESS_ADO_LOW);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set addr pin failed.\n");
        
@@ -167,7 +167,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     }
     bmp388_interface_debug_print("bmp388: set addr pin low.\n");
     res = bmp388_get_addr_pin(&gs_handle, &addr_pin_test);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get addr pin failed.\n");
        
@@ -177,7 +177,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set high */
     res = bmp388_set_addr_pin(&gs_handle, BMP388_ADDRESS_ADO_HIGH);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set addr pin failed.\n");
        
@@ -185,7 +185,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     }
     bmp388_interface_debug_print("bmp388: set addr pin high.\n");
     res = bmp388_get_addr_pin(&gs_handle, &addr_pin_test);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get addr pin failed.\n");
        
@@ -195,7 +195,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set interface */
     res = bmp388_set_interface(&gs_handle, interface);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interface failed.\n");
        
@@ -204,7 +204,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set addr pin */
     res = bmp388_set_addr_pin(&gs_handle, addr_pin);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set addr pin failed.\n");
        
@@ -213,7 +213,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* bmp388 init */
     res = bmp388_init(&gs_handle);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: init failed.\n");
        
@@ -224,19 +224,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     bmp388_interface_debug_print("bmp388: bmp388_set_fifo_watermark/bmp388_get_fifo_watermark test.\n");
     fifo_watermark_in = rand()%256 + 256;
     res = bmp388_set_fifo_watermark(&gs_handle, fifo_watermark_in);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo watermark failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo watermark %d.\n", fifo_watermark_in);
     res = bmp388_get_fifo_watermark(&gs_handle, (uint16_t *)&fifo_watermark_out);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo watermark failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -247,19 +247,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_fifo(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo enable.\n");
     res = bmp388_get_fifo(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -267,19 +267,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_fifo(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo disable.\n");
     res = bmp388_get_fifo(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -290,19 +290,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_fifo_stop_on_full(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo stop on full failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo stop on full enable.\n");
     res = bmp388_get_fifo_stop_on_full(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo stop on full failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -310,19 +310,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_fifo_stop_on_full(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo stop on full failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo stop on full disable.\n");
     res = bmp388_get_fifo_stop_on_full(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo stop on full failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -333,19 +333,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_fifo_sensortime_on(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo sensortime on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo sensortime on enable.\n");
     res = bmp388_get_fifo_sensortime_on(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo sensortime on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -353,19 +353,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_fifo_sensortime_on(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo sensortime on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo sensortime on disable.\n");
     res = bmp388_get_fifo_sensortime_on(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo sensortime on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -376,19 +376,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_fifo_pressure_on(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo pressure on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo pressure on enable.\n");
     res = bmp388_get_fifo_pressure_on(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo pressure on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -396,19 +396,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_fifo_pressure_on(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo pressure on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo pressure on disable.\n");
     res = bmp388_get_fifo_pressure_on(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo pressure on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -419,19 +419,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_fifo_temperature_on(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo temperature on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo temperature on enable.\n");
     res = bmp388_get_fifo_temperature_on(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo temperature on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -439,19 +439,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_fifo_temperature_on(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo temperature on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo temperature on disable.\n");
     res = bmp388_get_fifo_temperature_on(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo temperature on failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -461,19 +461,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     bmp388_interface_debug_print("bmp388: bmp388_set_fifo_subsampling/bmp388_get_fifo_subsampling test.\n");
     subsampling_in = rand()%7;
     res = bmp388_set_fifo_subsampling(&gs_handle, subsampling_in);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo subsampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo subsampling %d.\n", subsampling_in);
     res = bmp388_get_fifo_subsampling(&gs_handle, (uint8_t *)&subsampling_out);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo subsampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -484,19 +484,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set unfiltered */
     res = bmp388_set_fifo_data_source(&gs_handle, BMP388_FIFO_DATA_SOURCE_UNFILTERED);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo data source failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo data source unfiltered.\n");
     res = bmp388_get_fifo_data_source(&gs_handle, (bmp388_fifo_data_source_t *)&source);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo data source failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -504,19 +504,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set filtered */
     res = bmp388_set_fifo_data_source(&gs_handle, BMP388_FIFO_DATA_SOURCE_FILTERED);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo data source failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set fifo data source filtered.\n");
     res = bmp388_get_fifo_data_source(&gs_handle, (bmp388_fifo_data_source_t *)&source);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo data source failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -527,19 +527,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set push pull */
     res = bmp388_set_interrupt_pin_type(&gs_handle, BMP388_INTERRUPT_PIN_TYPE_PUSH_PULL);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt pin type failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt pin type push pull.\n");
     res = bmp388_get_interrupt_pin_type(&gs_handle, (bmp388_interrupt_pin_type_t *)&pin_type);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt pin type failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -547,19 +547,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set open drain */
     res = bmp388_set_interrupt_pin_type(&gs_handle, BMP388_INTERRUPT_PIN_TYPE_OPEN_DRAIN);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt pin type failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt pin type open drain.\n");
     res = bmp388_get_interrupt_pin_type(&gs_handle, (bmp388_interrupt_pin_type_t *)&pin_type);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt pin type failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -570,19 +570,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set lower */
     res = bmp388_set_interrupt_active_level(&gs_handle, BMP388_INTERRUPT_ACTIVE_LEVEL_LOWER);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt active level failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt active level lower.\n");
     res = bmp388_get_interrupt_active_level(&gs_handle, (bmp388_interrupt_active_level_t *)&level);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt active level failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -590,19 +590,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set higher */
     res = bmp388_set_interrupt_active_level(&gs_handle, BMP388_INTERRUPT_ACTIVE_LEVEL_HIGHER);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt active level failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt active level higher.\n");
     res = bmp388_get_interrupt_active_level(&gs_handle, (bmp388_interrupt_active_level_t *)&level);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt active level failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -613,19 +613,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_latch_interrupt_pin_and_interrupt_status(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set latch interrupt pin and interrupt status failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set latch interrupt pin and interrupt status enable.\n");
     res = bmp388_get_latch_interrupt_pin_and_interrupt_status(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get latch interrupt pin and interrupt status failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -633,19 +633,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_latch_interrupt_pin_and_interrupt_status(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set latch interrupt pin and interrupt status failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set latch interrupt pin and interrupt status disable.\n");
     res = bmp388_get_latch_interrupt_pin_and_interrupt_status(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get latch interrupt pin and interrupt status failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -656,19 +656,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_interrupt_fifo_watermark(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt fifo watermark failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt fifo watermark enable.\n");
     res = bmp388_get_interrupt_fifo_watermark(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt fifo watermark failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -676,19 +676,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_interrupt_fifo_watermark(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt fifo watermark failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt fifo watermark disable.\n");
     res = bmp388_get_interrupt_fifo_watermark(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt fifo watermark failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -699,19 +699,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_interrupt_fifo_full(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt fifo full failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt fifo full enable.\n");
     res = bmp388_get_interrupt_fifo_full(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt fifo full failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -719,19 +719,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_interrupt_fifo_full(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt fifo full failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt fifo full disable.\n");
     res = bmp388_get_interrupt_fifo_full(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt fifo full failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -742,19 +742,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_interrupt_data_ready(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt data ready failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt data ready enable.\n");
     res = bmp388_get_interrupt_data_ready(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt data ready failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -762,19 +762,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_interrupt_data_ready(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set interrupt data ready failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set interrupt data ready disable.\n");
     res = bmp388_get_interrupt_data_ready(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt data ready failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -785,19 +785,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set 4 wire */
     res = bmp388_set_spi_wire(&gs_handle, BMP388_SPI_WIRE_4);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set spi wire failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set spi 4 wire.\n");
     res = bmp388_get_spi_wire(&gs_handle, (bmp388_spi_wire_t *)&wire);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get spi wire failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -806,19 +806,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     {
         /* set 3 wire */
         res = bmp388_set_spi_wire(&gs_handle, BMP388_SPI_WIRE_3);
-        if (res)
+        if (res != 0)
         {
             bmp388_interface_debug_print("bmp388: set spi wire failed.\n");
-            bmp388_deinit(&gs_handle);
+            (void)bmp388_deinit(&gs_handle);
             
             return 1;
         }
         bmp388_interface_debug_print("bmp388: set spi 3 wire.\n");
         res = bmp388_get_spi_wire(&gs_handle, (bmp388_spi_wire_t *)&wire);
-        if (res)
+        if (res != 0)
         {
             bmp388_interface_debug_print("bmp388: get spi wire failed.\n");
-            bmp388_deinit(&gs_handle);
+            (void)bmp388_deinit(&gs_handle);
             
             return 1;
         }
@@ -830,19 +830,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_iic_watchdog_timer(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set iic watchdog timer failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set iic watchdog timer enable.\n");
     res = bmp388_get_iic_watchdog_timer(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get iic watchdog timer failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -850,19 +850,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_iic_watchdog_timer(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set iic watchdog timer failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set iic watchdog timer disable.\n");
     res = bmp388_get_iic_watchdog_timer(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get iic watchdog timer failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -873,19 +873,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set 1.25ms period */
     res = bmp388_set_iic_watchdog_period(&gs_handle, BMP388_IIC_WATCHDOG_PERIOD_1P25_MS);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set iic watchdog period failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set iic watchdog period 1.25ms.\n");
     res = bmp388_get_iic_watchdog_period(&gs_handle, (bmp388_iic_watchdog_period_t *)&period);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get iic watchdog period failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -893,19 +893,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set 40ms period */
     res = bmp388_set_iic_watchdog_period(&gs_handle, BMP388_IIC_WATCHDOG_PERIOD_40_MS);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set iic watchdog period failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set iic watchdog period 40ms.\n");
     res = bmp388_get_iic_watchdog_period(&gs_handle, (bmp388_iic_watchdog_period_t *)&period);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get iic watchdog period failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -916,19 +916,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_pressure(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set pressure failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set pressure disable.\n");
     res = bmp388_get_pressure(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get pressure failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -936,19 +936,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_pressure(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set pressure failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set pressure enable.\n");
     res = bmp388_get_pressure(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get pressure failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -959,19 +959,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* disable */
     res = bmp388_set_temperature(&gs_handle, BMP388_BOOL_FALSE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set temperature failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set temperature disable.\n");
     res = bmp388_get_temperature(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get temperature failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -979,19 +979,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* enable */
     res = bmp388_set_temperature(&gs_handle, BMP388_BOOL_TRUE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set temperature failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set temperature enable.\n");
     res = bmp388_get_temperature(&gs_handle, (bmp388_bool_t *)&enable);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get temperature failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1002,19 +1002,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* sleep */
     res = bmp388_set_mode(&gs_handle, BMP388_MODE_SLEEP_MODE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set mode failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set mode sleep.\n");
     res = bmp388_get_mode(&gs_handle, (bmp388_mode_t *)&mode);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get mode failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1022,19 +1022,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* normal mode */
     res = bmp388_set_mode(&gs_handle, BMP388_MODE_NORMAL_MODE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set mode failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set mode normal mode.\n");
     res = bmp388_get_mode(&gs_handle, (bmp388_mode_t *)&mode);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get mode failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1042,28 +1042,28 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set forced mode */
     res = bmp388_set_mode(&gs_handle, BMP388_MODE_SLEEP_MODE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set mode failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_delay_ms(50);
     res = bmp388_set_mode(&gs_handle, BMP388_MODE_FORCED_MODE);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set mode failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set mode forced mode.\n");
     res = bmp388_get_mode(&gs_handle, (bmp388_mode_t *)&mode);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get mode failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1074,19 +1074,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x1 */
     res = bmp388_set_pressure_oversampling(&gs_handle, BMP388_OVERSAMPLING_x1);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set pressure oversampling x1.\n");
     res = bmp388_get_pressure_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1094,19 +1094,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x2 */
     res = bmp388_set_pressure_oversampling(&gs_handle, BMP388_OVERSAMPLING_x2);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set pressure oversampling x2.\n");
     res = bmp388_get_pressure_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1114,19 +1114,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x4 */
     res = bmp388_set_pressure_oversampling(&gs_handle, BMP388_OVERSAMPLING_x4);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set pressure oversampling x4.\n");
     res = bmp388_get_pressure_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1134,19 +1134,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x8 */
     res = bmp388_set_pressure_oversampling(&gs_handle, BMP388_OVERSAMPLING_x8);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set pressure oversampling x8.\n");
     res = bmp388_get_pressure_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1154,19 +1154,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x16 */
     res = bmp388_set_pressure_oversampling(&gs_handle, BMP388_OVERSAMPLING_x16);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set pressure oversampling x16.\n");
     res = bmp388_get_pressure_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1174,19 +1174,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x32 */
     res = bmp388_set_pressure_oversampling(&gs_handle, BMP388_OVERSAMPLING_x32);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set pressure oversampling x32.\n");
     res = bmp388_get_pressure_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get pressure oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1197,19 +1197,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* oversampling x1 */
     res = bmp388_set_temperature_oversampling(&gs_handle, BMP388_OVERSAMPLING_x1);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set temperature oversampling x1.\n");
     res = bmp388_get_temperature_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1217,19 +1217,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x2 */
     res = bmp388_set_temperature_oversampling(&gs_handle, BMP388_OVERSAMPLING_x2);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set temperature oversampling x2.\n");
     res = bmp388_get_temperature_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1237,19 +1237,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x4 */
     res = bmp388_set_temperature_oversampling(&gs_handle, BMP388_OVERSAMPLING_x4);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set temperature oversampling x4.\n");
     res = bmp388_get_temperature_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1257,19 +1257,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x8 */
     res = bmp388_set_temperature_oversampling(&gs_handle, BMP388_OVERSAMPLING_x8);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set temperature oversampling x8.\n");
     res = bmp388_get_temperature_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1277,19 +1277,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x16 */
     res = bmp388_set_temperature_oversampling(&gs_handle, BMP388_OVERSAMPLING_x16);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set temperature oversampling x16.\n");
     res = bmp388_get_temperature_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1297,19 +1297,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set oversampling x32 */
     res = bmp388_set_temperature_oversampling(&gs_handle, BMP388_OVERSAMPLING_x32);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set temperature oversampling x32.\n");
     res = bmp388_get_temperature_oversampling(&gs_handle, (bmp388_oversampling_t *)&oversampling);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get temperature oversampling failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1320,19 +1320,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 200Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_200_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 200Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1340,19 +1340,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 100Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_100_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 100Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1360,19 +1360,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 50Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_50_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 50Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1380,19 +1380,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 25Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_25_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 25Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1400,19 +1400,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 12.5Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_12P5_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 12.5Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1420,19 +1420,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 6.25Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_6P25_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 6.25Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1440,19 +1440,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 3.1Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_3P1_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 3.1Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1460,19 +1460,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 1.5Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_1P5_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 1.5Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1480,19 +1480,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.78Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P78_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.78Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1500,19 +1500,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.39Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P39_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.39Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1520,19 +1520,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.2Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P2_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.2Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1540,19 +1540,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.1Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P1_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.1Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1560,19 +1560,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.05Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P05_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.05Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1580,19 +1580,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.02Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P02_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.02Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1600,19 +1600,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.01Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P01_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.01Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1620,19 +1620,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.006Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P006_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.006Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1640,19 +1640,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.003Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P003_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.003Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1660,19 +1660,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set odr 0.0015Hz */
     res = bmp388_set_odr(&gs_handle, BMP388_ODR_0P0015_HZ);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set odr 0.0015Hz.\n");
     res = bmp388_get_odr(&gs_handle, (bmp388_odr_t *)&odr);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get odr failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1683,19 +1683,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set coefficient 0 */
     res = bmp388_set_filter_coefficient(&gs_handle, BMP388_FILTER_COEFFICIENT_0);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set filter coefficient 0.\n");
     res = bmp388_get_filter_coefficient(&gs_handle, (bmp388_filter_coefficient_t *)&coef);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1703,19 +1703,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set coefficient 1 */
     res = bmp388_set_filter_coefficient(&gs_handle, BMP388_FILTER_COEFFICIENT_1);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set filter coefficient 1.\n");
     res = bmp388_get_filter_coefficient(&gs_handle, (bmp388_filter_coefficient_t *)&coef);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1723,19 +1723,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set coefficient 3 */
     res = bmp388_set_filter_coefficient(&gs_handle, BMP388_FILTER_COEFFICIENT_3);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set filter coefficient 3.\n");
     res = bmp388_get_filter_coefficient(&gs_handle, (bmp388_filter_coefficient_t *)&coef);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1743,19 +1743,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set coefficient 7 */
     res = bmp388_set_filter_coefficient(&gs_handle, BMP388_FILTER_COEFFICIENT_7);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set filter coefficient 7.\n");
     res = bmp388_get_filter_coefficient(&gs_handle, (bmp388_filter_coefficient_t *)&coef);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1763,19 +1763,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set coefficient 15 */
     res = bmp388_set_filter_coefficient(&gs_handle, BMP388_FILTER_COEFFICIENT_15);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set filter coefficient 15.\n");
     res = bmp388_get_filter_coefficient(&gs_handle, (bmp388_filter_coefficient_t *)&coef);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1783,19 +1783,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set coefficient 31 */
     res = bmp388_set_filter_coefficient(&gs_handle, BMP388_FILTER_COEFFICIENT_31);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set filter coefficient 31.\n");
     res = bmp388_get_filter_coefficient(&gs_handle, (bmp388_filter_coefficient_t *)&coef);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1803,19 +1803,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set coefficient 63 */
     res = bmp388_set_filter_coefficient(&gs_handle, BMP388_FILTER_COEFFICIENT_63);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set filter coefficient 63.\n");
     res = bmp388_get_filter_coefficient(&gs_handle, (bmp388_filter_coefficient_t *)&coef);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1823,19 +1823,19 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* set coefficient 127 */
     res = bmp388_set_filter_coefficient(&gs_handle, BMP388_FILTER_COEFFICIENT_127);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
     bmp388_interface_debug_print("bmp388: set filter coefficient 127.\n");
     res = bmp388_get_filter_coefficient(&gs_handle, (bmp388_filter_coefficient_t *)&coef);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get filter coefficient failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1844,10 +1844,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_get_error */
     bmp388_interface_debug_print("bmp388: bmp388_get_error.\n");
     res = bmp388_get_error(&gs_handle, (uint8_t *)&err);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get err failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1856,10 +1856,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_get_status */
     bmp388_interface_debug_print("bmp388: bmp388_get_status.\n");
     res = bmp388_get_status(&gs_handle, (uint8_t *)&status);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get status failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1868,10 +1868,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_get_sensortime */
     bmp388_interface_debug_print("bmp388: bmp388_get_sensortime.\n");
     res = bmp388_get_sensortime(&gs_handle, (uint32_t *)&sensortime);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get sensortime failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1880,10 +1880,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_get_event */
     bmp388_interface_debug_print("bmp388: bmp388_get_event.\n");
     res = bmp388_get_event(&gs_handle, &event);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get event failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1892,10 +1892,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_get_interrupt_status */
     bmp388_interface_debug_print("bmp388: bmp388_get_interrupt_status.\n");
     res = bmp388_get_interrupt_status(&gs_handle, (uint8_t *)&status);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get interrupt status failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1904,10 +1904,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_get_fifo_length */
     bmp388_interface_debug_print("bmp388: bmp388_get_fifo_length.\n");
     res = bmp388_get_fifo_length(&gs_handle, (uint16_t *)&length);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo length failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1916,10 +1916,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_get_fifo_data */
     bmp388_interface_debug_print("bmp388: bmp388_get_fifo_data.\n");
     res = bmp388_get_fifo_data(&gs_handle, (uint8_t *)&data, 1);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: get fifo data failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1928,10 +1928,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_flush_fifo */
     bmp388_interface_debug_print("bmp388: bmp388_flush_fifo.\n");
     res = bmp388_flush_fifo(&gs_handle);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: flush fifo failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1940,10 +1940,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_extmode_en_middle */
     bmp388_interface_debug_print("bmp388: bmp388_extmode_en_middle.\n");
     res = bmp388_extmode_en_middle(&gs_handle);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: extmode en middle failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1952,10 +1952,10 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_softreset */
     bmp388_interface_debug_print("bmp388: bmp388_softreset.\n");
     res = bmp388_softreset(&gs_handle);
-    if (res)
+    if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: bmp388 softreset failed.\n");
-        bmp388_deinit(&gs_handle);
+        (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
@@ -1963,7 +1963,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     
     /* finish register test */
     bmp388_interface_debug_print("bmp388: finish register test.\n");
-    bmp388_deinit(&gs_handle);
+    (void)bmp388_deinit(&gs_handle);
     
     return 0;
 }

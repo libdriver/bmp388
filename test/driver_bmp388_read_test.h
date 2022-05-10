@@ -35,8 +35,8 @@
  * </table>
  */
 
-#ifndef _DRIVER_BMP388_READ_TEST_H_
-#define _DRIVER_BMP388_READ_TEST_H_
+#ifndef DRIVER_BMP388_READ_TEST_H
+#define DRIVER_BMP388_READ_TEST_H
 
 #include "driver_bmp388_interface.h"
 

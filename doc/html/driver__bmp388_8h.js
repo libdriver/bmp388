@@ -147,7 +147,7 @@ var driver__bmp388_8h =
     [ "bmp388_get_pressure", "group__bmp388__base__driver.html#ga5f9a2425baf061b89b0060e0cd15a4e4", null ],
     [ "bmp388_get_pressure_oversampling", "group__bmp388__base__driver.html#ga7b5747091e31b2559c332a58452b802a", null ],
     [ "bmp388_get_reg", "group__bmp388__extern__driver.html#gab8ec614d66cfa87cac6e13b127104cab", null ],
-    [ "bmp388_get_sensortime", "group__bmp388__base__driver.html#gafb6ae350062d76a8119f9825ff5a900d", null ],
+    [ "bmp388_get_sensortime", "group__bmp388__base__driver.html#ga9a81e931e3c8984ffa263a751e4d8c8d", null ],
     [ "bmp388_get_spi_wire", "group__bmp388__base__driver.html#gae0906ced9b2f24b643d2623c8ac237c4", null ],
     [ "bmp388_get_status", "group__bmp388__base__driver.html#ga9694a1705843975e7eaa1be559c4c29d", null ],
     [ "bmp388_get_temperature", "group__bmp388__base__driver.html#gab1a468d442b47f6fcb02d1ad6d8ac3ce", null ],

@@ -35,8 +35,8 @@
  * </table>
  */
 
-#ifndef _DRIVER_BMP388_FIFO_H_
-#define _DRIVER_BMP388_FIFO_H_
+#ifndef DRIVER_BMP388_FIFO_H
+#define DRIVER_BMP388_FIFO_H
 
 #include "driver_bmp388_interface.h"
 
@@ -95,7 +95,7 @@ uint8_t bmp388_fifo_irq_handler(void);
  * @note      none
  */
 uint8_t bmp388_fifo_init(bmp388_interface_t interface, bmp388_address_t addr_pin,
-                         uint8_t (*fifo_receive_callback)(uint8_t type));
+                         void (*fifo_receive_callback)(uint8_t type));
 
 /**
  * @brief  fifo example deinit
