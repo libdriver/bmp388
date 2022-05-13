@@ -3535,23 +3535,19 @@ uint8_t bmp388_irq_handler(bmp388_handle_t *handle)
        
         return 1;                                                                            /* return error */
     }
-    if ((status & (1 << 0)) != 0)                                                            /* if fifo watermark */
-    {
-        if(handle->receive_callback != NULL)                                                 /* if receive callback is valid */
-        {
-            handle->receive_callback(BMP388_INTERRUPT_STATUS_FIFO_WATERMARK);                /* run receive callback */
-        }
-        
-        return 0;                                                                            /* success return 0 */
-    }
     if ((status & (1 << 1)) != 0)                                                            /* if fifo full */
     {
         if(handle->receive_callback != NULL)                                                 /* if receive callback is valid */
         {
             handle->receive_callback(BMP388_INTERRUPT_STATUS_FIFO_FULL);                     /* run receive callback */
         }
-        
-        return 0;                                                                            /* success return 0 */
+    }
+    if ((status & (1 << 0)) != 0)                                                            /* if fifo watermark */
+    {
+        if(handle->receive_callback != NULL)                                                 /* if receive callback is valid */
+        {
+            handle->receive_callback(BMP388_INTERRUPT_STATUS_FIFO_WATERMARK);                /* run receive callback */
+        }
     }
     if ((status & (1 << 3)) != 0)                                                            /* if data ready */
     {
@@ -3559,8 +3555,6 @@ uint8_t bmp388_irq_handler(bmp388_handle_t *handle)
         {
             handle->receive_callback(BMP388_INTERRUPT_STATUS_DATA_READY);                    /* run receive callback */
         }
-        
-        return 0;                                                                            /* success return 0 */
     }
     
     return 0;                                                                                /* success return 0 */

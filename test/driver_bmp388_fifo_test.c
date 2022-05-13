@@ -475,35 +475,7 @@ uint8_t bmp388_fifo_test(bmp388_interface_t interface, bmp388_address_t addr_pin
     
     /* fifo full test */
     bmp388_interface_debug_print("bmp388: fifo full test.\n");
-    res = bmp388_set_mode(&gs_handle, BMP388_MODE_SLEEP_MODE);
-    if (res != 0)
-    {
-        bmp388_interface_debug_print("bmp388: set mode failed.\n");
-        (void)bmp388_deinit(&gs_handle); 
-        
-        return 1;
-    }
-    bmp388_interface_delay_ms(10);
     
-    /* set fifo watermark 512 */
-    res = bmp388_set_fifo_watermark(&gs_handle, 512);
-    if (res != 0)
-    {
-        bmp388_interface_debug_print("bmp388: set fifo watermark failed.\n");
-        (void)bmp388_deinit(&gs_handle); 
-        
-        return 1;
-    }
-    
-    /* set normal mode */
-    res = bmp388_set_mode(&gs_handle, BMP388_MODE_NORMAL_MODE);
-    if (res != 0)
-    {
-        bmp388_interface_debug_print("bmp388: set mode failed.\n");
-        (void)bmp388_deinit(&gs_handle); 
-        
-        return 1;
-    }
     for (i = 0; i < times; i++)
     {
         uint32_t num;
