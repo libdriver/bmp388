@@ -456,9 +456,6 @@ uint8_t bmp388(uint8_t argc, char **argv)
                 if (strcmp("-iic", argv[4]) == 0)
                 {
                     interface = BMP388_INTERFACE_IIC;
-                    bmp388_interface_debug_print("bmp388: fifo test can only run in spi interface.\n");
-                    
-                    return 1;
                 }
                 else if (strcmp("-spi", argv[4]) == 0)
                 {
@@ -747,9 +744,6 @@ uint8_t bmp388(uint8_t argc, char **argv)
                 if (strcmp("-iic", argv[4]) == 0)
                 {
                     interface = BMP388_INTERFACE_IIC;
-                    bmp388_interface_debug_print("bmp388: fifo test can only run in spi interface.\n");
-                    
-                    return 5;
                 }
                 else if (strcmp("-spi", argv[4]) == 0)
                 {
