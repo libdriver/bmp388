@@ -2544,8 +2544,8 @@ uint8_t bmp388_set_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
         return 1;                                                                       /* return error */
     }
     
-    prev &= ~(0xF << 0);                                                                /* clear config */
-    prev |= coefficient << 0;                                                           /* set config */
+    prev &= ~(0x7 << 1);                                                                /* clear config */
+    prev |= coefficient << 1;                                                           /* set config */
     res = a_bmp388_iic_spi_write(handle, BMP388_REG_CONFIG, (uint8_t *)&prev, 1);       /* write config */
     if (res != 0)                                                                       /* check result */
     {
@@ -2589,7 +2589,7 @@ uint8_t bmp388_get_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
        
         return 1;                                                                      /* return error */
     }
-    *coefficient = (bmp388_filter_coefficient_t)(prev & 0x0F);                         /* get coefficient */
+    *coefficient = (bmp388_filter_coefficient_t)((prev >> 1) & 0x07);                  /* get coefficient */
     
     return 0;                                                                          /* success return 0 */
 }
