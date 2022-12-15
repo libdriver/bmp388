@@ -83,7 +83,7 @@ uint8_t bmp388_read_test(bmp388_interface_t interface, bmp388_address_t addr_pin
         bmp388_interface_debug_print("bmp388: chip is %s.\n", info.chip_name);
         bmp388_interface_debug_print("bmp388: manufacturer is %s.\n", info.manufacturer_name);
         bmp388_interface_debug_print("bmp388: interface is %s.\n", info.interface);
-        bmp388_interface_debug_print("bmp388: driver version is %d.%d.\n", info.driver_version/1000, (info.driver_version%1000)/100);
+        bmp388_interface_debug_print("bmp388: driver version is %d.%d.\n", info.driver_version / 1000, (info.driver_version % 1000) / 100);
         bmp388_interface_debug_print("bmp388: min supply voltage is %0.1fV.\n", info.supply_voltage_min_v);
         bmp388_interface_debug_print("bmp388: max supply voltage is %0.1fV.\n", info.supply_voltage_max_v);
         bmp388_interface_debug_print("bmp388: max current is %0.2fmA.\n", info.max_current_ma);
@@ -378,8 +378,8 @@ uint8_t bmp388_read_test(bmp388_interface_t interface, bmp388_address_t addr_pin
             
             return 1;
         }
-        bmp388_interface_debug_print("bmp388: temperature is %0.2fc.\n", temperature_c);
-        bmp388_interface_debug_print("bmp388: pressure is %0.2fpa.\n", pressure_pa);
+        bmp388_interface_debug_print("bmp388: temperature is %0.2fC.\n", temperature_c);
+        bmp388_interface_debug_print("bmp388: pressure is %0.2fPa.\n", pressure_pa);
         bmp388_interface_delay_ms(1000);
     }
     
@@ -421,8 +421,8 @@ uint8_t bmp388_read_test(bmp388_interface_t interface, bmp388_address_t addr_pin
             
             return 1;
         }
-        bmp388_interface_debug_print("bmp388: temperature is %0.2fc.\n", temperature_c);
-        bmp388_interface_debug_print("bmp388: pressure is %0.2fpa.\n", pressure_pa);
+        bmp388_interface_debug_print("bmp388: temperature is %0.2fC.\n", temperature_c);
+        bmp388_interface_debug_print("bmp388: pressure is %0.2fPa.\n", pressure_pa);
         bmp388_interface_delay_ms(1000);
     }
     

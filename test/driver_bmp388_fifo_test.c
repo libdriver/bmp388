@@ -37,11 +37,11 @@
 
 #include "driver_bmp388_fifo_test.h"
 
-static bmp388_handle_t gs_handle;             /**< bmp388 handle */
-static uint8_t gs_fifo_full_flag;             /**< fifo full flag */
-static uint8_t gs_fifo_watermark_flag;        /**< fifo watermark flag */
-static uint8_t gs_buf[512];                   /**< local buffer */
-static bmp388_frame_t gs_frame[256];          /**< local frame */
+static bmp388_handle_t gs_handle;                      /**< bmp388 handle */
+static volatile uint8_t gs_fifo_full_flag;             /**< fifo full flag */
+static volatile uint8_t gs_fifo_watermark_flag;        /**< fifo watermark flag */
+static uint8_t gs_buf[512];                            /**< local buffer */
+static bmp388_frame_t gs_frame[256];                   /**< local frame */
 
 /**
  * @brief  fifo test irq handler
@@ -181,7 +181,7 @@ uint8_t bmp388_fifo_test(bmp388_interface_t interface, bmp388_address_t addr_pin
         bmp388_interface_debug_print("bmp388: chip is %s.\n", info.chip_name);
         bmp388_interface_debug_print("bmp388: manufacturer is %s.\n", info.manufacturer_name);
         bmp388_interface_debug_print("bmp388: interface is %s.\n", info.interface);
-        bmp388_interface_debug_print("bmp388: driver version is %d.%d.\n", info.driver_version/1000, (info.driver_version%1000)/100);
+        bmp388_interface_debug_print("bmp388: driver version is %d.%d.\n", info.driver_version / 1000, (info.driver_version % 1000) / 100);
         bmp388_interface_debug_print("bmp388: min supply voltage is %0.1fV.\n", info.supply_voltage_min_v);
         bmp388_interface_debug_print("bmp388: max supply voltage is %0.1fV.\n", info.supply_voltage_max_v);
         bmp388_interface_debug_print("bmp388: max current is %0.2fmA.\n", info.max_current_ma);

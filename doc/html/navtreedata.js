@@ -24,8 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "LidDriver BMP388", "index.html", [
-    [ "LibDriver BMP388", "index.html", null ],
+  [ "LibDriver BMP388", "index.html", [
     [ "Modules", "modules.html", "modules" ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
@@ -54,7 +53,7 @@ var NAVTREEINDEX =
 "annotated.html",
 "group__bmp388__driver.html#ga9a541fd425cb5513c32b35c104d58775",
 "group__bmp388__example__driver.html#gab89470159d5b6d3f20dd8d473aeef6d6",
-"structbmp388__handle__s.html#a02176c0d04e4f55c507df4178aee9bdb"
+"structbmp388__handle__s.html#a09053d6d5812eb276a9e4834dde35991"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

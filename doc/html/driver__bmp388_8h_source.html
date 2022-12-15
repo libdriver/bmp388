@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LidDriver BMP388: src/driver_bmp388.h Source File</title>
+<title>LibDriver BMP388: src/driver_bmp388.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="doxygen.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">LidDriver BMP388
+   <div id="projectname">LibDriver BMP388
    &#160;<span id="projectnumber">2.0.0</span>
    </div>
    <div id="projectbrief">BMP388 full function driver</div>
@@ -243,7 +243,7 @@ $(document).ready(function(){initNavTree('driver__bmp388_8h_source.html',''); in
 <div class="line"><a name="l00252"></a><span class="lineno"><a class="line" href="structbmp388__handle__s.html">  252</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structbmp388__handle__s.html">bmp388_handle_s</a></div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;{</div>
 <div class="line"><a name="l00254"></a><span class="lineno"><a class="line" href="structbmp388__handle__s.html#ae4fb63dc1b166464d5da3aa753b0805a">  254</a></span>&#160;    uint8_t <a class="code" href="structbmp388__handle__s.html#ae4fb63dc1b166464d5da3aa753b0805a">iic_addr</a>;                                                                   </div>
-<div class="line"><a name="l00255"></a><span class="lineno"><a class="line" href="structbmp388__handle__s.html#a86d6c6cc84a25fd7cf2f2b16372faef1">  255</a></span>&#160;    uint8_t <a class="code" href="structbmp388__handle__s.html#a86d6c6cc84a25fd7cf2f2b16372faef1">buf</a>[512+1];                                                                 </div>
+<div class="line"><a name="l00255"></a><span class="lineno"><a class="line" href="structbmp388__handle__s.html#a86d6c6cc84a25fd7cf2f2b16372faef1">  255</a></span>&#160;    uint8_t <a class="code" href="structbmp388__handle__s.html#a86d6c6cc84a25fd7cf2f2b16372faef1">buf</a>[512 + 1];                                                               </div>
 <div class="line"><a name="l00256"></a><span class="lineno"><a class="line" href="structbmp388__handle__s.html#a8826dd07625f8d90859ce9bd09628d61">  256</a></span>&#160;    uint8_t (*<a class="code" href="structbmp388__handle__s.html#a8826dd07625f8d90859ce9bd09628d61">iic_init</a>)(void);                                                          </div>
 <div class="line"><a name="l00257"></a><span class="lineno"><a class="line" href="structbmp388__handle__s.html#af6963bbad902ca6e43942b48c07986c3">  257</a></span>&#160;    uint8_t (*<a class="code" href="structbmp388__handle__s.html#af6963bbad902ca6e43942b48c07986c3">iic_deinit</a>)(void);                                                        </div>
 <div class="line"><a name="l00258"></a><span class="lineno"><a class="line" href="structbmp388__handle__s.html#af4ef726288b88f51a846483803a1249b">  258</a></span>&#160;    uint8_t (*<a class="code" href="structbmp388__handle__s.html#af4ef726288b88f51a846483803a1249b">iic_read</a>)(uint8_t addr, uint8_t reg, uint8_t *<a class="code" href="structbmp388__handle__s.html#a86d6c6cc84a25fd7cf2f2b16372faef1">buf</a>, uint16_t len);         </div>
