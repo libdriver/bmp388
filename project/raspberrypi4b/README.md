@@ -1,14 +1,14 @@
-### 1. Chip
+### 1. Board
 
-#### 1.1 Chip Info
+#### 1.1 Board Info
 
-chip name : Raspberry Pi 4B.
+Board Name: Raspberry Pi 4B.
 
-iic pin: SCL/SDA GPIO3/GPIO2.
+IIC Pin: SCL/SDA GPIO3/GPIO2.
 
-spi pin: SCLK/MOSI/MISO/CS GPIO11/GPIO10/GPIO9/GPIO8.
+SPI Pin: SCLK/MOSI/MISO/CS GPIO11/GPIO10/GPIO9/GPIO8.
 
-gpio pin: INT GPIO17.
+GPIO Pin: INT GPIO17.
 
 ### 2. Install
 
@@ -74,37 +74,79 @@ Find the compiled library in CMake.
 find_package(bmp388 REQUIRED)
 ```
 
+#### 2.4 Problem
+
+There is some unknown problem in the gpio interrupt or data reading of bmp388 on the raspberry board.FIFO reading always failed.
+
 ### 3. BMP388
 
 #### 3.1 Command Instruction
 
-​          bmp388 is a basic command which can test all bmp388 driver function:
+1. Show bmp388 chip and driver information.
 
-​           -i        show bmp388 chip and driver information.
+   ```shell
+   bmp388 (-i | --information)
+   ```
 
-​           -h       show bmp388 help.
+2. Show bmp388 help.
 
-​           -p       show bmp388 pin connections of the current board.
+   ```shell
+   bmp388 (-h | --help)
+   ```
 
-​           -t (reg (-iic | -spi) -a (0 | 1) | read <times> (-iic | -spi) -a (0 | 1)  | int  <times> (-iic | -spi) -a (0 | 1) | fifo  <times> (-iic | -spi) -a (0 | 1))
+3. Show bmp388 pin connections of the current board.
 
-​           -t reg (-iic | -spi) -a (0 | 1)        run bmp388 register test. 
+   ```shell
+   bmp388 (-p | --port)
+   ```
 
-​           -t read <times> (-iic | -spi) -a (0 | 1)        run bmp388 read test. times means the test times. 
+4. Run bmp388 register test.
 
-​           -t int <times> (-iic | -spi) -a (0 | 1)        run bmp388 interrupt test. times means the test times. 
+   ```shell
+   bmp388 (-t reg | --test=reg) [--addr=<0 | 1>] [--interface=<iic | spi>]
+   ```
 
-​           -t fifo <times> (-iic | -spi) -a (0 | 1)        run bmp388 fifo test. times means the test times. 
+5. Run bmp388 read test, times means the test times. 
 
-​           -c (read <times> (-iic | -spi) -a (0 | 1) | shot <times> (-iic | -spi) -a (0 | 1) | int <times> (-iic | -spi) -a (0 | 1) | fifo <times> (-iic | -spi) -a (0 | 1) )
+   ```shell
+   bmp388 (-t read | --test=read) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+   ```
 
-​           -c read <times> (-iic | -spi) -a (0 | 1)        run bmp388 read function. times means the read times. 
+6. Run bmp388 interrupt test, times means the test times.
 
-​           -c shot <times> (-iic | -spi) -a (0 | 1)        run bmp388 shot function. times means the read times. 
+   ```shell
+   bmp388 (-t int | --test=int) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+   ```
 
-​           -c int <times> (-iic | -spi) -a (0 | 1)        run bmp388 interrupt function. times means the read times. 
+7. Run bmp388 fifo test, times means the test times.
 
-​           -c fifo <times> (-iic | -spi) -a (0 | 1)        run bmp388 fifo function. times means the read times. 
+   ```shell
+   bmp388 (-t fifo | --test=fifo) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+   ```
+
+8. Run bmp388 read function, times means the read times. 
+
+   ```shell
+   bmp388 (-e read | --example=read) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+   ```
+
+9. Run bmp388 shot function, times means the read times.
+
+   ```shell
+   bmp388 (-e shot | --example=shot) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+   ```
+
+10. Run bmp388 interrupt function, times means the read times.
+
+    ```shell
+    bmp388 (-e int | --example=int) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+    ```
+
+11. Run bmp388 fifo function, times means the read times.
+
+    ```shell
+    bmp388 (-e fifo | --example=fifo) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+    ```
 
 #### 3.2 Command Example
 
@@ -135,7 +177,7 @@ bmp388: INT connected to GPIO17(BCM).
 ```
 
 ```shell
-./bmp388 -t reg -spi -a 0
+./bmp388 -t reg --interface=spi
 
 bmp388: chip is Bosch BMP388.
 bmp388: manufacturer is Bosch.
@@ -158,7 +200,7 @@ bmp388: check addr pin ok.
 bmp388: set addr pin high.
 bmp388: check addr pin ok.
 bmp388: bmp388_set_fifo_watermark/bmp388_get_fifo_watermark test.
-bmp388: set fifo watermark 432.
+bmp388: set fifo watermark 359.
 bmp388: check fifo watermark ok.
 bmp388: bmp388_set_fifo/bmp388_get_fifo test.
 bmp388: set fifo enable.
@@ -338,7 +380,7 @@ bmp388: err is 0x00.
 bmp388: bmp388_get_status.
 bmp388: status is 0x70.
 bmp388: bmp388_get_sensortime.
-bmp388: sensortime is 0x001E66.
+bmp388: sensortime is 0x000533.
 bmp388: bmp388_get_event.
 bmp388: event is power up or softrest.
 bmp388: bmp388_get_interrupt_status.
@@ -357,7 +399,7 @@ bmp388: finish register test.
 ```
 
 ```shell
-./bmp388 -t read 3 -spi -a 0
+./bmp388 -t read --interface=spi --times=3
 
 bmp388: chip is Bosch BMP388.
 bmp388: manufacturer is Bosch.
@@ -370,24 +412,24 @@ bmp388: max temperature is 85.0C.
 bmp388: min temperature is -40.0C.
 bmp388: start read test.
 bmp388: forced mode read test.
-bmp388: temperature is 27.14c.
-bmp388: pressure is 102571.11pa.
-bmp388: temperature is 27.14c.
-bmp388: pressure is 102570.99pa.
-bmp388: temperature is 27.14c.
-bmp388: pressure is 102570.83pa.
+bmp388: temperature is 27.81C.
+bmp388: pressure is 102826.62Pa.
+bmp388: temperature is 27.81C.
+bmp388: pressure is 102826.70Pa.
+bmp388: temperature is 27.81C.
+bmp388: pressure is 102826.62Pa.
 bmp388: normal mode read test.
-bmp388: temperature is 27.36c.
-bmp388: pressure is 102556.73pa.
-bmp388: temperature is 27.39c.
-bmp388: pressure is 102555.52pa.
-bmp388: temperature is 27.41c.
-bmp388: pressure is 102555.84pa.
+bmp388: temperature is 27.92C.
+bmp388: pressure is 102819.14Pa.
+bmp388: temperature is 28.00C.
+bmp388: pressure is 102815.42Pa.
+bmp388: temperature is 28.03C.
+bmp388: pressure is 102813.44Pa.
 bmp388: finish read test.
 ```
 
 ```shell
-./bmp388 -t int 3 -spi -a 0
+./bmp388 -t int --interface=spi --times=3
 
 bmp388: chip is Bosch BMP388.
 bmp388: manufacturer is Bosch.
@@ -399,17 +441,17 @@ bmp388: max current is 0.80mA.
 bmp388: max temperature is 85.0C.
 bmp388: min temperature is -40.0C.
 bmp388: start interrupt test.
-bmp388: temperature is 27.42c.
-bmp388: pressure is 102560.72pa.
-bmp388: temperature is 27.53c.
-bmp388: pressure is 102556.27pa.
-bmp388: temperature is 27.54c.
-bmp388: pressure is 102555.51pa.
+bmp388: temperature is 30.57C.
+bmp388: pressure is 103030.59Pa.
+bmp388: temperature is 30.69C.
+bmp388: pressure is 103020.56Pa.
+bmp388: temperature is 30.72C.
+bmp388: pressure is 103017.99Pa.
 bmp388: finish interrupt test.
 ```
 
 ```shell
-./bmp388 -t fifo 3 -spi -a 0
+./bmp388 -t fifo --interface=spi --times=3
 
 bmp388: chip is Bosch BMP388.
 bmp388: manufacturer is Bosch.
@@ -436,415 +478,424 @@ bmp388: finish fifo test.
 ```
 
 ```shell
-./bmp388 -c read 3 -spi -a 0
+./bmp388 -e read --interface=spi --times=3
 
 bmp388: 1/3.
-bmp388: temperature is 28.03C.
-bmp388: pressure is 102563.48Pa.
+bmp388: temperature is 28.20C.
+bmp388: pressure is 102824.71Pa.
 bmp388: 2/3.
-bmp388: temperature is 28.07C.
-bmp388: pressure is 102562.90Pa.
+bmp388: temperature is 28.28C.
+bmp388: pressure is 102819.53Pa.
 bmp388: 3/3.
-bmp388: temperature is 28.08C.
-bmp388: pressure is 102562.76Pa.
+bmp388: temperature is 28.32C.
+bmp388: pressure is 102817.60Pa.
 ```
 
 ```shell
-./bmp388 -c shot 3 -spi -a 0
+./bmp388 -e shot --interface=spi --times=3
 
 bmp388: 1/3.
-bmp388: temperature is 27.76C.
-bmp388: pressure is 102577.23Pa.
+bmp388: temperature is 28.12C.
+bmp388: pressure is 102830.87Pa.
 bmp388: 2/3.
-bmp388: temperature is 27.76C.
-bmp388: pressure is 102577.16Pa.
+bmp388: temperature is 28.12C.
+bmp388: pressure is 102830.94Pa.
 bmp388: 3/3.
-bmp388: temperature is 27.76C.
-bmp388: pressure is 102577.59Pa.
+bmp388: temperature is 28.12C.
+bmp388: pressure is 102831.08Pa.
 ```
 
 ```shell
-./bmp388 -c int 3 -spi -a 0
+./bmp388 -e int --interface=spi --times=3
 
 bmp388: 1/3.
-bmp388: temperature is 27.24C.
-bmp388: pressure is 102567.33Pa.
+bmp388: temperature is 29.85C.
+bmp388: pressure is 103039.22Pa.
 bmp388: 2/3.
-bmp388: temperature is 27.27C.
-bmp388: pressure is 102565.65Pa.
+bmp388: temperature is 29.86C.
+bmp388: pressure is 103038.77Pa.
 bmp388: 3/3.
-bmp388: temperature is 27.33C.
-bmp388: pressure is 102561.62Pa.
+bmp388: temperature is 29.87C.
+bmp388: pressure is 103038.01Pa.
 ```
 
 ```shell
-./bmp388 -c fifo 3 -spi -a 0
+./bmp388 -e fifo --interface=spi --times=3
 
 bmp388: fifo 1/1.
-bmp388: sensortime is 74003.
+bmp388: sensortime is 74180.
 bmp388: fifo 1/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.96C.
 bmp388: fifo 2/75.
-bmp388: pressure is 102544.24Pa.
+bmp388: pressure is 102971.79Pa.
 bmp388: fifo 3/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.97C.
 bmp388: fifo 4/75.
-bmp388: pressure is 102544.46Pa.
+bmp388: pressure is 102971.60Pa.
 bmp388: fifo 5/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.97C.
 bmp388: fifo 6/75.
-bmp388: pressure is 102544.32Pa.
+bmp388: pressure is 102971.44Pa.
 bmp388: fifo 7/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.97C.
 bmp388: fifo 8/75.
-bmp388: pressure is 102544.07Pa.
+bmp388: pressure is 102971.32Pa.
 bmp388: fifo 9/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.97C.
 bmp388: fifo 10/75.
-bmp388: pressure is 102544.26Pa.
+bmp388: pressure is 102971.25Pa.
 bmp388: fifo 11/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.98C.
 bmp388: fifo 12/75.
-bmp388: pressure is 102543.92Pa.
+bmp388: pressure is 102971.09Pa.
 bmp388: fifo 13/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.98C.
 bmp388: fifo 14/75.
-bmp388: pressure is 102544.07Pa.
+bmp388: pressure is 102970.90Pa.
 bmp388: fifo 15/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.98C.
 bmp388: fifo 16/75.
-bmp388: pressure is 102544.20Pa.
+bmp388: pressure is 102970.79Pa.
 bmp388: fifo 17/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.98C.
 bmp388: fifo 18/75.
-bmp388: pressure is 102544.71Pa.
+bmp388: pressure is 102970.57Pa.
 bmp388: fifo 19/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.98C.
 bmp388: fifo 20/75.
-bmp388: pressure is 102544.90Pa.
+bmp388: pressure is 102970.46Pa.
 bmp388: fifo 21/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.98C.
 bmp388: fifo 22/75.
-bmp388: pressure is 102545.38Pa.
+bmp388: pressure is 102970.30Pa.
 bmp388: fifo 23/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.98C.
 bmp388: fifo 24/75.
-bmp388: pressure is 102545.42Pa.
+bmp388: pressure is 102970.28Pa.
 bmp388: fifo 25/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.98C.
 bmp388: fifo 26/75.
-bmp388: pressure is 102544.96Pa.
+bmp388: pressure is 102970.09Pa.
 bmp388: fifo 27/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.99C.
 bmp388: fifo 28/75.
-bmp388: pressure is 102544.51Pa.
+bmp388: pressure is 102970.06Pa.
 bmp388: fifo 29/75.
-bmp388: temperature is 27.74C.
+bmp388: temperature is 26.99C.
 bmp388: fifo 30/75.
-bmp388: pressure is 102544.64Pa.
+bmp388: pressure is 102970.00Pa.
 bmp388: fifo 31/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 26.99C.
 bmp388: fifo 32/75.
-bmp388: pressure is 102544.95Pa.
+bmp388: pressure is 102969.81Pa.
 bmp388: fifo 33/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 26.99C.
 bmp388: fifo 34/75.
-bmp388: pressure is 102544.76Pa.
+bmp388: pressure is 102969.84Pa.
 bmp388: fifo 35/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 26.99C.
 bmp388: fifo 36/75.
-bmp388: pressure is 102544.40Pa.
+bmp388: pressure is 102969.79Pa.
 bmp388: fifo 37/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 26.99C.
 bmp388: fifo 38/75.
-bmp388: pressure is 102544.09Pa.
+bmp388: pressure is 102969.82Pa.
 bmp388: fifo 39/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 26.99C.
 bmp388: fifo 40/75.
-bmp388: pressure is 102543.14Pa.
+bmp388: pressure is 102969.81Pa.
 bmp388: fifo 41/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 42/75.
-bmp388: pressure is 102543.49Pa.
+bmp388: pressure is 102969.67Pa.
 bmp388: fifo 43/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 44/75.
-bmp388: pressure is 102544.12Pa.
+bmp388: pressure is 102969.67Pa.
 bmp388: fifo 45/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 46/75.
-bmp388: pressure is 102544.66Pa.
+bmp388: pressure is 102969.60Pa.
 bmp388: fifo 47/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 48/75.
-bmp388: pressure is 102544.75Pa.
+bmp388: pressure is 102969.69Pa.
 bmp388: fifo 49/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 50/75.
-bmp388: pressure is 102544.75Pa.
+bmp388: pressure is 102969.66Pa.
 bmp388: fifo 51/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 52/75.
-bmp388: pressure is 102544.89Pa.
+bmp388: pressure is 102969.53Pa.
 bmp388: fifo 53/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 54/75.
-bmp388: pressure is 102545.13Pa.
+bmp388: pressure is 102969.44Pa.
 bmp388: fifo 55/75.
-bmp388: temperature is 27.75C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 56/75.
-bmp388: pressure is 102545.30Pa.
+bmp388: pressure is 102969.41Pa.
 bmp388: fifo 57/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 58/75.
-bmp388: pressure is 102545.94Pa.
+bmp388: pressure is 102969.28Pa.
 bmp388: fifo 59/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 60/75.
-bmp388: pressure is 102545.20Pa.
+bmp388: pressure is 102969.16Pa.
 bmp388: fifo 61/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 62/75.
-bmp388: pressure is 102545.24Pa.
+bmp388: pressure is 102969.08Pa.
 bmp388: fifo 63/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.00C.
 bmp388: fifo 64/75.
-bmp388: pressure is 102545.43Pa.
+bmp388: pressure is 102969.01Pa.
 bmp388: fifo 65/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 66/75.
-bmp388: pressure is 102545.28Pa.
+bmp388: pressure is 102969.18Pa.
 bmp388: fifo 67/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 68/75.
-bmp388: pressure is 102545.37Pa.
+bmp388: pressure is 102969.24Pa.
 bmp388: fifo 69/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 70/75.
-bmp388: pressure is 102545.12Pa.
+bmp388: pressure is 102969.13Pa.
 bmp388: fifo 71/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 72/75.
-bmp388: pressure is 102545.15Pa.
+bmp388: pressure is 102969.01Pa.
 bmp388: fifo 73/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 74/75.
-bmp388: pressure is 102545.09Pa.
+bmp388: pressure is 102968.86Pa.
 bmp388: fifo 75/75.
-bmp388: sensortime is 149593.
-bmp388: fifo 1/9.
-bmp388: temperature is 27.76C.
-bmp388: fifo 2/9.
-bmp388: pressure is 102545.64Pa.
-bmp388: fifo 3/9.
-bmp388: temperature is 27.77C.
-bmp388: fifo 4/9.
-bmp388: pressure is 102545.91Pa.
-bmp388: fifo 5/9.
-bmp388: temperature is 27.77C.
-bmp388: fifo 6/9.
-bmp388: pressure is 102545.67Pa.
-bmp388: fifo 7/9.
-bmp388: temperature is 27.77C.
-bmp388: fifo 8/9.
-bmp388: pressure is 102546.00Pa.
-bmp388: fifo 9/9.
-bmp388: sensortime is 158375.
+bmp388: sensortime is 149746.
+bmp388: fifo 1/11.
+bmp388: temperature is 27.01C.
+bmp388: fifo 2/11.
+bmp388: pressure is 102968.86Pa.
+bmp388: fifo 3/11.
+bmp388: temperature is 27.01C.
+bmp388: fifo 4/11.
+bmp388: pressure is 102968.97Pa.
+bmp388: fifo 5/11.
+bmp388: temperature is 27.01C.
+bmp388: fifo 6/11.
+bmp388: pressure is 102968.88Pa.
+bmp388: fifo 7/11.
+bmp388: temperature is 27.01C.
+bmp388: fifo 8/11.
+bmp388: pressure is 102968.73Pa.
+bmp388: fifo 9/11.
+bmp388: temperature is 27.01C.
+bmp388: fifo 10/11.
+bmp388: pressure is 102968.57Pa.
+bmp388: fifo 11/11.
+bmp388: sensortime is 161386.
 bmp388: fifo 1/75.
-bmp388: temperature is 27.76C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 2/75.
-bmp388: pressure is 102545.72Pa.
+bmp388: pressure is 102968.63Pa.
 bmp388: fifo 3/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 4/75.
-bmp388: pressure is 102545.95Pa.
+bmp388: pressure is 102968.59Pa.
 bmp388: fifo 5/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 6/75.
-bmp388: pressure is 102545.63Pa.
+bmp388: pressure is 102968.59Pa.
 bmp388: fifo 7/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 8/75.
-bmp388: pressure is 102545.56Pa.
+bmp388: pressure is 102968.48Pa.
 bmp388: fifo 9/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 10/75.
-bmp388: pressure is 102545.54Pa.
+bmp388: pressure is 102968.54Pa.
 bmp388: fifo 11/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.01C.
 bmp388: fifo 12/75.
-bmp388: pressure is 102545.30Pa.
+bmp388: pressure is 102968.57Pa.
 bmp388: fifo 13/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 14/75.
-bmp388: pressure is 102545.71Pa.
+bmp388: pressure is 102968.61Pa.
 bmp388: fifo 15/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 16/75.
-bmp388: pressure is 102546.06Pa.
+bmp388: pressure is 102968.55Pa.
 bmp388: fifo 17/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 18/75.
-bmp388: pressure is 102546.06Pa.
+bmp388: pressure is 102968.34Pa.
 bmp388: fifo 19/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 20/75.
-bmp388: pressure is 102546.33Pa.
+bmp388: pressure is 102968.21Pa.
 bmp388: fifo 21/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 22/75.
-bmp388: pressure is 102546.18Pa.
+bmp388: pressure is 102968.24Pa.
 bmp388: fifo 23/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 24/75.
-bmp388: pressure is 102546.64Pa.
+bmp388: pressure is 102968.31Pa.
 bmp388: fifo 25/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 26/75.
-bmp388: pressure is 102546.66Pa.
+bmp388: pressure is 102968.32Pa.
 bmp388: fifo 27/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 28/75.
-bmp388: pressure is 102545.98Pa.
+bmp388: pressure is 102968.30Pa.
 bmp388: fifo 29/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 30/75.
-bmp388: pressure is 102546.31Pa.
+bmp388: pressure is 102968.26Pa.
 bmp388: fifo 31/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 32/75.
-bmp388: pressure is 102546.63Pa.
+bmp388: pressure is 102968.31Pa.
 bmp388: fifo 33/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 34/75.
-bmp388: pressure is 102546.66Pa.
+bmp388: pressure is 102968.44Pa.
 bmp388: fifo 35/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 36/75.
-bmp388: pressure is 102546.90Pa.
+bmp388: pressure is 102968.38Pa.
 bmp388: fifo 37/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 38/75.
-bmp388: pressure is 102546.52Pa.
+bmp388: pressure is 102968.45Pa.
 bmp388: fifo 39/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 40/75.
-bmp388: pressure is 102545.66Pa.
+bmp388: pressure is 102968.44Pa.
 bmp388: fifo 41/75.
-bmp388: temperature is 27.77C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 42/75.
-bmp388: pressure is 102545.67Pa.
+bmp388: pressure is 102968.45Pa.
 bmp388: fifo 43/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 44/75.
-bmp388: pressure is 102546.13Pa.
+bmp388: pressure is 102968.43Pa.
 bmp388: fifo 45/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 46/75.
-bmp388: pressure is 102546.42Pa.
+bmp388: pressure is 102968.43Pa.
 bmp388: fifo 47/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 48/75.
-bmp388: pressure is 102546.42Pa.
+bmp388: pressure is 102968.48Pa.
 bmp388: fifo 49/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 50/75.
-bmp388: pressure is 102546.53Pa.
+bmp388: pressure is 102968.42Pa.
 bmp388: fifo 51/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 52/75.
-bmp388: pressure is 102546.40Pa.
+bmp388: pressure is 102968.49Pa.
 bmp388: fifo 53/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 54/75.
-bmp388: pressure is 102546.28Pa.
+bmp388: pressure is 102968.50Pa.
 bmp388: fifo 55/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 56/75.
-bmp388: pressure is 102546.41Pa.
+bmp388: pressure is 102968.45Pa.
 bmp388: fifo 57/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.02C.
 bmp388: fifo 58/75.
-bmp388: pressure is 102546.38Pa.
+bmp388: pressure is 102968.48Pa.
 bmp388: fifo 59/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.03C.
 bmp388: fifo 60/75.
-bmp388: pressure is 102546.92Pa.
+bmp388: pressure is 102968.46Pa.
 bmp388: fifo 61/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.03C.
 bmp388: fifo 62/75.
-bmp388: pressure is 102546.47Pa.
+bmp388: pressure is 102968.51Pa.
 bmp388: fifo 63/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.03C.
 bmp388: fifo 64/75.
-bmp388: pressure is 102546.49Pa.
+bmp388: pressure is 102968.56Pa.
 bmp388: fifo 65/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.03C.
 bmp388: fifo 66/75.
-bmp388: pressure is 102546.20Pa.
+bmp388: pressure is 102968.45Pa.
 bmp388: fifo 67/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.03C.
 bmp388: fifo 68/75.
-bmp388: pressure is 102546.26Pa.
+bmp388: pressure is 102968.48Pa.
 bmp388: fifo 69/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.03C.
 bmp388: fifo 70/75.
-bmp388: pressure is 102546.20Pa.
+bmp388: pressure is 102968.49Pa.
 bmp388: fifo 71/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.03C.
 bmp388: fifo 72/75.
-bmp388: pressure is 102545.98Pa.
+bmp388: pressure is 102968.52Pa.
 bmp388: fifo 73/75.
-bmp388: temperature is 27.78C.
+bmp388: temperature is 27.03C.
 bmp388: fifo 74/75.
-bmp388: pressure is 102546.12Pa.
+bmp388: pressure is 102968.53Pa.
 bmp388: fifo 75/75.
-bmp388: sensortime is 233561.
-bmp388: fifo 1/9.
-bmp388: temperature is 27.78C.
-bmp388: fifo 2/9.
-bmp388: pressure is 102545.81Pa.
-bmp388: fifo 3/9.
-bmp388: temperature is 27.78C.
-bmp388: fifo 4/9.
-bmp388: pressure is 102546.12Pa.
-bmp388: fifo 5/9.
-bmp388: temperature is 27.78C.
-bmp388: fifo 6/9.
-bmp388: pressure is 102545.91Pa.
-bmp388: fifo 7/9.
-bmp388: temperature is 27.79C.
-bmp388: fifo 8/9.
-bmp388: pressure is 102546.22Pa.
-bmp388: fifo 9/9.
-bmp388: sensortime is 242347.
+bmp388: sensortime is 235762.
+bmp388: fifo 1/11.
+bmp388: temperature is 27.03C.
+bmp388: fifo 2/11.
+bmp388: pressure is 102968.59Pa.
+bmp388: fifo 3/11.
+bmp388: temperature is 27.03C.
+bmp388: fifo 4/11.
+bmp388: pressure is 102968.58Pa.
+bmp388: fifo 5/11.
+bmp388: temperature is 27.03C.
+bmp388: fifo 6/11.
+bmp388: pressure is 102968.61Pa.
+bmp388: fifo 7/11.
+bmp388: temperature is 27.03C.
+bmp388: fifo 8/11.
+bmp388: pressure is 102968.45Pa.
+bmp388: fifo 9/11.
+bmp388: temperature is 27.03C.
+bmp388: fifo 10/11.
+bmp388: pressure is 102968.41Pa.
+bmp388: fifo 11/11.
+bmp388: sensortime is 247405.
 bmp388: finish fifo read.
 ```
 
 ```shell
 ./bmp388 -h
 
-bmp388 -i
-	show bmp388 chip and driver information.
-bmp388 -h
-	show bmp388 help.
-bmp388 -p
-	show bmp388 pin connections of the current board.
-bmp388 -t reg (-iic | -spi) -a (0 | 1)
-	run bmp388 register test.
-bmp388 -t read <times> (-iic | -spi) -a (0 | 1)
-	run bmp388 read test.times means the test times.
-bmp388 -t int <times> (-iic | -spi) -a (0 | 1)
-	run bmp388 interrupt test.times means the test times.
-bmp388 -t fifo <times> (-iic | -spi) -a (0 | 1)
-	run bmp388 fifo test.times means the test times.
-bmp388 -c read <times> (-iic | -spi) -a (0 | 1)
-	run bmp388 read function.times means the read times.
-bmp388 -c shot <times> (-iic | -spi) -a (0 | 1)
-	run bmp388 shot function.times means the read times.
-bmp388 -c int <times> (-iic | -spi) -a (0 | 1)
-	run bmp388 interrupt function.times means the read times.
-bmp388 -c fifo <times> (-iic | -spi) -a (0 | 1)
-	run bmp388 fifo function.times means the read times.
-```
+Usage:
+  bmp388 (-i | --information)
+  bmp388 (-h | --help)
+  bmp388 (-p | --port)
+  bmp388 (-t reg | --test=reg) [--addr=<0 | 1>] [--interface=<iic | spi>]
+  bmp388 (-t read | --test=read) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+  bmp388 (-t int | --test=int) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+  bmp388 (-t fifo | --test=fifo) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+  bmp388 (-e read | --example=read) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+  bmp388 (-e shot | --example=shot) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+  bmp388 (-e int | --example=int) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
+  bmp388 (-e fifo | --example=fifo) [--addr=<0 | 1>] [--interface=<iic | spi>] [--times=<num>]
 
+Options:
+      --addr=<0 | 1>                 Set the chip iic address.([default: 0])
+  -e <read | shot | int | fifo>, --example=<read | shot | int | fifo>
+                                     Run the driver example.
+  -h, --help                         Show the help.
+  -i, --information                  Show the chip information.
+      --interface=<iic | spi>        Set the chip interface.([default: iic])
+  -p, --port                         Display the pin connections of the current board.
+  -t <reg | read | int | fifo>, --test=<reg | read | int | fifo>
+                                     Run the driver test.
+      --times=<num>                  Set the running times.([default: 3])
+```

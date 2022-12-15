@@ -376,7 +376,7 @@ static int64_t a_bmp388_compensate_pressure(bmp388_handle_t *handle, uint32_t da
 /**
  * @brief      get the error
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *err points to a error buffer
+ * @param[out] *err points to an error buffer
  * @return     status code
  *             - 0 success
  *             - 1 get error failed
@@ -483,7 +483,7 @@ uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *t)
 /**
  * @brief      get the event
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *event points to a event buffer
+ * @param[out] *event points to an event buffer
  * @return     status code
  *             - 0 success
  *             - 1 get event failed
@@ -1328,7 +1328,7 @@ uint8_t bmp388_set_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_
 /**
  * @brief      get the interrupt pin type
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *pin_type points to a interrupt pin type buffer
+ * @param[out] *pin_type points to an interrupt pin type buffer
  * @return     status code
  *             - 0 success
  *             - 1 get interrupt pin type failed
@@ -1410,7 +1410,7 @@ uint8_t bmp388_set_interrupt_active_level(bmp388_handle_t *handle, bmp388_interr
 /**
  * @brief      get the interrupt active level
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *level points to a interrupt active level buffer
+ * @param[out] *level points to an interrupt active level buffer
  * @return     status code
  *             - 0 success
  *             - 1 get interrupt active level failed
@@ -1984,7 +1984,7 @@ uint8_t bmp388_set_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
 /**
  * @brief      get the iic watchdog period
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *period points to a iic watchdog period buffer
+ * @param[out] *period points to an iic watchdog period buffer
  * @return     status code
  *             - 0 success
  *             - 1 get iic watchdog period failed
@@ -2312,7 +2312,7 @@ uint8_t bmp388_set_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversam
 /**
  * @brief      get the pressure oversampling
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *oversampling points to a oversampling buffer
+ * @param[out] *oversampling points to an oversampling buffer
  * @return     status code
  *             - 0 success
  *             - 1 get pressure oversampling failed
@@ -2394,7 +2394,7 @@ uint8_t bmp388_set_temperature_oversampling(bmp388_handle_t *handle, bmp388_over
 /**
  * @brief      get the temperature oversampling
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *oversampling points to a oversampling buffer
+ * @param[out] *oversampling points to an oversampling buffer
  * @return     status code
  *             - 0 success
  *             - 1 get temperature oversampling failed
@@ -2477,7 +2477,7 @@ uint8_t bmp388_set_odr(bmp388_handle_t *handle, bmp388_odr_t odr)
 /**
  * @brief      get the output data rate
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *odr points to a output data rate buffer
+ * @param[out] *odr points to an output data rate buffer
  * @return     status code
  *             - 0 success
  *             - 1 get odr failed
@@ -3584,7 +3584,7 @@ uint8_t bmp388_set_addr_pin(bmp388_handle_t *handle, bmp388_address_t addr_pin)
 /**
  * @brief      get the iic address pin
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *addr_pin points to a iic address pin buffer
+ * @param[out] *addr_pin points to an iic address pin buffer
  * @return     status code
  *             - 0 success
  *             - 2 handle is NULL
@@ -3826,7 +3826,7 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
  * @brief     set the chip register
  * @param[in] *handle points to a bmp388 handle structure
  * @param[in] reg is the iic register address
- * @param[in] value is the data written to the register
+ * @param[in] value is the data write to the register
  * @return    status code
  *            - 0 success
  *            - 1 write failed
