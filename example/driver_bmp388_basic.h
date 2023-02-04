@@ -87,7 +87,7 @@ uint8_t bmp388_basic_deinit(void);
 /**
  * @brief      basic example read
  * @param[out] *temperature_c points a converted temperature data buffer
- * @param[out] *pressure_pa points a converted pressrue data buffer
+ * @param[out] *pressure_pa points a converted pressure data buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed

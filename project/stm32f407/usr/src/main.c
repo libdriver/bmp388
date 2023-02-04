@@ -165,12 +165,12 @@ void bmp388_interface_fifo_receive_callback(uint8_t type)
                 else if (gs_frame[i].type == BMP388_FRAME_TYPE_SENSORTIME)
                 {
                     bmp388_interface_debug_print("bmp388: fifo %d/%d.\n", i + 1, frame_len);
-                    bmp388_interface_debug_print("bmp388: sensortime is %d.\n", gs_frame[i].raw);
+                    bmp388_interface_debug_print("bmp388: sensor time is %d.\n", gs_frame[i].raw);
                 }
                 else
                 {
                     bmp388_interface_debug_print("bmp388: fifo %d/%d.\n", i + 1, frame_len);
-                    bmp388_interface_debug_print("bmp388: unknow type.\n");
+                    bmp388_interface_debug_print("bmp388: unknown type.\n");
                 }
             }
             gs_fifo_watermark_flag = 1;
@@ -207,12 +207,12 @@ void bmp388_interface_fifo_receive_callback(uint8_t type)
                 else if (gs_frame[i].type == BMP388_FRAME_TYPE_SENSORTIME)
                 {
                     bmp388_interface_debug_print("bmp388: fifo %d/%d.\n", i + 1, frame_len);
-                    bmp388_interface_debug_print("bmp388: sensortime is %d.\n", gs_frame[i].raw);
+                    bmp388_interface_debug_print("bmp388: sensor time is %d.\n", gs_frame[i].raw);
                 }
                 else
                 {
                     bmp388_interface_debug_print("bmp388: fifo %d/%d.\n", i + 1, frame_len);
-                    bmp388_interface_debug_print("bmp388: unknow type.\n");
+                    bmp388_interface_debug_print("bmp388: unknown type.\n");
                 }
             }
             gs_fifo_full_flag = 1;
@@ -257,7 +257,7 @@ uint8_t bmp388(uint8_t argc, char **argv)
         {"times", required_argument, NULL, 3},
         {NULL, 0, NULL, 0},
     };
-    char type[33] = "unknow";
+    char type[33] = "unknown";
     uint32_t times = 3;
     bmp388_address_t addr = BMP388_ADDRESS_ADO_LOW;
     bmp388_interface_t interface = BMP388_INTERFACE_IIC;
@@ -789,7 +789,7 @@ int main(void)
     /* uart init */
     uart_init(115200);
     
-    /* shell init && register bmp388 fuction */
+    /* shell init && register bmp388 function */
     shell_init();
     shell_register("bmp388", bmp388);
     uart_print("bmp388: welcome to libdriver bmp388.\n");
@@ -812,7 +812,7 @@ int main(void)
             }
             else if (res == 2)
             {
-                uart_print("bmp388: unknow command.\n");
+                uart_print("bmp388: unknown command.\n");
             }
             else if (res == 3)
             {
@@ -828,7 +828,7 @@ int main(void)
             }
             else
             {
-                uart_print("bmp388: unknow status code.\n");
+                uart_print("bmp388: unknown status code.\n");
             }
             uart_flush();
         }

@@ -245,7 +245,7 @@ uint8_t bmp388_interrupt_init(bmp388_interface_t interface, bmp388_address_t add
         return 1;
     }
     
-    /* set default temperature oversamping */
+    /* set default temperature oversampling */
     res = bmp388_set_temperature_oversampling(&gs_handle, BMP388_INTERRUPT_DEFAULT_TEMPERATURE_OVERSAMPLING);
     if (res != 0)
     {
@@ -291,7 +291,7 @@ uint8_t bmp388_interrupt_init(bmp388_interface_t interface, bmp388_address_t add
 /**
  * @brief      interrupt example read
  * @param[out] *temperature_c points a converted temperature data buffer
- * @param[out] *pressure_pa points a converted pressrue data buffer
+ * @param[out] *pressure_pa points a converted pressure data buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
