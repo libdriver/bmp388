@@ -279,11 +279,11 @@ uint8_t bmp388_fifo_test(bmp388_interface_t interface, bmp388_address_t addr_pin
         return 1;
     }
     
-    /* enable fifo sensortime on */
+    /* enable fifo sensor time on */
     res = bmp388_set_fifo_sensortime_on(&gs_handle, BMP388_BOOL_TRUE);
     if (res != 0)
     {
-        bmp388_interface_debug_print("bmp388: set fifo sensortime on failed.\n");
+        bmp388_interface_debug_print("bmp388: set fifo sensor time on failed.\n");
         (void)bmp388_deinit(&gs_handle); 
         
         return 1;
@@ -291,7 +291,7 @@ uint8_t bmp388_fifo_test(bmp388_interface_t interface, bmp388_address_t addr_pin
     res = bmp388_set_fifo_pressure_on(&gs_handle, BMP388_BOOL_TRUE);
     if (res != 0)
     {
-        bmp388_interface_debug_print("bmp388: set fifo sensortime on failed.\n");
+        bmp388_interface_debug_print("bmp388: set fifo sensor time on failed.\n");
         (void)bmp388_deinit(&gs_handle); 
         
         return 1;
@@ -321,7 +321,7 @@ uint8_t bmp388_fifo_test(bmp388_interface_t interface, bmp388_address_t addr_pin
         return 1;
     }
     
-    /* set interrupt pin type push pull */
+    /* set interrupt pin type push-pull */
     res = bmp388_set_interrupt_pin_type(&gs_handle, BMP388_INTERRUPT_PIN_TYPE_PUSH_PULL);
     if (res != 0)
     {

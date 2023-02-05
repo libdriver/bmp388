@@ -335,41 +335,41 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     res = bmp388_set_fifo_sensortime_on(&gs_handle, BMP388_BOOL_TRUE);
     if (res != 0)
     {
-        bmp388_interface_debug_print("bmp388: set fifo sensortime on failed.\n");
+        bmp388_interface_debug_print("bmp388: set fifo sensor time on failed.\n");
         (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
-    bmp388_interface_debug_print("bmp388: set fifo sensortime on enable.\n");
+    bmp388_interface_debug_print("bmp388: set fifo sensor time on enable.\n");
     res = bmp388_get_fifo_sensortime_on(&gs_handle, (bmp388_bool_t *)&enable);
     if (res != 0)
     {
-        bmp388_interface_debug_print("bmp388: get fifo sensortime on failed.\n");
+        bmp388_interface_debug_print("bmp388: get fifo sensor time on failed.\n");
         (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
-    bmp388_interface_debug_print("bmp388: check fifo sensortime on %s.\n", enable==BMP388_BOOL_TRUE?"ok":"error");
+    bmp388_interface_debug_print("bmp388: check fifo sensor time on %s.\n", enable==BMP388_BOOL_TRUE?"ok":"error");
     
     /* disable */
     res = bmp388_set_fifo_sensortime_on(&gs_handle, BMP388_BOOL_FALSE);
     if (res != 0)
     {
-        bmp388_interface_debug_print("bmp388: set fifo sensortime on failed.\n");
+        bmp388_interface_debug_print("bmp388: set fifo sensor time on failed.\n");
         (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
-    bmp388_interface_debug_print("bmp388: set fifo sensortime on disable.\n");
+    bmp388_interface_debug_print("bmp388: set fifo sensor time on disable.\n");
     res = bmp388_get_fifo_sensortime_on(&gs_handle, (bmp388_bool_t *)&enable);
     if (res != 0)
     {
-        bmp388_interface_debug_print("bmp388: get fifo sensortime on failed.\n");
+        bmp388_interface_debug_print("bmp388: get fifo sensor time on failed.\n");
         (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
-    bmp388_interface_debug_print("bmp388: check fifo sensortime on %s.\n", enable==BMP388_BOOL_FALSE?"ok":"error");
+    bmp388_interface_debug_print("bmp388: check fifo sensor time on %s.\n", enable==BMP388_BOOL_FALSE?"ok":"error");
     
     /* bmp388_set_fifo_pressure_on/bmp388_get_fifo_pressure_on test */
     bmp388_interface_debug_print("bmp388: bmp388_set_fifo_pressure_on/bmp388_get_fifo_pressure_on test.\n");
@@ -525,7 +525,7 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     /* bmp388_set_interrupt_pin_type/bmp388_get_interrupt_pin_type test */
     bmp388_interface_debug_print("bmp388: bmp388_set_interrupt_pin_type/bmp388_get_interrupt_pin_type test.\n");
     
-    /* set push pull */
+    /* set push-pull */
     res = bmp388_set_interrupt_pin_type(&gs_handle, BMP388_INTERRUPT_PIN_TYPE_PUSH_PULL);
     if (res != 0)
     {
@@ -1870,12 +1870,12 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     res = bmp388_get_sensortime(&gs_handle, (uint32_t *)&sensortime);
     if (res != 0)
     {
-        bmp388_interface_debug_print("bmp388: get sensortime failed.\n");
+        bmp388_interface_debug_print("bmp388: get sensor time failed.\n");
         (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
-    bmp388_interface_debug_print("bmp388: sensortime is 0x%06X.\n", (uint32_t)sensortime);
+    bmp388_interface_debug_print("bmp388: sensor time is 0x%06X.\n", (uint32_t)sensortime);
     
     /* bmp388_get_event */
     bmp388_interface_debug_print("bmp388: bmp388_get_event.\n");
@@ -1954,12 +1954,12 @@ uint8_t bmp388_register_test(bmp388_interface_t interface, bmp388_address_t addr
     res = bmp388_softreset(&gs_handle);
     if (res != 0)
     {
-        bmp388_interface_debug_print("bmp388: bmp388 softreset failed.\n");
+        bmp388_interface_debug_print("bmp388: bmp388 soft reset failed.\n");
         (void)bmp388_deinit(&gs_handle);
         
         return 1;
     }
-    bmp388_interface_debug_print("bmp388: softreset %s.\n", res?"error":"ok");
+    bmp388_interface_debug_print("bmp388: soft reset %s.\n", res?"error":"ok");
     
     /* finish register test */
     bmp388_interface_debug_print("bmp388: finish register test.\n");

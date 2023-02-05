@@ -59,19 +59,19 @@
 #define BMP388_REG_NVM_PAR_T2_H        0x34        /**< NVM PAR T2 high register */
 #define BMP388_REG_NVM_PAR_T3          0x35        /**< NVM PAR T3 register */
 #define BMP388_REG_NVM_PAR_P1_L        0x36        /**< NVM PAR P1 low register */
-#define BMP388_REG_NVM_PAR_P1_H        0x37        /**< NVM PAR P1 hgih register */
+#define BMP388_REG_NVM_PAR_P1_H        0x37        /**< NVM PAR P1 high register */
 #define BMP388_REG_NVM_PAR_P2_L        0x38        /**< NVM PAR P2 low register */
-#define BMP388_REG_NVM_PAR_P2_H        0x39        /**< NVM PAR P2 hgih register */
+#define BMP388_REG_NVM_PAR_P2_H        0x39        /**< NVM PAR P2 high register */
 #define BMP388_REG_NVM_PAR_P3          0x3A        /**< NVM PAR P3 register */
 #define BMP388_REG_NVM_PAR_P4          0x3B        /**< NVM PAR P4 register */
 #define BMP388_REG_NVM_PAR_P5_L        0x3C        /**< NVM PAR P5 low register */
-#define BMP388_REG_NVM_PAR_P5_H        0x3D        /**< NVM PAR P5 hgih register */
+#define BMP388_REG_NVM_PAR_P5_H        0x3D        /**< NVM PAR P5 high register */
 #define BMP388_REG_NVM_PAR_P6_L        0x3E        /**< NVM PAR P6 low register */
-#define BMP388_REG_NVM_PAR_P6_H        0x3F        /**< NVM PAR P6 hgih register */
+#define BMP388_REG_NVM_PAR_P6_H        0x3F        /**< NVM PAR P6 high register */
 #define BMP388_REG_NVM_PAR_P7          0x40        /**< NVM PAR P7 register */
 #define BMP388_REG_NVM_PAR_P8          0x41        /**< NVM PAR P8 register */
 #define BMP388_REG_NVM_PAR_P9_L        0x42        /**< NVM PAR P9 low register */
-#define BMP388_REG_NVM_PAR_P9_H        0x43        /**< NVM PAR P9 hgih register */
+#define BMP388_REG_NVM_PAR_P9_H        0x43        /**< NVM PAR P9 high register */
 #define BMP388_REG_NVM_PAR_P10         0x44        /**< NVM PAR P10 register */
 #define BMP388_REG_NVM_PAR_P11         0x45        /**< NVM PAR P11 register */
 #define BMP388_REG_CONFIG              0x1F        /**< configure register */
@@ -89,9 +89,9 @@
 #define BMP388_REG_FIFO_LENGTH_0       0x12        /**< fifo length 0 register */
 #define BMP388_REG_INT_STATUS          0x11        /**< interrupt status register */
 #define BMP388_REG_EVENT               0x10        /**< event register */
-#define BMP388_REG_SENSORTIME_2        0x0E        /**< sensortime 2 register */
-#define BMP388_REG_SENSORTIME_1        0x0D        /**< sensortime 1 register */
-#define BMP388_REG_SENSORTIME_0        0x0C        /**< sensortime 0 register */
+#define BMP388_REG_SENSORTIME_2        0x0E        /**< sensor time 2 register */
+#define BMP388_REG_SENSORTIME_1        0x0D        /**< sensor time 1 register */
+#define BMP388_REG_SENSORTIME_0        0x0C        /**< sensor time 0 register */
 #define BMP388_REG_DATA_5              0x09        /**< data 5 register */
 #define BMP388_REG_DATA_4              0x08        /**< data 4 register */
 #define BMP388_REG_DATA_3              0x07        /**< data 3 register */
@@ -301,7 +301,7 @@ static uint8_t a_bmp388_get_calibration_data(bmp388_handle_t *handle)
 /**
  * @brief     compensate the temperature
  * @param[in] *handle points to a bmp388 handle structure
- * @param[in] data is the raw temperatue
+ * @param[in] data is the raw temperature
  * @return    compensated temperature
  * @note      none
  */
@@ -444,12 +444,12 @@ uint8_t bmp388_get_status(bmp388_handle_t *handle, uint8_t *status)
 }
 
 /**
- * @brief      get the sensortime
+ * @brief      get the sensor time
  * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *t points to a timerstamp buffer
+ * @param[out] *t points to a timestamp buffer
  * @return     status code
  *             - 0 success
- *             - 1 get sensortime failed
+ *             - 1 get sensor time failed
  *             - 2 handle is NULL
  *             - 3 handle is not initialized
  * @note       none
@@ -471,7 +471,7 @@ uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *t)
     res = a_bmp388_iic_spi_read(handle, BMP388_REG_SENSORTIME_0, (uint8_t *)buf, 3);       /* read config */
     if (res != 0)                                                                          /* check result */
     {
-        handle->debug_print("bmp388: get sensortime register failed.\n");                  /* get sensortime register failed */
+        handle->debug_print("bmp388: get sensor time register failed.\n");                 /* get sensor time register failed */
        
         return 1;                                                                          /* return error */
     }
@@ -865,12 +865,12 @@ uint8_t bmp388_get_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t *ena
 }
 
 /**
- * @brief     enable or disable the fifo sensortime on
+ * @brief     enable or disable the fifo sensor time on
  * @param[in] *handle points to a bmp388 handle structure
  * @param[in] enable is a bool value
  * @return    status code
  *            - 0 success
- *            - 1 set fifo sensortime on failed
+ *            - 1 set fifo sensor time on failed
  *            - 2 handle is NULL
  *            - 3 handle is not initialized
  * @note      none
@@ -910,12 +910,12 @@ uint8_t bmp388_set_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t ena
 }
 
 /**
- * @brief      get the fifo sensortime on status
+ * @brief      get the fifo sensor time on status
  * @param[in]  *handle points to a bmp388 handle structure
  * @param[out] *enable points to a bool buffer
  * @return     status code
  *             - 0 success
- *             - 1 get fifo sensortime on failed
+ *             - 1 get fifo sensor time on failed
  *             - 2 handle is NULL
  *             - 3 handle is not initialized
  * @note       none
@@ -2019,7 +2019,7 @@ uint8_t bmp388_get_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
 }
 
 /**
- * @brief     enable or disable the pressrue
+ * @brief     enable or disable the pressure
  * @param[in] *handle points to a bmp388 handle structure
  * @param[in] enable is a bool value
  * @return    status code
@@ -2979,7 +2979,7 @@ uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c
     }
     if ((prev & 0x01) != 0)                                                                   /* check mode */
     {
-        handle->debug_print("bmp388: fifo mode can't use this fuction.\n");                   /* fifo mode can't use this fuction */
+        handle->debug_print("bmp388: fifo mode can't use this function.\n");                  /* fifo mode can't use this function */
        
         return 1;                                                                             /* return error */
     }
@@ -3091,7 +3091,7 @@ uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c
     {
         handle->debug_print("bmp388: mode is invalid.\n");                                    /* mode is invalid */
            
-        return 1;                                                                             /* retun error */
+        return 1;                                                                             /* return error */
     }
 }
 
@@ -3132,7 +3132,7 @@ uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
     }
     if ((prev & 0x01) != 0)                                                                   /* check mode */
     {
-        handle->debug_print("bmp388: fifo mode can't use this fuction.\n");                   /* fifo mode can't use this fuction */
+        handle->debug_print("bmp388: fifo mode can't use this function.\n");                  /* fifo mode can't use this function */
        
         return 1;                                                                             /* return error */
     }
@@ -3334,7 +3334,7 @@ uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temp
     }
     if ((prev & 0x01) != 0)                                                                   /* check fifo mode */
     {
-        handle->debug_print("bmp388: fifo mode can't use this fuction.\n");                   /* fifo mode can't use this fuction */
+        handle->debug_print("bmp388: fifo mode can't use this function.\n");                  /* fifo mode can't use this function */
        
         return 1;                                                                             /* return error */
     }
@@ -3689,9 +3689,9 @@ uint8_t bmp388_read_fifo(bmp388_handle_t *handle, uint8_t *buf, uint16_t *len)
             return 1;                                                                               /* return error */
         }
         length = ((uint16_t)(tmp_buf[1] & 0x01) << 8) | tmp_buf[0];                                 /* get data */
-        if ((prev & (1 << 2)) != 0)                                                                 /* if include sensorttime */
+        if ((prev & (1 << 2)) != 0)                                                                 /* if include sensor time */
         {
-            length += 4;                                                                            /* add sensortime length */
+            length += 4;                                                                            /* add sensor time length */
         }            
         *len = (*len) < length ? (*len) :length;                                                    /* get real length */
         res = a_bmp388_iic_spi_read(handle, BMP388_REG_FIFO_DATA, (uint8_t *)buf, *len);            /* read config */
@@ -3706,7 +3706,7 @@ uint8_t bmp388_read_fifo(bmp388_handle_t *handle, uint8_t *buf, uint16_t *len)
     }
     else
     {
-        handle->debug_print("bmp388: normal mode or forced mode can't use this fuction.\n");        /* normal mode or forced mode can't use this fuction */
+        handle->debug_print("bmp388: normal mode or forced mode can't use this function.\n");       /* normal mode or forced mode can't use this function */
            
         return 1;                                                                                   /* return error */
     }
@@ -3762,7 +3762,7 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
                 }
                 frame[frame_total].type =  BMP388_FRAME_TYPE_TEMPERATURE;                                                                 /* set temperature type */
                 frame[frame_total].raw = (uint32_t)buf[i + 2 + 1] << 16 | (uint32_t)buf[i + 1 + 1] << 8 | buf[i + 0 + 1];                 /* set raw */
-                frame[frame_total].data = (float)((double)a_bmp388_compensate_temperature(handle, frame[frame_total].raw) / 100.0);       /* set compensate temerature */
+                frame[frame_total].data = (float)((double)a_bmp388_compensate_temperature(handle, frame[frame_total].raw) / 100.0);       /* set compensate temperature */
                 frame_total++;                                                                                                            /* frame++ */
                 i += 4;                                                                                                                   /* index + 4 */
                 
@@ -3776,7 +3776,7 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
                 }
                 frame[frame_total].type =  BMP388_FRAME_TYPE_TEMPERATURE;                                                                 /* set temperature type */
                 frame[frame_total].raw = (uint32_t)buf[i + 2 + 1] << 16| (uint32_t)buf[i + 1 + 1] << 8 | buf[i + 0 + 1];                  /* set raw */
-                frame[frame_total].data = (float)((double)a_bmp388_compensate_temperature(handle, frame[frame_total].raw) / 100.0);       /* set compensate temerature */
+                frame[frame_total].data = (float)((double)a_bmp388_compensate_temperature(handle, frame[frame_total].raw) / 100.0);       /* set compensate temperature */
                 frame_total++;                                                                                                            /* frame++ */
                 if (frame_total > ((*frame_len)-1))                                                                                       /* check length */
                 {
@@ -3796,7 +3796,7 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
                 {
                     return 0;                                                                                                             /* return success */
                 }
-                frame[frame_total].type =  BMP388_FRAME_TYPE_SENSORTIME;                                                                  /* set sensortime type */
+                frame[frame_total].type =  BMP388_FRAME_TYPE_SENSORTIME;                                                                  /* set sensor time type */
                 frame[frame_total].raw = (uint32_t)buf[i + 2 + 1] << 16 | (uint32_t)buf[i + 1 + 1] << 8 | buf[i + 0 + 1];                 /* set raw */
                 frame[frame_total].data = 0;                                                                                              /* set data */
                 frame_total++;                                                                                                            /* frame++ */
@@ -3898,7 +3898,7 @@ uint8_t bmp388_info(bmp388_info_t *info)
     info->max_current_ma = MAX_CURRENT;                             /* set maximum current */
     info->temperature_max = TEMPERATURE_MAX;                        /* set minimal temperature */
     info->temperature_min = TEMPERATURE_MIN;                        /* set maximum temperature */
-    info->driver_version = DRIVER_VERSION;                          /* set driver verison */
+    info->driver_version = DRIVER_VERSION;                          /* set driver version */
     
     return 0;                                                       /* success return 0 */
 }
