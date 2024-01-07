@@ -53,6 +53,11 @@ extern "C"{
  */
 
 /**
+ * @addtogroup bmp388_base_driver
+ * @{
+ */
+
+/**
  * @brief bmp388 interface enumeration definition
  */
 typedef enum
@@ -300,9 +305,13 @@ typedef struct bmp388_info_s
 } bmp388_info_t;
 
 /**
+ * @}
+ */
+
+/**
  * @defgroup bmp388_link_driver bmp388 link driver function
  * @brief    bmp388 link driver modules
- * @ingroup  bmp3881_driver
+ * @ingroup  bmp388_driver
  * @{
  */
 
