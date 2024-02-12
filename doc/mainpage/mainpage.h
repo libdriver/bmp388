@@ -1,6 +1,6 @@
 /**
  * @mainpage  LibDriver BMP388
- * @brief     libdriver bmp388 is a full function driver of bmp388 and it can run in both MCU and Linux platform.
+ * @brief     LibDriver BMP388 is a full function driver of BMP388 and it can run in both MCU and Linux platform.
  * @version   2.0.0
  * @author    Shifeng Li
  *
