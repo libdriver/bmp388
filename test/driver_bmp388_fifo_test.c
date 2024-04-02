@@ -269,8 +269,8 @@ uint8_t bmp388_fifo_test(bmp388_interface_t interface, bmp388_address_t addr_pin
         return 1;
     }
     
-    /* set fifo watermark 256 */
-    res = bmp388_set_fifo_watermark(&gs_handle, 256);
+    /* set fifo watermark 500 */
+    res = bmp388_set_fifo_watermark(&gs_handle, 500);
     if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set fifo watermark failed.\n");
@@ -341,8 +341,8 @@ uint8_t bmp388_fifo_test(bmp388_interface_t interface, bmp388_address_t addr_pin
         return 1;
     }
     
-    /* enable latch interrupt pin and interrupt status */
-    res = bmp388_set_latch_interrupt_pin_and_interrupt_status(&gs_handle, BMP388_BOOL_TRUE);
+    /* disable latch interrupt pin and interrupt status */
+    res = bmp388_set_latch_interrupt_pin_and_interrupt_status(&gs_handle, BMP388_BOOL_FALSE);
     if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set set latch interrupt pin and interrupt status failed.\n");

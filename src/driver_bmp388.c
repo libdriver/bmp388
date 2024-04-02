@@ -3804,6 +3804,24 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
                 
                 break;                                                                                                                    /* break */
             }
+            case 0x80 :                                                                                                                   /* fifo empty */
+            {
+                i += 2;                                                                                                                   /* index+2 */
+                
+                break;                                                                                                                    /* break */
+            }
+            case 0x48 :                                                                                                                   /* fifo input config */
+            {
+                i += 2;                                                                                                                   /* index+2 */
+                
+                break;                                                                                                                    /* break */
+            }
+            case 0x44 :                                                                                                                   /* config error */
+            {
+                i += 2;                                                                                                                   /* index+2 */
+                
+                break;                                                                                                                    /* break */
+            }
             default :
             {
                 handle->debug_print("bmp388: header is invalid.\n");                                                                      /* header is invalid */

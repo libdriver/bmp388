@@ -211,8 +211,8 @@ $(document).ready(function(){initNavTree('driver__bmp388__interrupt_8c_source.ht
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    }</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    </div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="comment">/* enable latch interrupt pin and interrupt status */</span></div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    res = <a class="code" href="group__bmp388__interrupt__driver.html#gae7c56da0291b40402b55bcd8200e01b9">bmp388_set_latch_interrupt_pin_and_interrupt_status</a>(&amp;gs_handle, <a class="code" href="group__bmp388__base__driver.html#ggac3a999efa90ffa81da8661638edf955da6b5b3c99117066ca733d70671f3b0ae8">BMP388_BOOL_TRUE</a>);</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="comment">/* disable latch interrupt pin and interrupt status */</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    res = <a class="code" href="group__bmp388__interrupt__driver.html#gae7c56da0291b40402b55bcd8200e01b9">bmp388_set_latch_interrupt_pin_and_interrupt_status</a>(&amp;gs_handle, <a class="code" href="group__bmp388__base__driver.html#ggac3a999efa90ffa81da8661638edf955da81158d601f2a2a99ecd877e2f525a102">BMP388_BOOL_FALSE</a>);</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keywordflow">if</span> (res != 0)</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    {</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <a class="code" href="group__bmp388__interface__driver.html#ga273d231e446d3524f9e4e00ad2bd76fd">bmp388_interface_debug_print</a>(<span class="stringliteral">&quot;bmp388: set latch interrupt pin and interrupt status failed.\n&quot;</span>);</div>

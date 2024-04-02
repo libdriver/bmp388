@@ -67,7 +67,7 @@ extern "C"{
 #define BMP388_FIFO_DEFAULT_INTERRUPT_WATERMARK      BMP388_BOOL_TRUE                         /**< enable interrupt watermark */
 #define BMP388_FIFO_DEFAULT_INTERRUPT_FIFO_FULL      BMP388_BOOL_FALSE                        /**< disable interrupt fifo full */
 #define BMP388_FIFO_DEFAULT_INTERRUPT_DATA_READY     BMP388_BOOL_FALSE                        /**< disable interrupt data ready */
-#define BMP388_FIFO_DEFAULT_LATCH_INTERRUPT          BMP388_BOOL_TRUE                         /**< latch interrupt pin and interrupt status */
+#define BMP388_FIFO_DEFAULT_LATCH_INTERRUPT          BMP388_BOOL_FALSE                        /**< latch interrupt pin and interrupt status */
 #define BMP388_FIFO_DEFAULT_PRESSURE                 BMP388_BOOL_TRUE                         /**< enable pressure */
 #define BMP388_FIFO_DEFAULT_TEMPERATURE              BMP388_BOOL_TRUE                         /**< enable temperature */
 #define BMP388_FIFO_DEFAULT_PRESSURE_OVERSAMPLING    BMP388_OVERSAMPLING_x32                  /**< pressure oversampling x32 */
