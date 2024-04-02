@@ -175,8 +175,8 @@ uint8_t bmp388_interrupt_init(bmp388_interface_t interface, bmp388_address_t add
         return 1;
     }
     
-    /* enable latch interrupt pin and interrupt status */
-    res = bmp388_set_latch_interrupt_pin_and_interrupt_status(&gs_handle, BMP388_BOOL_TRUE);
+    /* disable latch interrupt pin and interrupt status */
+    res = bmp388_set_latch_interrupt_pin_and_interrupt_status(&gs_handle, BMP388_BOOL_FALSE);
     if (res != 0)
     {
         bmp388_interface_debug_print("bmp388: set latch interrupt pin and interrupt status failed.\n");
