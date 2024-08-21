@@ -299,12 +299,12 @@ uint8_t bmp388_interrupt_init(bmp388_interface_t interface, bmp388_address_t add
  */
 uint8_t bmp388_interrupt_read(float *temperature_c, float *pressure_pa)
 {
-    uint32_t temperature_yaw;
-    uint32_t pressure_yaw;
+    uint32_t temperature_raw;
+    uint32_t pressure_raw;
     
     /* read temperature and pressure */
-    if (bmp388_read_temperature_pressure(&gs_handle, (uint32_t *)&temperature_yaw, temperature_c,
-                                        (uint32_t *)&pressure_yaw, pressure_pa) != 0)
+    if (bmp388_read_temperature_pressure(&gs_handle, (uint32_t *)&temperature_raw, temperature_c,
+                                        (uint32_t *)&pressure_raw, pressure_pa) != 0)
     {
         return 1;
     }

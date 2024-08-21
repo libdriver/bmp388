@@ -364,14 +364,14 @@ uint8_t bmp388_read_test(bmp388_interface_t interface, bmp388_address_t addr_pin
     bmp388_interface_delay_ms(1000);
     for (i = 0; i < times; i++)
     {
-        uint32_t temperature_yaw;
-        uint32_t pressure_yaw;
+        uint32_t temperature_raw;
+        uint32_t pressure_raw;
         float temperature_c;
         float pressure_pa;
         
         /* read temperature pressure */
-        if (bmp388_read_temperature_pressure(&gs_handle, (uint32_t *)&temperature_yaw, (float *)&temperature_c,
-                                            (uint32_t *)&pressure_yaw, (float *)&pressure_pa) != 0)
+        if (bmp388_read_temperature_pressure(&gs_handle, (uint32_t *)&temperature_raw, (float *)&temperature_c,
+                                            (uint32_t *)&pressure_raw, (float *)&pressure_pa) != 0)
         {
             bmp388_interface_debug_print("bmp388: read temperature and pressure failed.\n");
             (void)bmp388_deinit(&gs_handle);
@@ -407,14 +407,14 @@ uint8_t bmp388_read_test(bmp388_interface_t interface, bmp388_address_t addr_pin
     bmp388_interface_delay_ms(1000);
     for (i = 0; i < times; i++)
     {
-        uint32_t temperature_yaw;
-        uint32_t pressure_yaw;
+        uint32_t temperature_raw;
+        uint32_t pressure_raw;
         float temperature_c;
         float pressure_pa;
         
         /* read temperature pressure */
-        if (bmp388_read_temperature_pressure(&gs_handle, (uint32_t *)&temperature_yaw, (float *)&temperature_c,
-                                            (uint32_t *)&pressure_yaw, (float *)&pressure_pa) != 0)
+        if (bmp388_read_temperature_pressure(&gs_handle, (uint32_t *)&temperature_raw, (float *)&temperature_c,
+                                            (uint32_t *)&pressure_raw, (float *)&pressure_pa) != 0)
         {
             bmp388_interface_debug_print("bmp388: read temperature and pressure failed.\n");
             (void)bmp388_deinit(&gs_handle);
