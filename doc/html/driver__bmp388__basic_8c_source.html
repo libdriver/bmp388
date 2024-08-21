@@ -282,12 +282,12 @@ $(document).ready(function(){initNavTree('driver__bmp388__basic_8c_source.html',
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
 <div class="line"><a name="l00248"></a><span class="lineno"><a class="line" href="group__bmp388__example__driver.html#gaf060999ee8490f9130474b0fc416b373">  248</a></span>&#160;uint8_t <a class="code" href="group__bmp388__example__driver.html#gaf060999ee8490f9130474b0fc416b373">bmp388_basic_read</a>(<span class="keywordtype">float</span> *temperature_c, <span class="keywordtype">float</span> *pressure_pa)</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;{</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    uint32_t temperature_yaw;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    uint32_t pressure_yaw;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    uint32_t temperature_raw;</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    uint32_t pressure_raw;</div>
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    </div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <span class="comment">/* read temperature and pressure */</span></div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="group__bmp388__base__driver.html#gaa0bfc91b37e54a199c25c3de6967ee65">bmp388_read_temperature_pressure</a>(&amp;gs_handle, (uint32_t *)&amp;temperature_yaw, temperature_c,</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                                        (uint32_t *)&amp;pressure_yaw, pressure_pa) != 0)</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="group__bmp388__base__driver.html#gaa0bfc91b37e54a199c25c3de6967ee65">bmp388_read_temperature_pressure</a>(&amp;gs_handle, (uint32_t *)&amp;temperature_raw, temperature_c,</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                                        (uint32_t *)&amp;pressure_raw, pressure_pa) != 0)</div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    {</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    }</div>
