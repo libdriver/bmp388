@@ -895,7 +895,3 @@ Options:
                                      Run the driver test.
       --times=<num>                  Set the running times.([default: 3])
 ```
-
-#### 3.3 Command Problem
-
-There is some unknown problem in the gpio interrupt or data reading of bmp388 on the raspberry board, FIFO reading always failed.
