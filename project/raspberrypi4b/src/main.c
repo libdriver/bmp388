@@ -60,7 +60,7 @@ uint8_t (*g_gpio_irq)(void) = NULL;                 /**< irq function address */
 
 /**
  * @brief     interface interrupt receive callback
- * @param[in] type is the interrupt type
+ * @param[in] type interrupt type
  * @note      none
  */
 void bmp388_interface_interrupt_receive_callback(uint8_t type)
@@ -97,7 +97,7 @@ void bmp388_interface_interrupt_receive_callback(uint8_t type)
 
 /**
  * @brief     interface fifo receive callback
- * @param[in] type is the interrupt type
+ * @param[in] type interrupt type
  * @note      none
  */
 void bmp388_interface_fifo_receive_callback(uint8_t type)
@@ -201,8 +201,8 @@ void bmp388_interface_fifo_receive_callback(uint8_t type)
 
 /**
  * @brief     bmp388 full function
- * @param[in] argc is arg numbers
- * @param[in] **argv is the arg address
+ * @param[in] argc arg numbers
+ * @param[in] **argv arg address
  * @return    status code
  *            - 0 success
  *            - 1 run failed
@@ -743,8 +743,8 @@ uint8_t bmp388(uint8_t argc, char **argv)
 
 /**
  * @brief     main function
- * @param[in] argc is arg numbers
- * @param[in] **argv is the arg address
+ * @param[in] argc arg numbers
+ * @param[in] **argv arg address
  * @return    status code
  *             - 0 success
  * @note      none

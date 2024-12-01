@@ -104,10 +104,10 @@
 
 /**
  * @brief      read multiple bytes
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[in]  reg is the register address
- * @param[out] *buf points to a data buffer
- * @param[in]  len is the data length
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[in]  reg register address
+ * @param[out] *buf pointer to a data buffer
+ * @param[in]  len data length
  * @return     status code
  *             - 0 success
  *             - 1 iic spi read failed
@@ -142,10 +142,10 @@ static uint8_t a_bmp388_iic_spi_read(bmp388_handle_t *handle, uint8_t reg, uint8
 
 /**
  * @brief     write multiple bytes
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] reg is the register address
- * @param[in] *buf points to a data buffer
- * @param[in] len is the data length
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] reg register address
+ * @param[in] *buf pointer to a data buffer
+ * @param[in] len data length
  * @return    status code
  *            - 0 success
  *            - 1 iic spi write failed
@@ -186,11 +186,12 @@ static uint8_t a_bmp388_iic_spi_write(bmp388_handle_t *handle, uint8_t reg, uint
 }
 
 /**
- * @brief  get the calibration data
- * @return status code
- *         - 0 success
- *         - 1 get calibration data failed
- * @note   none
+ * @brief     get the calibration data
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @return    status code
+ *            - 0 success
+ *            - 1 get calibration data failed
+ * @note      none
  */
 static uint8_t a_bmp388_get_calibration_data(bmp388_handle_t *handle)
 {
@@ -300,8 +301,8 @@ static uint8_t a_bmp388_get_calibration_data(bmp388_handle_t *handle)
 
 /**
  * @brief     compensate the temperature
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] data is the raw temperature
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] data raw temperature
  * @return    compensated temperature
  * @note      none
  */
@@ -330,8 +331,8 @@ static int64_t a_bmp388_compensate_temperature(bmp388_handle_t *handle, uint32_t
 
 /**
  * @brief     compensate the pressure
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] data is the raw pressure
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] data raw pressure
  * @return    compensated pressure
  * @note      none
  */
@@ -375,8 +376,8 @@ static int64_t a_bmp388_compensate_pressure(bmp388_handle_t *handle, uint32_t da
 
 /**
  * @brief      get the error
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *err points to an error buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *err pointer to an error buffer
  * @return     status code
  *             - 0 success
  *             - 1 get error failed
@@ -410,8 +411,8 @@ uint8_t bmp388_get_error(bmp388_handle_t *handle, uint8_t *err)
 
 /**
  * @brief      get the status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *status points to a status buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *status pointer to a status buffer
  * @return     status code
  *             - 0 success
  *             - 1 get status failed
@@ -445,8 +446,8 @@ uint8_t bmp388_get_status(bmp388_handle_t *handle, uint8_t *status)
 
 /**
  * @brief      get the sensor time
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *t points to a timestamp buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *t pointer to a timestamp buffer
  * @return     status code
  *             - 0 success
  *             - 1 get sensor time failed
@@ -482,8 +483,8 @@ uint8_t bmp388_get_sensortime(bmp388_handle_t *handle, uint32_t *t)
 
 /**
  * @brief      get the event
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *event points to an event buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *event pointer to an event buffer
  * @return     status code
  *             - 0 success
  *             - 1 get event failed
@@ -519,8 +520,8 @@ uint8_t bmp388_get_event(bmp388_handle_t *handle, bmp388_event_t *event)
 
 /**
  * @brief      get the interrupt status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *status points to a status buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *status pointer to a status buffer
  * @return     status code
  *             - 0 success
  *             - 1 get interrupt status failed
@@ -554,8 +555,8 @@ uint8_t bmp388_get_interrupt_status(bmp388_handle_t *handle, uint8_t *status)
 
 /**
  * @brief      get the fifo length
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *length points to a fifo length buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *length pointer to a fifo length buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo length failed
@@ -591,9 +592,9 @@ uint8_t bmp388_get_fifo_length(bmp388_handle_t *handle, uint16_t *length)
 
 /**
  * @brief      get the fifo data
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *data points to a data buffer
- * @param[in]  length is the data buffer length
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *data pointer to a data buffer
+ * @param[in]  length data buffer length
  * @return     status code
  *             - 0 success
  *             - 1 get fifo data failed
@@ -627,8 +628,8 @@ uint8_t bmp388_get_fifo_data(bmp388_handle_t *handle, uint8_t *data, uint16_t le
 
 /**
  * @brief     set the fifo watermark
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] watermark is the fifo watermark
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] watermark fifo watermark
  * @return    status code
  *            - 0 success
  *            - 1 set fifo watermark failed
@@ -665,8 +666,8 @@ uint8_t bmp388_set_fifo_watermark(bmp388_handle_t *handle, uint16_t watermark)
 
 /**
  * @brief      get the fifo watermark
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *watermark points to a fifo watermark buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *watermark pointer to a fifo watermark buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo watermark failed
@@ -702,8 +703,8 @@ uint8_t bmp388_get_fifo_watermark(bmp388_handle_t *handle, uint16_t *watermark)
 
 /**
  * @brief     enable or disable the fifo
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set fifo failed
@@ -747,8 +748,8 @@ uint8_t bmp388_set_fifo(bmp388_handle_t *handle, bmp388_bool_t enable)
 
 /**
  * @brief      get the fifo status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo failed
@@ -784,8 +785,8 @@ uint8_t bmp388_get_fifo(bmp388_handle_t *handle, bmp388_bool_t *enable)
 
 /**
  * @brief     enable or disable the fifo stopping on full
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set fifo stop on full failed
@@ -829,8 +830,8 @@ uint8_t bmp388_set_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t enab
 
 /**
  * @brief      get the fifo stopping on full status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo stop on full failed
@@ -866,8 +867,8 @@ uint8_t bmp388_get_fifo_stop_on_full(bmp388_handle_t *handle, bmp388_bool_t *ena
 
 /**
  * @brief     enable or disable the fifo sensor time on
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set fifo sensor time on failed
@@ -911,8 +912,8 @@ uint8_t bmp388_set_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t ena
 
 /**
  * @brief      get the fifo sensor time on status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo sensor time on failed
@@ -948,8 +949,8 @@ uint8_t bmp388_get_fifo_sensortime_on(bmp388_handle_t *handle, bmp388_bool_t *en
 
 /**
  * @brief     enable or disable the fifo pressure on
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set fifo pressure on failed
@@ -993,8 +994,8 @@ uint8_t bmp388_set_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t enabl
 
 /**
  * @brief      get the fifo pressure on status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo pressure on failed
@@ -1030,8 +1031,8 @@ uint8_t bmp388_get_fifo_pressure_on(bmp388_handle_t *handle, bmp388_bool_t *enab
 
 /**
  * @brief     enable or disable the fifo temperature on
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set fifo temperature on failed
@@ -1075,8 +1076,8 @@ uint8_t bmp388_set_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t en
 
 /**
  * @brief      get the fifo temperature on status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo temperature on failed
@@ -1112,8 +1113,8 @@ uint8_t bmp388_get_fifo_temperature_on(bmp388_handle_t *handle, bmp388_bool_t *e
 
 /**
  * @brief     set the fifo subsampling
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] subsample is the fifo subsample
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] subsample fifo subsample
  * @return    status code
  *            - 0 success
  *            - 1 set fifo subsampling failed
@@ -1163,8 +1164,8 @@ uint8_t bmp388_set_fifo_subsampling(bmp388_handle_t *handle, uint8_t subsample)
 
 /**
  * @brief      get the fifo subsampling
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *subsample points to subsample buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *subsample pointer to subsample buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo subsampling failed
@@ -1200,8 +1201,8 @@ uint8_t bmp388_get_fifo_subsampling(bmp388_handle_t *handle, uint8_t *subsample)
 
 /**
  * @brief     set the fifo data source
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] source is the fifo data source
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] source fifo data source
  * @return    status code
  *            - 0 success
  *            - 1 set fifo data source failed
@@ -1245,8 +1246,8 @@ uint8_t bmp388_set_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_so
 
 /**
  * @brief      get the fifo data source
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *source points to fifo data source buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *source pointer to fifo data source buffer
  * @return     status code
  *             - 0 success
  *             - 1 get fifo data source failed
@@ -1282,8 +1283,8 @@ uint8_t bmp388_get_fifo_data_source(bmp388_handle_t *handle, bmp388_fifo_data_so
 
 /**
  * @brief     set the interrupt pin type
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] pin_type is the interrupt pin type
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] pin_type interrupt pin type
  * @return    status code
  *            - 0 success
  *            - 1 set interrupt pin type failed
@@ -1327,8 +1328,8 @@ uint8_t bmp388_set_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_
 
 /**
  * @brief      get the interrupt pin type
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *pin_type points to an interrupt pin type buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *pin_type pointer to an interrupt pin type buffer
  * @return     status code
  *             - 0 success
  *             - 1 get interrupt pin type failed
@@ -1364,8 +1365,8 @@ uint8_t bmp388_get_interrupt_pin_type(bmp388_handle_t *handle, bmp388_interrupt_
 
 /**
  * @brief     set the interrupt active level
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] level is the interrupt active level
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] level interrupt active level
  * @return    status code
  *            - 0 success
  *            - 1 set interrupt active level failed
@@ -1409,8 +1410,8 @@ uint8_t bmp388_set_interrupt_active_level(bmp388_handle_t *handle, bmp388_interr
 
 /**
  * @brief      get the interrupt active level
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *level points to an interrupt active level buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *level pointer to an interrupt active level buffer
  * @return     status code
  *             - 0 success
  *             - 1 get interrupt active level failed
@@ -1446,8 +1447,8 @@ uint8_t bmp388_get_interrupt_active_level(bmp388_handle_t *handle, bmp388_interr
 
 /**
  * @brief     enable or disable latching interrupt pin and interrupt status
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set latch interrupt pin and interrupt status failed
@@ -1491,8 +1492,8 @@ uint8_t bmp388_set_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *han
 
 /**
  * @brief      get latching interrupt pin and interrupt status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get latch interrupt pin and interrupt status failed
@@ -1528,8 +1529,8 @@ uint8_t bmp388_get_latch_interrupt_pin_and_interrupt_status(bmp388_handle_t *han
 
 /**
  * @brief     enable or disable the fifo watermark interrupt
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set interrupt fifo watermark failed
@@ -1573,8 +1574,8 @@ uint8_t bmp388_set_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool
 
 /**
  * @brief      get the interrupt fifo watermark
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get interrupt fifo watermark failed
@@ -1610,8 +1611,8 @@ uint8_t bmp388_get_interrupt_fifo_watermark(bmp388_handle_t *handle, bmp388_bool
 
 /**
  * @brief     enable or disable the fifo full interrupt
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set interrupt fifo full failed
@@ -1655,8 +1656,8 @@ uint8_t bmp388_set_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t en
 
 /**
  * @brief      get the interrupt fifo full
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get interrupt fifo full failed
@@ -1692,8 +1693,8 @@ uint8_t bmp388_get_interrupt_fifo_full(bmp388_handle_t *handle, bmp388_bool_t *e
 
 /**
  * @brief     enable or disable the data ready interrupt
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set interrupt data ready failed
@@ -1737,8 +1738,8 @@ uint8_t bmp388_set_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t e
 
 /**
  * @brief      get the interrupt data ready status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get interrupt data ready failed
@@ -1774,8 +1775,8 @@ uint8_t bmp388_get_interrupt_data_ready(bmp388_handle_t *handle, bmp388_bool_t *
 
 /**
  * @brief     set the spi wire
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] wire is the spi wire
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] wire spi wire
  * @return    status code
  *            - 0 success
  *            - 1 set spi wire failed
@@ -1819,8 +1820,8 @@ uint8_t bmp388_set_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t wire)
 
 /**
  * @brief      get the spi wire
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *wire points to a spi wire buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *wire pointer to a spi wire buffer
  * @return     status code
  *             - 0 success
  *             - 1 get spi wire failed
@@ -1856,8 +1857,8 @@ uint8_t bmp388_get_spi_wire(bmp388_handle_t *handle, bmp388_spi_wire_t *wire)
 
 /**
  * @brief     enable or disable the iic watchdog timer
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set iic watchdog timer failed
@@ -1901,8 +1902,8 @@ uint8_t bmp388_set_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t ena
 
 /**
  * @brief      get the iic watchdog timer status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get iic watchdog timer failed
@@ -1938,8 +1939,8 @@ uint8_t bmp388_get_iic_watchdog_timer(bmp388_handle_t *handle, bmp388_bool_t *en
 
 /**
  * @brief     set the iic watchdog period
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] period is the iic watchdog period
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] period iic watchdog period
  * @return    status code
  *            - 0 success
  *            - 1 set iic watchdog period failed
@@ -1983,8 +1984,8 @@ uint8_t bmp388_set_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
 
 /**
  * @brief      get the iic watchdog period
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *period points to an iic watchdog period buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *period pointer to an iic watchdog period buffer
  * @return     status code
  *             - 0 success
  *             - 1 get iic watchdog period failed
@@ -2020,8 +2021,8 @@ uint8_t bmp388_get_iic_watchdog_period(bmp388_handle_t *handle, bmp388_iic_watch
 
 /**
  * @brief     enable or disable the pressure
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set pressure failed
@@ -2065,8 +2066,8 @@ uint8_t bmp388_set_pressure(bmp388_handle_t *handle, bmp388_bool_t enable)
 
 /**
  * @brief      get the pressure status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get pressure failed
@@ -2102,8 +2103,8 @@ uint8_t bmp388_get_pressure(bmp388_handle_t *handle, bmp388_bool_t *enable)
 
 /**
  * @brief     enable or disable the temperature
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] enable is a bool value
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] enable bool value
  * @return    status code
  *            - 0 success
  *            - 1 set temperature failed
@@ -2147,8 +2148,8 @@ uint8_t bmp388_set_temperature(bmp388_handle_t *handle, bmp388_bool_t enable)
 
 /**
  * @brief      get the temperature status
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *enable points to a bool buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *enable pointer to a bool buffer
  * @return     status code
  *             - 0 success
  *             - 1 get temperature failed
@@ -2184,8 +2185,8 @@ uint8_t bmp388_get_temperature(bmp388_handle_t *handle, bmp388_bool_t *enable)
 
 /**
  * @brief     set the chip mode
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] mode is the chip mode
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] mode chip mode
  * @return    status code
  *            - 0 success
  *            - 1 set mode failed
@@ -2229,8 +2230,8 @@ uint8_t bmp388_set_mode(bmp388_handle_t *handle, bmp388_mode_t mode)
 
 /**
  * @brief      get the chip mode
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *mode points to a mode buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *mode pointer to a mode buffer
  * @return     status code
  *             - 0 success
  *             - 1 get mode failed
@@ -2266,8 +2267,8 @@ uint8_t bmp388_get_mode(bmp388_handle_t *handle, bmp388_mode_t *mode)
 
 /**
  * @brief     set the pressure oversampling
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] oversampling is the pressure oversampling
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] oversampling pressure oversampling
  * @return    status code
  *            - 0 success
  *            - 1 set pressure oversampling failed
@@ -2311,8 +2312,8 @@ uint8_t bmp388_set_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversam
 
 /**
  * @brief      get the pressure oversampling
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *oversampling points to an oversampling buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *oversampling pointer to an oversampling buffer
  * @return     status code
  *             - 0 success
  *             - 1 get pressure oversampling failed
@@ -2348,8 +2349,8 @@ uint8_t bmp388_get_pressure_oversampling(bmp388_handle_t *handle, bmp388_oversam
 
 /**
  * @brief     set the temperature oversampling
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] oversampling is the temperature oversampling
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] oversampling temperature oversampling
  * @return    status code
  *            - 0 success
  *            - 1 set temperature oversampling failed
@@ -2393,8 +2394,8 @@ uint8_t bmp388_set_temperature_oversampling(bmp388_handle_t *handle, bmp388_over
 
 /**
  * @brief      get the temperature oversampling
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *oversampling points to an oversampling buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *oversampling pointer to an oversampling buffer
  * @return     status code
  *             - 0 success
  *             - 1 get temperature oversampling failed
@@ -2430,8 +2431,8 @@ uint8_t bmp388_get_temperature_oversampling(bmp388_handle_t *handle, bmp388_over
 
 /**
  * @brief     set the output data rate
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] odr is the output data rate
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] odr output data rate
  * @return    status code
  *            - 0 success
  *            - 1 set odr failed
@@ -2476,8 +2477,8 @@ uint8_t bmp388_set_odr(bmp388_handle_t *handle, bmp388_odr_t odr)
 
 /**
  * @brief      get the output data rate
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *odr points to an output data rate buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *odr pointer to an output data rate buffer
  * @return     status code
  *             - 0 success
  *             - 1 get odr failed
@@ -2513,8 +2514,8 @@ uint8_t bmp388_get_odr(bmp388_handle_t *handle, bmp388_odr_t *odr)
 
 /**
  * @brief     set the filter coefficient
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] coefficient is the filter coefficient
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] coefficient filter coefficient
  * @return    status code
  *            - 0 success
  *            - 1 set filter coefficient failed
@@ -2559,8 +2560,8 @@ uint8_t bmp388_set_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
 
 /**
  * @brief      get the filter coefficient
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *coefficient points to a filter coefficient buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *coefficient pointer to a filter coefficient buffer
  * @return     status code
  *             - 0 success
  *             - 1 get filter coefficient failed
@@ -2596,7 +2597,7 @@ uint8_t bmp388_get_filter_coefficient(bmp388_handle_t *handle, bmp388_filter_coe
 
 /**
  * @brief     flush the fifo
- * @param[in] *handle points to a bmp388 handle structure
+ * @param[in] *handle pointer to a bmp388 handle structure
  * @return    status code
  *            - 0 success
  *            - 1 flush fifo failed
@@ -2632,7 +2633,7 @@ uint8_t bmp388_flush_fifo(bmp388_handle_t *handle)
 
 /**
  * @brief     soft reset
- * @param[in] *handle points to a bmp388 handle structure
+ * @param[in] *handle pointer to a bmp388 handle structure
  * @return    status code
  *            - 0 success
  *            - 1 soft reset failed
@@ -2668,7 +2669,7 @@ uint8_t bmp388_softreset(bmp388_handle_t *handle)
 
 /**
  * @brief     extmode enable middle
- * @param[in] *handle points to a bmp388 handle structure
+ * @param[in] *handle pointer to a bmp388 handle structure
  * @return    status code
  *            - 0 success
  *            - 1 extmode enable middle failed
@@ -2704,7 +2705,7 @@ uint8_t bmp388_extmode_en_middle(bmp388_handle_t *handle)
 
 /**
  * @brief     close the chip
- * @param[in] *handle points to a bmp388 handle structure
+ * @param[in] *handle pointer to a bmp388 handle structure
  * @return    status code
  *            - 0 success
  *            - 1 close failed
@@ -2744,7 +2745,7 @@ static uint8_t a_bmp388_close(bmp388_handle_t *handle)
 
 /**
  * @brief     initialize the chip
- * @param[in] *handle points to a bmp388 handle structure
+ * @param[in] *handle pointer to a bmp388 handle structure
  * @return    status code
  *            - 0 success
  *            - 1 iic or spi initialization failed
@@ -2892,7 +2893,7 @@ uint8_t bmp388_init(bmp388_handle_t *handle)
 
 /**
  * @brief     close the chip
- * @param[in] *handle points to a bmp388 handle structure
+ * @param[in] *handle pointer to a bmp388 handle structure
  * @return    status code
  *            - 0 success
  *            - 1 iic or spi deinit failed
@@ -2945,9 +2946,9 @@ uint8_t bmp388_deinit(bmp388_handle_t *handle)
 
 /**
  * @brief      read the temperature
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *raw points to a raw temperature buffer
- * @param[out] *c points to a converted temperature buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *raw pointer to a raw temperature buffer
+ * @param[out] *c pointer to a converted temperature buffer
  * @return     status code
  *             - 0 success
  *             - 1 read temperature failed
@@ -3097,9 +3098,9 @@ uint8_t bmp388_read_temperature(bmp388_handle_t *handle, uint32_t *raw, float *c
 
 /**
  * @brief      read the pressure
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *raw points to a raw pressure buffer
- * @param[out] *pa points to a converted pressure buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *raw pointer to a raw pressure buffer
+ * @param[out] *pa pointer to a converted pressure buffer
  * @return     status code
  *             - 0 success
  *             - 1 read pressure failed
@@ -3297,11 +3298,11 @@ uint8_t bmp388_read_pressure(bmp388_handle_t *handle, uint32_t *raw, float *pa)
 
 /**
  * @brief      read the temperature and pressure
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *temperature_raw points to a raw temperature buffer
- * @param[out] *temperature_c points to a converted temperature buffer
- * @param[out] *pressure_raw points to a raw pressure buffer
- * @param[out] *pressure_pa points to a converted pressure buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *temperature_raw pointer to a raw temperature buffer
+ * @param[out] *temperature_c pointer to a converted temperature buffer
+ * @param[out] *pressure_raw pointer to a raw pressure buffer
+ * @param[out] *pressure_pa pointer to a converted pressure buffer
  * @return     status code
  *             - 0 success
  *             - 1 read temperature pressure failed
@@ -3506,7 +3507,7 @@ uint8_t bmp388_read_temperature_pressure(bmp388_handle_t *handle, uint32_t *temp
 
 /**
  * @brief     irq handler
- * @param[in] *handle points to a bmp388 handle structure
+ * @param[in] *handle pointer to a bmp388 handle structure
  * @return    status code
  *            - 0 success
  *            - 1 run failed
@@ -3562,8 +3563,8 @@ uint8_t bmp388_irq_handler(bmp388_handle_t *handle)
 
 /**
  * @brief     set the iic address pin
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] addr_pin is the iic address pin
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] addr_pin iic address pin
  * @return    status code
  *            - 0 success
  *            - 2 handle is NULL
@@ -3583,8 +3584,8 @@ uint8_t bmp388_set_addr_pin(bmp388_handle_t *handle, bmp388_address_t addr_pin)
 
 /**
  * @brief      get the iic address pin
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *addr_pin points to an iic address pin buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *addr_pin pointer to an iic address pin buffer
  * @return     status code
  *             - 0 success
  *             - 2 handle is NULL
@@ -3604,8 +3605,8 @@ uint8_t bmp388_get_addr_pin(bmp388_handle_t *handle, bmp388_address_t *addr_pin)
 
 /**
  * @brief     set the interface
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] interface is the chip interface
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] interface chip interface
  * @return    status code
  *            - 0 success
  *            - 2 handle is NULL
@@ -3625,8 +3626,8 @@ uint8_t bmp388_set_interface(bmp388_handle_t *handle, bmp388_interface_t interfa
 
 /**
  * @brief      get the interface
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[out] *interface points to a chip interface buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[out] *interface pointer to a chip interface buffer
  * @return     status code
  *             - 0 success
  *             - 2 handle is NULL
@@ -3646,9 +3647,9 @@ uint8_t bmp388_get_interface(bmp388_handle_t *handle, bmp388_interface_t *interf
 
 /**
  * @brief         read the fifo
- * @param[in]     *handle points to a bmp388 handle structure
- * @param[in]     *buf points to a data buffer
- * @param[in,out] *len points to a data length buffer
+ * @param[in]     *handle pointer to a bmp388 handle structure
+ * @param[in]     *buf pointer to a data buffer
+ * @param[in,out] *len pointer to a data length buffer
  * @return        status code
  *                - 0 success
  *                - 1 read fifo failed
@@ -3714,11 +3715,11 @@ uint8_t bmp388_read_fifo(bmp388_handle_t *handle, uint8_t *buf, uint16_t *len)
 
 /**
  * @brief         parse the fifo data
- * @param[in]     *handle points to a bmp388 handle structure
- * @param[in]     *buf is the fifo data
- * @param[in]     buf_len is the fifo data length
- * @param[out]    *frame points to a frame buffer
- * @param[in,out] *frame_len points to a frame length buffer
+ * @param[in]     *handle pointer to a bmp388 handle structure
+ * @param[in]     *buf pointer to fifo data
+ * @param[in]     buf_len fifo data length
+ * @param[out]    *frame pointer to a frame buffer
+ * @param[in,out] *frame_len pointer to a frame length buffer
  * @return        status code
  *                - 0 success
  *                - 1 fifo parse failed
@@ -3842,9 +3843,9 @@ uint8_t bmp388_fifo_parse(bmp388_handle_t *handle, uint8_t *buf, uint16_t buf_le
 
 /**
  * @brief     set the chip register
- * @param[in] *handle points to a bmp388 handle structure
- * @param[in] reg is the iic register address
- * @param[in] value is the data write to the register
+ * @param[in] *handle pointer to a bmp388 handle structure
+ * @param[in] reg iic register address
+ * @param[in] value data written to the register
  * @return    status code
  *            - 0 success
  *            - 1 write failed
@@ -3868,9 +3869,9 @@ uint8_t bmp388_set_reg(bmp388_handle_t *handle, uint8_t reg, uint8_t value)
 
 /**
  * @brief      get the chip register
- * @param[in]  *handle points to a bmp388 handle structure
- * @param[in]  reg is the iic register address
- * @param[out] *value points to a read data buffer
+ * @param[in]  *handle pointer to a bmp388 handle structure
+ * @param[in]  reg iic register address
+ * @param[out] *value pointer to a read data buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
@@ -3894,7 +3895,7 @@ uint8_t bmp388_get_reg(bmp388_handle_t *handle, uint8_t reg, uint8_t *value)
 
 /**
  * @brief      get chip's information
- * @param[out] *info points to a bmp388 info structure
+ * @param[out] *info pointer to a bmp388 info structure
  * @return     status code
  *             - 0 success
  *             - 2 handle is NULL
