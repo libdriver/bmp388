@@ -10,7 +10,7 @@
 
 The BMP388 is a digital sensor with pressure and temperature measurement based on proven sensing principles.The sensor module is housed in an extremely compact 10-pin metal-lid LGA package with a footprint only 2.0 x 2.0 mm2 and max 0.8 mm package height. Its small dimensions and its low power consumption of 3.4 uA@1Hz allow the implementation in battery driven devices such as mobile phones ,GPS modules or watches.
 
-LibDriver BMP388 is a full function driver of BMP388 launched by LibDriver.It provides continuous reading of pressure and temperature, single reading of pressure and temperature, interrupt reading, FIFO acquisition and other functions. LibDriver is MISRA compliant.
+LibDriver BMP388 is a full-featured driver of BMP388 launched by LibDriver.It provides continuous reading of pressure and temperature, single reading of pressure and temperature, interrupt reading, FIFO acquisition and other functions. LibDriver is MISRA compliant.
 
 ### Table of Contents
 
