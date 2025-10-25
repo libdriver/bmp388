@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "LibDriver BMP388", "index.html", [
-    [ "Modules", "modules.html", "modules" ],
+    [ "Topics", "topics.html", "topics" ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
@@ -51,10 +51,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"group__bmp388__base__driver.html#gac7cc96c3768b7989db634e2daa4bf47b",
-"group__bmp388__example__driver.html#gab89470159d5b6d3f20dd8d473aeef6d6",
-"structbmp388__handle__s.html#a09053d6d5812eb276a9e4834dde35991"
+"group__bmp388__example__driver.html#ga124dd8176ab416a9a7f05592731d9ef6"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
+var LISTOFALLMEMBERS = 'List of all members';
